@@ -923,7 +923,7 @@ public final class Controller extends View
 		double y2 = y1 + (Math.sin(rads) * distance);
 		return checkObstructionsPoint((float) x1, (float) y1, (float) x2, (float) y2, objectOnGround);
 	}
-	/**
+	/**x
 	 * checks whether a given point hits any obstacles
 	 * @param X x point
 	 * @param Y y point
