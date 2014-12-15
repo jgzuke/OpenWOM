@@ -56,6 +56,7 @@ import java.util.Random;
 import com.spritelib.Sprite;
 public final class Controller extends View
 {
+	private boolean paused = false;
 	protected int screenMinX;
 	protected int screenMinY;
 	protected double screenDimensionMultiplier;
@@ -90,24 +91,9 @@ public final class Controller extends View
 	protected int xShiftLevel;
 	protected int yShiftLevel;
 	private Handler mHandler = new Handler();
-	private Bitmap check;
-	protected String buyingItem;
-	protected int startingLevel;
-	protected boolean drainHp = false;
-	protected boolean lowerHp = false;
-	protected boolean limitSpells = false;
-	protected boolean enemyRegen = false;
-	protected double moneyMultiplier = 0;
-	protected double moneyMade = 0;
-	public boolean hasKey = false;
-	private int exitX = 0;
-	private int exitY = 0;
 	private int curXShift;
 	private int curYShift;
-	private int goldColor = Color.rgb(216, 200, 28);
-	private int platinumColor = Color.rgb(196, 204, 204);
 	private int healthColor = Color.rgb(150, 0, 0);
-	private int specialColor = Color.rgb(0, 0, 150);
 	private int cooldownColor = Color.rgb(190, 190, 0);
 	protected Sprite shootStick;
 	protected int playerHit=0;
@@ -121,12 +107,9 @@ public final class Controller extends View
 		 */
 		public void run()
 		{
-			if(activity.gameOnAtAll) // if game is running call framecalls
+			if(!paused)
 			{
-				if(activity.gameRunning) // if game is running call framecalls
-				{
-					frameCall();
-				}
+				frameCall();
 				mHandler.postDelayed(this, 50);
 			}
 		}
@@ -134,60 +117,36 @@ public final class Controller extends View
 	/** 
 	 * Initializes all undecided variables, loads level, creates player and enemy objects, and starts frameCaller
 	 */
-	public Controller(Context startSet, StartActivity activitySet, int levelToStart, int difficulty)
+	public Controller(Context startSet, StartActivity activitySet)
 	{
 		super(startSet);
 		spriteController = new SpriteController(startSet, this);
 		activity = activitySet;
 		context = startSet;
-		changeDifficulty(difficulty);
 		imageLibrary = new ImageLibrary(startSet, this); // creates image library
+		player = new Player(this); // creates player object
+		setUpStuff();
+		endFighting();
+		loadLevel(); // create enemies walls etc.
+		frameCaller.run();
+	}
+	private void setUpStuff()
+	{
 		shootStick = new Graphic_shootStick(imageLibrary.loadImage("icon_shoot", 70, 35));
-		screenMinX = activitySet.screenMinX;
-		screenMinY = activitySet.screenMinY;
-		screenDimensionMultiplier = activitySet.screenDimensionMultiplier;
+		screenMinX = activity.screenMinX;
+		screenMinY = activity.screenMinY;
+		screenDimensionMultiplier = activity.screenDimensionMultiplier;
 		paint.setAntiAlias(true);
 		paint.setDither(true);
 		paint.setFilterBitmap(true);
 		setBackgroundColor(Color.BLACK);
 		setKeepScreenOn(true); // so screen doesnt shut off when game is left inactive
-		player = new Player(this); // creates player object
 		detect = new PlayerGestureDetector(this); // creates gesture detector object
 		setOnTouchListener(detect);
 		detect.setPlayer(player);
-		changePlayOptions();
-		frameCaller.run();
-		startFighting(levelToStart);
-	}
-	/**
-	 * starts a new round of fighting, sets difficulty and loads level
-	 * @param levelNumSet level to start
-	 */
-	protected void startFighting(int levelNumSet)
-	{
-		endFighting();
-		levelNum = levelNumSet;
-		difficultyLevelMultiplier *= 0.5+(Math.pow(getLevelWinningsMultiplier((int)(levelNum/10)+2), 0.2)/2); // set difficulty for level
-		loadLevel(); // create enemies walls etc.
-	}
-	/**
-	 * changes difficulty of level
-	 * @param difficultyLevelSet new difficulty to set
-	 */
-	protected void changeDifficulty(int difficultyLevelSet)
-	{
-		difficultyLevel = difficultyLevelSet;
-		difficultyLevelMultiplier = 15 / (double)(difficultyLevel + 5); // set difficulty multiplier
-		activity.saveGame(); // saves game state in case of interuption
-	}
-	/**
-	 * changes look of background when options are changed
-	 */
-	protected void changePlayOptions()
-	{
 		background = drawStart(); // redraws play screen
 		invalidate();
-		activity.saveGame(); // saves game state in case of interuption
+		activity.saveGame();
 	}
 	/**
 	 * creates a rectangle wall object
@@ -463,7 +422,7 @@ public final class Controller extends View
 		paint.setColor(cooldownColor);
 		g.drawRect(404, 94, 404 + (int)((63 * player.abilityTimer_burst) / 500), 104, paint);
 		g.drawRect(404, 199, 404 + (int)((63 * player.abilityTimer_roll) / 120), 209, paint);
-		g.drawRect(404, 303, 404 + (int)((63 * player.abilityTimer_Proj_Tracker) / (91+(activity.premiumUpgrades[0]*20))), 313, paint);
+		g.drawRect(404, 303, 404 + (int)((63 * player.abilityTimer_Proj_Tracker) / 91), 313, paint);
 		paint.setStyle(Paint.Style.FILL);
 		paint.setColor(Color.BLACK);
 		paint.setAlpha(151);
@@ -486,52 +445,27 @@ public final class Controller extends View
 		playerHit++;
 		playerBursted++;
 		spriteController.frameCall();
-		if(hasKey && getDistance(player.x, player.y, exitX, exitY) < 30)
+		if(!player.deleted)
 		{
-			activity.winFight();
+			player.frameCall();
+			if(player.x < 10) player.x = (10);
+			if(player.x > levelWidth - 10) player.x = (levelWidth - 10);
+			if(player.y < 10) player.y = (10);
+			if(player.y > levelHeight - 10) player.y = (levelHeight - 10);
 		}
-		else
+		for(int i = 0; i < wallRects.size(); i++)
 		{
-			if(!player.deleted)
-			{
-				player.frameCall();
-					if(player.x < 10) player.x = (10);
-					if(player.x > levelWidth - 10) player.x = (levelWidth - 10);
-					if(player.y < 10) player.y = (10);
-					if(player.y > levelHeight - 10) player.y = (levelHeight - 10);
-			}
+				wallRects.get(i).frameCall();
 		}
-		if(activity.gameRunning)
+		for(int i = 0; i < wallCircles.size(); i++)
 		{
-			if(levelNum == 20)
-			{
-				if(player.x > 619 && player.y > 140 && player.y < 160)
-				{
-					loadLevelSection(21);
-				}
-			}
-			if(levelNum == 21)
-			{
-				if(player.x > 544 && player.y > 140 && player.y < 160)
-				{
-					loadLevelSection(22);
-				}
-			}
-			for(int i = 0; i < wallRects.size(); i++)
-			{
-					wallRects.get(i).frameCall();
-			}
-			for(int i = 0; i < wallCircles.size(); i++)
-			{
-					wallCircles.get(i).frameCall();
-			}
-			for(int i = 0; i < wallRings.size(); i++)
-			{
-					wallRings.get(i).frameCall();
-			}
-			invalidate();
+				wallCircles.get(i).frameCall();
 		}
-		activity.resetVolume();
+		for(int i = 0; i < wallRings.size(); i++)
+		{
+				wallRings.get(i).frameCall();
+		}
+		invalidate();
 	}
 	protected boolean playerOnSquare(double x1, double y1, double width, double height)
 	{
