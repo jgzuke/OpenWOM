@@ -27,7 +27,6 @@ abstract public class Enemy extends Human
 	protected int pathedToHitLength = 0;
 	protected boolean HasLocation = false;
 	protected boolean LOS = false;
-	protected int checkLOSTimer = 1;
 	protected double distanceFound;
 	private int dangerCheckCounter;
 	protected boolean keyHolder = false;
@@ -101,6 +100,7 @@ abstract public class Enemy extends Human
 	}
 	private void everySingleFrame()
 	{
+		hadLOSLastTime--;
 		if(sick)
 		{
 			hp -= 20;
@@ -310,7 +310,6 @@ abstract public class Enemy extends Human
 	 */
 	protected void checkLOS()
 	{
-		hadLOSLastTime--;
 		double rads2 = Math.atan2((control.player.y - y), (control.player.x - x));
 		if(control.player.rollTimer>0 && hadLOSLastTime<1)
 		{
@@ -323,24 +322,22 @@ abstract public class Enemy extends Human
 			if(difference>90&&checkDistance(x, y, control.player.x, control.player.y)>50)
 			{
 				LOS = false;
-				HasLocation = hadLOSLastTime>0;
 			} else
 			{
 				if(!control.checkObstructionsPoint((float)x, (float)y, (float)control.player.x, (float)control.player.y, false))
 				{
 					LOS = true;
-					HasLocation = true;
-					hadLOSLastTime = 5;
+					hadLOSLastTime = 25;
 					lastPlayerX = control.player.x;
 					lastPlayerY = control.player.y;
 					checkedPlayerLast = false;
 				} else
 				{
 					LOS = false;
-					HasLocation = hadLOSLastTime>3;
 				}
 			}
 		}
+		HasLocation = hadLOSLastTime>0;
 		if(HasLocation)	//tell others where player is
 		{
 			for(int i = 0; i < control.spriteController.enemies.size(); i++)
@@ -352,7 +349,6 @@ abstract public class Enemy extends Human
 				}
 			}
 		}
-		checkLOSTimer = 10;
 	}
 	protected void turnToward(double nx, double ny)
 	{

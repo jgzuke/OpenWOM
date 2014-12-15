@@ -18,8 +18,7 @@ public final class Enemy_Default extends Enemy
 	@Override
 	protected void frameCall()
 	{
-		checkLOSTimer--;
-		if(checkLOSTimer < 1) checkLOS();
+		checkLOS();
 		checkDanger();
 		if(action.equals("Stun"))
 		{
