@@ -48,7 +48,7 @@ public class Wall_Circle extends Wall
 			rads = Math.atan2(ydif, xdif);
 			if(Math.pow(xdif, 2) + Math.pow(ydif/oCRatio, 2) < oCRS)
 			{
-				if(!control.checkHitBackPass(control.player.x, control.player.y, true))
+				if(!control.checkHitBackPass(control.player.x, control.player.y, true, 0))
 				{
 					control.player.x = oCX - (Math.cos(rads) * oCR);
 					control.player.y = oCY - (Math.sin(rads) * oCR);
@@ -64,7 +64,7 @@ public class Wall_Circle extends Wall
 				rads = Math.atan2(ydif, xdif);
 				if(Math.pow(xdif, 2) + Math.pow(ydif/oCRatio, 2) < oCRS)
 				{
-					if(!control.checkHitBackPass(enemies.get(i).x, enemies.get(i).y, true))
+					if(!control.checkHitBackPass(enemies.get(i).x, enemies.get(i).y, true, 0))
 					{
 						enemies.get(i).x = oCX - (Math.cos(rads) * oCR);
 						enemies.get(i).y = oCY - (Math.sin(rads) * oCR);
