@@ -784,7 +784,7 @@ public final class Controller extends View
 		}
 		for(int i = 0; i < wallCircleValues.size(); i++)
 		{
-			int [] values = wallCircleValues.get(i);
+			int [] values = wallCircleValues.get(i).clone();
 			if(values[3]==1||objectOnGround) // OBJECT IS TALL OR OBJECT ON GROUND
 			{
 				values[2]+=expand;
@@ -818,7 +818,7 @@ public final class Controller extends View
 		}
 		for(int i = 0; i < wallRectValues.size(); i++)
 		{
-			int [] values = wallRectValues.get(i);
+			int [] values = wallRectValues.get(i).clone();
 			if(values[4]==1||objectOnGround) // OBJECT IS TALL
 			{
 				values[0]-=expand;
@@ -828,7 +828,7 @@ public final class Controller extends View
 				if(!hitBack)
 				{
 					//Right and left Checks
-					if(x1 < values[0] && values[0] < x2)
+					if(x1 < values[0] && values[0] < x2) // if left sid of wall 
 					{
 						tempY = (m1 * values[0]) + b1;
 						if(values[2] < tempY && tempY < values[3])
@@ -865,7 +865,7 @@ public final class Controller extends View
 		}
 		for(int i = 0; i < wallRingValues.size(); i++)
 		{
-			int [] values = wallRingValues.get(i);
+			int [] values = wallRingValues.get(i).clone();
 			if(values[4]==1||objectOnGround) // OBJECT IS TALL
 			{
 				values[2]-=expand;

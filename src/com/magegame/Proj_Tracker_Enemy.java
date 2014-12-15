@@ -23,7 +23,7 @@ public final class Proj_Tracker_Enemy extends Proj_Tracker
 		xForward = Xforward;
 		yForward = Yforward;
 		power = Power;
-		if((control.player.frame < 22|| control.player.frame==31)&& !deleted) // currentframe under 22 because if player rolls it doesnt hit
+		if((control.player.frame < 22|| control.player.frame>29)&& !deleted) // currentframe under 22 because if player rolls it doesnt hit
 		{
 			xDif = x - control.player.x;
 			yDif = y - control.player.y;

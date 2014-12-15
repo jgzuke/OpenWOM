@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 abstract public class Enemy extends Human
 {
-	private int fromWall = 0;
+	private int fromWall = 5;
 	protected int runTimer = 0;
 	protected int stunTimer = 0;
 	protected int worth = 3;
