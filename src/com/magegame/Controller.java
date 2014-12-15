@@ -765,7 +765,7 @@ public final class Controller extends View
 	 * @param y2 second y
 	 * @return whether it could travel between points
 	 */
-	protected boolean checkObstructionsPoint(float x1, float y1, float x2, float y2, boolean objectOnGround)
+	protected boolean checkObstructionsPoint(float x1, float y1, float x2, float y2, boolean objectOnGround, int expand)
 	{
 		boolean hitBack = false;
 		float m1 = (y2 - y1) / (x2 - x1);
@@ -795,7 +795,7 @@ public final class Controller extends View
 					if(x1 < tempX && tempX < x2)
 					{
 						tempY = (circM * tempX) + circB;
-						if(Math.sqrt(Math.pow(tempX - values[0], 2) + Math.pow((tempY - values[1]), 2)) < values[2])
+						if(Math.sqrt(Math.pow(tempX - values[0], 2) + Math.pow((tempY - values[1]), 2)) < values[2]+expand)
 						{
 							hitBack = true;
 						}
@@ -823,35 +823,35 @@ public final class Controller extends View
 				if(!hitBack)
 				{
 					//Right and left Checks
-					if(x1 < values[0] && values[0] < x2)
+					if(x1 < values[0]-expand && values[0]-expand < x2)
 					{
 						tempY = (m1 * values[0]) + b1;
-						if(values[2] < tempY && tempY < values[3])
+						if(values[2]-expand < tempY && tempY < values[3]+expand)
 						{
 							hitBack = true;
 						}
 					}
-					if(x1 < values[1] && values[1] < x2)
+					if(x1 < values[1]+expand && values[1]+expand < x2)
 					{
 						tempY = (m1 * values[1]) + b1;
-						if(values[2] < tempY && tempY < values[3])
+						if(values[2]-expand < tempY && tempY < values[3]+expand)
 						{
 							hitBack = true;
 						}
 					}
 					//Top and Bottom checks
-					if(y1 < values[2] && values[2] < y2)
+					if(y1 < values[2]-expand && values[2]-expand < y2)
 					{
 						tempX = (values[2] - b1) / m1;
-						if(values[0] < tempX && tempX < values[1])
+						if(values[0]-expand < tempX && tempX < values[1]+expand)
 						{
 							hitBack = true;
 						}
 					}
-					if(y1 < values[3] && values[3] < y2)
+					if(y1 < values[3]+expand && values[3]+expand < y2)
 					{
 						tempX = (values[2] - b1) / m1;
-						if(values[0] < tempX && tempX < values[1])
+						if(values[0]-expand < tempX && tempX < values[1]+expand)
 						{
 							hitBack = true;
 						}
@@ -859,11 +859,30 @@ public final class Controller extends View
 				}
 			}
 		}
+		private ArrayList<int[]> wallPassageValues = new ArrayList<int[]>(); // int[] is x1, x2, y1, y2
+		private ArrayList<int[]> wallRingValues = new ArrayList<int[]>(); // int[] is x, y, radiusInner, radiusOuter, tall or not
+		
 		for(int i = 0; i < wallRingValues.size(); i++)
 		{
 			int [] values = wallRingValues.get(i);
 			if(values[4]==1||objectOnGround) // OBJECT IS TALL
 			{
+				if(!hitBack)
+				{
+					circM = -(1 / m1);
+					circB = values[1] - (circM * values[0]);
+					tempX = (circB - b1) / (m1 - circM);
+					if(x1 < tempX && tempX < x2)
+					{
+						tempY = (circM * tempX) + circB;
+						if(Math.sqrt(Math.pow(tempX - values[0], 2) + Math.pow((tempY - values[1]), 2)) < values[2]+expand)
+						{
+							hitBack = true;
+						}
+					}
+				}
+				
+				
 				if(!hitBack)
 				{
 					double a = Math.pow(m1, 2) + 1;
