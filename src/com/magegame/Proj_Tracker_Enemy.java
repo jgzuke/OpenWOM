@@ -91,7 +91,7 @@ public final class Proj_Tracker_Enemy extends Proj_Tracker
 	@Override
 	protected void hitBack(int px, int py)
 	{
-		if(control.checkHitBack(px, py, false, 3) && !deleted)
+		if(control.checkHitBack(px, py, false) && !deleted)
 		{
 			explodeBack();
 		}

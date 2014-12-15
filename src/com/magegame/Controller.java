@@ -767,6 +767,7 @@ public final class Controller extends View
 	 */
 	protected boolean checkObstructionsPoint(float x1, float y1, float x2, float y2, boolean objectOnGround, int expand)
 	{
+		boolean hitBack = false;
 		float m1 = (y2 - y1) / (x2 - x1);
 		float b1 = y1 - (m1 * x1);
 		float circM;
@@ -775,20 +776,20 @@ public final class Controller extends View
 		float tempY;
 		if(x1 < 0 || x1 > levelWidth || y1 < 0 || y1 > levelHeight)
 		{
-			return true;
+			hitBack = true;
 		}
 		if(x2 < 0 || x2 > levelWidth || y2 < 0 || y2 > levelHeight)
 		{
-			return true;
+			hitBack = true;
 		}
-		if(checkHitBack(x1, y1, objectOnGround, expand)) return true;
-		if(checkHitBack(x2, y2, objectOnGround, expand)) return true;
 		for(int i = 0; i < wallCircleValues.size(); i++)
 		{
 			int [] values = wallCircleValues.get(i);
 			if(values[3]==1||objectOnGround) // OBJECT IS TALL OR OBJECT ON GROUND
 			{
 				values[2]+=expand;
+				if(!hitBack)
+				{
 					circM = -(1 / m1);
 					circB = values[1] - (circM * values[0]);
 					tempX = (circB - b1) / (m1 - circM);
@@ -797,9 +798,10 @@ public final class Controller extends View
 						tempY = (circM * tempX) + circB;
 						if(Math.sqrt(Math.pow(tempX - values[0], 2) + Math.pow((tempY - values[1]), 2)) < values[2])
 						{
-							return true;
+							hitBack = true;
 						}
 					}
+				}
 			}
 		}
 		if(x1 > x2)
@@ -823,13 +825,15 @@ public final class Controller extends View
 				values[1]+=expand;
 				values[2]-=expand;
 				values[3]+=expand;
+				if(!hitBack)
+				{
 					//Right and left Checks
 					if(x1 < values[0] && values[0] < x2)
 					{
 						tempY = (m1 * values[0]) + b1;
 						if(values[2] < tempY && tempY < values[3])
 						{
-							return true;
+							hitBack = true;
 						}
 					}
 					if(x1 < values[1] && values[1] < x2)
@@ -837,7 +841,7 @@ public final class Controller extends View
 						tempY = (m1 * values[1]) + b1;
 						if(values[2] < tempY && tempY < values[3])
 						{
-							return true;
+							hitBack = true;
 						}
 					}
 					//Top and Bottom checks
@@ -846,16 +850,17 @@ public final class Controller extends View
 						tempX = (values[2] - b1) / m1;
 						if(values[0] < tempX && tempX < values[1])
 						{
-							return true;
+							hitBack = true;
 						}
 					} else if(y1 < values[3] && values[3] < y2)
 					{
 						tempX = (values[2] - b1) / m1;
 						if(values[0] < tempX && tempX < values[1])
 						{
-							return true;
+							hitBack = true;
 						}
 					}
+				}
 			}
 		}
 		for(int i = 0; i < wallRingValues.size(); i++)
@@ -865,6 +870,8 @@ public final class Controller extends View
 			{
 				values[2]-=expand;
 				values[3]+=expand;
+				if(!hitBack)
+				{
 					double a = Math.pow(m1, 2) + 1;
 					double b = 2 * ((m1 * b1) - (m1 * values[1]) - (values[0]));
 					double c = Math.pow(b1, 2) + (Math.pow(values[1], 2)) - (2 * b1 * values[1]) + Math.pow(values[0], 2) - Math.pow(140, 2);
@@ -877,23 +884,24 @@ public final class Controller extends View
 						if(x1 < pointX1 && pointX1 < x2)
 						{
 							double pointY = (m1 * pointX1) + b1;
-							if(!checkHitBackPass(pointX1, pointY, objectOnGround, expand))
+							if(!checkHitBackPass(pointX1, pointY, objectOnGround))
 							{
-								return true;
+								hitBack = true;
 							}
 						}
 						if(x1 < pointX2 && pointX2 < x2)
 						{
 							double pointY = (m1 * pointX2) + b1;
-							if(!checkHitBackPass(pointX2, pointY, objectOnGround, expand))
+							if(!checkHitBackPass(pointX2, pointY, objectOnGround))
 							{
-								return true;
+								hitBack = true;
 							}
 						}
 					}
+				}
 			}
 		}
-		return false;
+		return hitBack;
 	}
 	/**
 	 * returns distance between two points
@@ -927,7 +935,7 @@ public final class Controller extends View
 	 * @param Y y point
 	 * @return whether it hits
 	 */
-	protected boolean checkHitBack(double X, double Y, boolean objectOnGround, int expand)
+	protected boolean checkHitBack(double X, double Y, boolean objectOnGround)
 	{
 		boolean hitBack = false;
 		if(X < 0 || X > levelWidth || Y < 0 || Y > levelHeight)
@@ -941,10 +949,6 @@ public final class Controller extends View
 				int [] values = wallRectValues.get(i);
 				if(values[4]==1||objectOnGround) // OBJECT IS TALL
 				{
-					values[0]-=expand;
-					values[1]+=expand;
-					values[2]-=expand;
-					values[3]+=expand;
 					if(hitBack == false)
 					{
 						if(X > values[0] && X < values[1])
@@ -965,7 +969,6 @@ public final class Controller extends View
 				int [] values = wallCircleValues.get(i);
 				if(values[3]==1||objectOnGround) // OBJECT IS TALL
 				{
-					values[2]+=expand;
 					if(hitBack == false)
 					{
 						if(Math.pow(X - values[1], 2) + Math.pow((Y - values[2]), 2) < Math.pow(values[3], 2))
@@ -983,22 +986,16 @@ public final class Controller extends View
 				int [] values = wallRingValues.get(i);
 				if(values[4]==1||objectOnGround) // OBJECT IS TALL
 				{
-					values[2]-=expand;
-					values[3]+=expand;
 					if(hitBack == false)
 					{
 						double dist = Math.pow(X - values[0], 2) + Math.pow((Y - values[1]), 2);
 						if(dist < Math.pow(values[3], 2) && dist > Math.pow(values[2], 2))
 						{
-							hitBack = true;
+							hitBack = !checkHitBackPass(X, Y, objectOnGround);
 						}
 					}
 				}
 			}
-		}
-		if(hitBack)
-		{
-			hitBack = !checkHitBackPass(X, Y, objectOnGround, expand);
 		}
 		return hitBack;
 	}
@@ -1008,7 +1005,7 @@ public final class Controller extends View
 	 * @param Y y point
 	 * @return whether it hits
 	 */
-	protected boolean checkHitBackPass(double X, double Y, boolean objectOnGround, int expand)
+	protected boolean checkHitBackPass(double X, double Y, boolean objectOnGround)
 	{
 		boolean hitBack = false;
 		for(int i = 0; i < wallPassageValues.size(); i++)
@@ -1018,10 +1015,6 @@ public final class Controller extends View
 				int [] values = wallRingValues.get(i); // valeus[4] is true when passage is for lower and upper area
 				if(values[4]==1||!objectOnGround) // OBJECT IS TALL
 				{
-					values[0]-=expand;
-					values[1]+=expand;
-					values[2]-=expand;
-					values[3]+=expand;
 					if(X > values[0] && X < values[1])
 					{
 						if(Y > values[2] && Y < values[3])

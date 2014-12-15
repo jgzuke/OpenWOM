@@ -309,9 +309,9 @@ abstract public class Enemy extends Human
 	/**
 	 * Checks whether object can 'see' player
 	 */
-	protected void checkLOS()
+	protected void checkLOS(int px, int py)
 	{
-		double rads2 = Math.atan2((control.player.y - y), (control.player.x - x));
+		double rads2 = Math.atan2((py - y), (px - x));
 		if(control.player.rollTimer>0 && hadLOSLastTime<1)
 		{
 			LOS = false;
@@ -320,17 +320,17 @@ abstract public class Enemy extends Human
 			double rot2 = rads2*r2d;
 			double difference = Math.abs(rotation-rot2);
 			if(difference>180) difference = 360-difference;
-			if(difference>90&&checkDistance(x, y, control.player.x, control.player.y)>50)
+			if(difference>90&&checkDistance(x, y, px, py)>50)
 			{
 				LOS = false;
 			} else
 			{
-				if(!control.checkObstructionsPoint((float)x, (float)y, (float)control.player.x, (float)control.player.y, false, fromWall))
+				if(!control.checkObstructionsPoint((float)x, (float)y, (float)px, (float)py, false, fromWall))
 				{
 					LOS = true;
 					hadLOSLastTime = 25;
-					lastPlayerX = control.player.x;
-					lastPlayerY = control.player.y;
+					lastPlayerX = px;
+					lastPlayerY = py;
 					checkedPlayerLast = false;
 				} else
 				{
@@ -346,7 +346,7 @@ abstract public class Enemy extends Human
 				Enemy enemy = control.spriteController.enemies.get(i);
 				if(!enemy.HasLocation&&checkDistance(x, y, enemy.x, enemy.y)<200)
 				{
-					enemy.turnToward(control.player.x, control.player.y);
+					enemy.turnToward(px, py);
 				}
 			}
 		}
@@ -585,7 +585,7 @@ abstract public class Enemy extends Human
 			if(!control.checkObstructionsPoint(x*20, y*20, eX, eY, true, fromWall)) return i;
 			if(x>0)
 			{	//if were not on the edge, we havent checked it, and its free
-				if(!checked[x-1][y]&&!control.checkHitBack((x-1)*20, y*20, true, fromWall))
+				if(!checked[x-1][y]&&!control.checkHitBack((x-1)*20, y*20, true))
 				{
 					int[] newPoint = {x-1, y, x, y}; // its a new endpoint
 					points.add(newPoint);
@@ -594,7 +594,7 @@ abstract public class Enemy extends Human
 			}
 			if(x<checked.length-1)
 			{
-				if(!checked[x+1][y]&&!control.checkHitBack((x+1)*20, y*20, true, fromWall))
+				if(!checked[x+1][y]&&!control.checkHitBack((x+1)*20, y*20, true))
 				{
 					int[] newPoint = {x+1, y, x, y};
 					points.add(newPoint);
@@ -603,7 +603,7 @@ abstract public class Enemy extends Human
 			}
 			if(y>0)
 			{
-				if(!checked[x][y-1]&&!control.checkHitBack(x*20, (y-1)*20, true, fromWall))
+				if(!checked[x][y-1]&&!control.checkHitBack(x*20, (y-1)*20, true))
 				{
 					int[] newPoint = {x, y-1, x, y};
 					points.add(newPoint);
@@ -612,7 +612,7 @@ abstract public class Enemy extends Human
 			}
 			if(y<checked[0].length-1)
 			{
-				if(!checked[x][y+1]&&!control.checkHitBack(x*20, (y+1)*20, true, fromWall))
+				if(!checked[x][y+1]&&!control.checkHitBack(x*20, (y+1)*20, true))
 				{
 					int[] newPoint = {x, y+1, x, y};
 					points.add(newPoint);

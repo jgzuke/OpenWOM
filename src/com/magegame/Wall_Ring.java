@@ -59,7 +59,7 @@ public class Wall_Ring extends Wall
 			double dist = Math.pow(xdif, 2) + Math.pow(ydif, 2);
 			if(dist < oCRSOut&&dist>oCRSIn)
 			{
-				if(!control.checkHitBackPass(curX, curY, true, 0))
+				if(!control.checkHitBackPass(curX, curY, true))
 				{
 					if(dist<oCRSAve)
 					{
@@ -85,7 +85,7 @@ public class Wall_Ring extends Wall
 				dist = Math.pow(xdif, 2) + Math.pow(ydif, 2);
 				if(dist < oCRSOut&&dist>oCRSIn)
 				{
-					if(!control.checkHitBackPass(curX, curY, true, 0))
+					if(!control.checkHitBackPass(curX, curY, true))
 					{
 						if(dist<oCRSAve)
 						{
