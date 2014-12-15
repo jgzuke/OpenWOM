@@ -73,14 +73,11 @@ public final class Controller extends View
 	private ArrayList<int[]> wallRectValues = new ArrayList<int[]>(); // int[] is x1, x2, y1, y2, tall or not
 	private ArrayList<int[]> wallCircleValues = new ArrayList<int[]>(); // int[] is x, y, radius, tall or not
 	private Rect aoeRect = new Rect();
-	private boolean gameEnded = false;
 	protected Player player;
 	protected Context context;
 	protected ImageLibrary imageLibrary;
 	private Random randomGenerator = new Random();
-	protected int difficultyLevel;
 	private int wallExtraWidth = 3;
-	private double difficultyLevelMultiplier;
 	protected int levelNum = 10;
 	private Bitmap background;
 	protected Bitmap tempPicture;
@@ -126,8 +123,7 @@ public final class Controller extends View
 		imageLibrary = new ImageLibrary(startSet, this); // creates image library
 		player = new Player(this); // creates player object
 		setUpStuff();
-		endFighting();
-		loadLevel(); // create enemies walls etc.
+		loadLevel(1); // create enemies walls etc.
 		frameCaller.run();
 	}
 	private void setUpStuff()
@@ -199,33 +195,18 @@ public final class Controller extends View
 		wallCircles.add(new Wall_Circle(this, x, y, rad + wallExtraWidth, ratio, tall));
 	}
 	/**
-	 * ends a round of fighting and resets variables
-	 */
-	protected void endFighting()
-	{
-		player.resetVariables(); // resets players variables
-		moneyMade = 0;
-		hasKey = false;
-		spriteController.clearObjectArrays();
-		clearWallArrays();
-		gameEnded = false;
-		imageLibrary.currentLevelTop = null;
-		activity.saveGame(); // saves game in case phone shuts down etc.
-	}
-	/**
 	 * loads a new level, creates walls enemies etc.
 	 */
-	protected void loadLevel()
+	protected void loadLevel(int toLoad)
 	{
 		clearWallArrays();
-		if(levelNum == 10)
-		{			// *******EXAMPLE FOR COMMENTS FOR LOADLEVEL SECTION
+		levelNum = toLoad;
+		if(toLoad==1)
+		{
 			levelWidth = 450; // height of level
 			levelHeight = 300; // width of level
 			player.x = 30; // player start x
 			player.y = 30; // player start y
-			exitX = 35;
-			exitY = 165;
 			spriteController.makeEnemy(1, 269, 86);
 			spriteController.makeEnemy(1, 358, 140, true);
 			spriteController.makeEnemy(1, 365, 204);
@@ -243,50 +224,7 @@ public final class Controller extends View
 			makeWall_Rectangle(179, -32, 38, 63, true, true);
 			makeWall_Rectangle(318, -41, 66, 63, true, true);
 		}
-		if(levelNum == 20)
-		{
-			levelWidth = 300; // height of level
-			levelHeight = 660; // width of level
-			player.x = 20; // player start x
-			player.y = 640; // player start y
-			exitX = 227;
-			exitY = 610;
-			spriteController.makeEnemy(1, 54, 377);
-			spriteController.makeEnemy(1, 150, 100, true);
-			spriteController.makeEnemy(1, 35, 484);
-			spriteController.makeEnemy(1, 227, 333);
-			spriteController.makeEnemy(1, 35, 114);
-			spriteController.makeEnemy(1, 262, 110);
-			spriteController.makeEnemy(2, 150, 315);
-			spriteController.makeEnemy(2, 99, 195);
-			spriteController.makeEnemy(2, 213, 195);
-			makeWall_Rectangle(105, 279, 15, 120, true, true);
-			makeWall_Rectangle(180, 280, 15, 120, true, true);
-			makeWall_Rectangle(-22, 565, 143, 16, true, true);
-			makeWall_Rectangle(105, 461, 15, 120, true, true);
-			makeWall_Rectangle(180, 565, 143, 16, true, true);
-			makeWall_Rectangle(180, 460, 15, 120, true, true);
-			makeWall_Rectangle(263, 571, 61, 76, true, true);
-			makeWall_Rectangle(-9, 572, 47, 33, true, true);
-			makeWall_Rectangle(262, 321, 47, 60, true, true);
-			makeWall_Rectangle(262, 400, 47, 60, true, true);
-			makeWall_Rectangle(262, 481, 47, 60, true, true);
-			makeWall_Rectangle(-7, 253, 102, 41, true, true);
-			makeWall_Rectangle(207, 253, 102, 42, true, true);
-			makeWall_Rectangle(-55, -45, 425, 84, true, true);
-			makeWall_Circle(225, 38, 56, 1, false);
-			makeWall_Circle(74, 38, 56, 1, false);
-			makeWall_Rectangle(216, 224, 89, 54, true, false);
-			makeWall_Rectangle(241, 200, 29, 77, true, false);
-			makeWall_Rectangle(10, 224, 79, 54, true, false);
-			makeWall_Rectangle(35, 200, 29, 77, true, false);
-			makeWall_Rectangle(0, 284, 111, 72, true, false);
-			makeWall_Rectangle(0, 502, 114, 101, true, false);
-			makeWall_Rectangle(-7, 585, 46, 35, true, false);
-			makeWall_Rectangle(235, 637, 71, 35, true, false);
-			makeWall_Rectangle(72, 637, 73, 43, true, false);
-		}
-		imageLibrary.loadLevel(levelNum, levelWidth, levelHeight);
+		imageLibrary.loadLevel(toLoad, levelWidth, levelHeight);
 	}
 	private void clearWallArrays()
 	{
@@ -518,7 +456,6 @@ public final class Controller extends View
 			h = 0;
 		}
 		g.drawBitmap(imageLibrary.currentLevel, 0, 0, paint);
-		drawBitmapLevel(imageLibrary.exitFightPortal, exitX - 30, exitY - 30, g);
 		spriteController.drawStructures(g, paint, imageLibrary);
 		spriteController.drawSprites(g, paint, imageLibrary, aoeRect);
 		if(imageLibrary.currentLevelTop != null)
@@ -607,12 +544,9 @@ public final class Controller extends View
 	@Override
 	protected void onDraw(Canvas g)
 	{
-		if(activity.gameRunning)
-		{
 			g.translate(screenMinX, screenMinY);
 			g.scale((float) screenDimensionMultiplier, (float) screenDimensionMultiplier);
 			drawNotPaused(g);
-		}
 	}
 	/**
 	 * draw normal unpaused screen
@@ -674,10 +608,6 @@ public final class Controller extends View
 		if(player.powerUpTimer > 0)
 		{
 			g.drawBitmap(imageLibrary.powerUpBigs[player.powerID - 1], 10, 25, paint);
-		}
-		if(hasKey)
-		{
-			g.drawBitmap(imageLibrary.powerUpBigs[4], 10, 25, paint);
 		}
 	}
 	/**
@@ -1040,22 +970,6 @@ public final class Controller extends View
 		}
 	}
 	/**
-	 * returns difficultyLevel
-	 * @return difficultyLevel
-	 */
-	protected int getDifficultyLevel()
-	{
-		return difficultyLevel;
-	}
-	/**
-	 * returns difficultyLevelMultiplier
-	 * @return difficultyLevelMultiplier
-	 */
-	protected double getDifficultyLevelMultiplier()
-	{
-		return difficultyLevelMultiplier;
-	}
-	/**
 	 * returns random integer between 0 and i-1
 	 * @param i returns int between one less than this and 0
 	 * @return random integer between 0 and i-1
@@ -1079,14 +993,6 @@ public final class Controller extends View
 	protected int getLevelNum()
 	{
 		return levelNum;
-	}
-	/**
-	 * returns whether game has ended
-	 * @return whether game has ended
-	 */
-	protected boolean getGameEnded()
-	{
-		return gameEnded;
 	}
 	/**
 	 * sets values for an index of all rectangle tall wall value arrays

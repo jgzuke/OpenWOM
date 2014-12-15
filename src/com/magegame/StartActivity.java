@@ -78,7 +78,8 @@ public class StartActivity extends Activity
 		boolean firstTime = readSavedData();
 		context = this;
 		startMusic();
-		setContentView(R.layout.activity_main);
+		control = new Controller(this, this);
+		setContentView(control);
 	}
 	private boolean readSavedData()
 	{
