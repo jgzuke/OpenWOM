@@ -33,7 +33,7 @@ public final class Proj_Tracker_AOE_Player extends Proj_Tracker_AOE
 					yDif = y - spriteController.enemies.get(i).y;
 					if(Math.sqrt(Math.pow(xDif, 2) + Math.pow(yDif, 2)) < widthDone+15)
 					{
-						double damage = 60*Math.pow((double)control.activity.upgrades[0]/10, 0.5);
+						double damage = 60;
 						spriteController.enemies.get(i).getHit((int)damage);
 					}
 				}
@@ -46,7 +46,7 @@ public final class Proj_Tracker_AOE_Player extends Proj_Tracker_AOE
 					yDif = y - spriteController.structures.get(i).y;
 					if(Math.sqrt(Math.pow(xDif, 2) + Math.pow(yDif, 2)) < widthDone+15)
 					{
-						double damage = 60*Math.pow((double)control.activity.upgrades[0]/10, 0.5);
+						double damage = 60;
 						spriteController.structures.get(i).getHit((int)damage);
 					}
 				}

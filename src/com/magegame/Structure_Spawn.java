@@ -15,7 +15,6 @@ public class Structure_Spawn extends Structure
 		super(X, Y, 25, 25, 0, creator.imageLibrary.structure_Spawn);
 		control = creator;
 		hp = 6000;
-		baseHp();
 		hpMax = hp;
 		worth = 17;
 	}

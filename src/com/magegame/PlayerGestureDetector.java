@@ -14,8 +14,6 @@ public class PlayerGestureDetector implements OnTouchListener {
 	private int screenMinY;
 	private int trackingId;
 	private int actionMask;
-	private double xTouch;
-	private double yTouch;
 	protected int buttonShiftX;
 	private int touchingShootID = 0;
 	/**
@@ -132,7 +130,7 @@ public class PlayerGestureDetector implements OnTouchListener {
 		boolean touched = false;
 		if(control.pointOnSquare(x, y, 0, 0, 50, 50))
         {
-        	control.activity.pauseGame();
+        	control.pause();
         	touched = true;
         } else if(control.pointOnCircle(x, y, 427-(buttonShiftX*0.95897), 267, 65))
         {

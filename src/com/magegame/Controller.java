@@ -226,6 +226,14 @@ public final class Controller extends View
 		}
 		imageLibrary.loadLevel(toLoad, levelWidth, levelHeight);
 	}
+	protected void die()
+	{
+		//TODO
+	}
+	protected void pause()
+	{
+		//TODO
+	}
 	private void clearWallArrays()
 	{
 		wallPassageValues.clear();

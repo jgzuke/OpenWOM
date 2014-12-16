@@ -44,10 +44,9 @@ abstract public class Structure extends Sprite
 	{
 		if(!deleted)
 		{
-			control.player.abilityTimer_burst += damage*control.activity.premiumUpgrades[2]/30;
-			control.player.abilityTimer_roll += damage*control.activity.premiumUpgrades[2]/50;
-			control.player.abilityTimerTransformed_pound += damage*control.activity.premiumUpgrades[2]/50;
-			control.player.abilityTimer_Proj_Tracker += damage*control.activity.premiumUpgrades[2]/100;
+			control.player.abilityTimer_burst += damage/30;
+			control.player.abilityTimer_roll += damage/50;
+			control.player.abilityTimer_Proj_Tracker += damage/100;
 			control.player.sp += damage*0.00003;
 			hp -= damage;
 			if(hp < 1)
@@ -76,8 +75,5 @@ abstract public class Structure extends Sprite
 				}
 			}
 		}
-	}
-	protected void baseHp() {
-		hp *= Math.pow(control.getDifficultyLevelMultiplier(), ((double)hp/10000));
 	}
 }

@@ -32,7 +32,7 @@ public final class Proj_Tracker_Enemy extends Proj_Tracker
 				control.player.getHit(power*4);
 				deleted = true;
 				control.activity.playEffect("arrowhit");
-				if(control.getRandomDouble()*(0.5+control.getDifficultyLevelMultiplier()) > 1.7) // chance of stunning player
+				if(control.getRandomDouble() > 0.8) // chance of stunning player
 				{
 					control.player.rads = Math.atan2(yForward, xForward);
 					control.player.stun();
@@ -47,8 +47,6 @@ public final class Proj_Tracker_Enemy extends Proj_Tracker
 	protected void frameCall()
 	{
 		super.frameCall();
-		double tempX = x;
-		double tempY = y;
 	}
 	@ Override
 	/**
@@ -80,7 +78,7 @@ public final class Proj_Tracker_Enemy extends Proj_Tracker
 				control.player.getHit(power*4);
 				deleted = true;
 				control.activity.playEffect("arrowhit");
-				if(control.getRandomDouble()*(0.5+control.getDifficultyLevelMultiplier()) > 1.7) // chance of stunning player
+				if(control.getRandomDouble() > 0.8) // chance of stunning player
 				{
 					control.player.rads = Math.atan2(yForward, xForward);
 					control.player.stun();

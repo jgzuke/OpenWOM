@@ -18,8 +18,6 @@ public final class Player extends Human
 	protected double abilityTimer_roll = 0;
 	protected double abilityTimer_burst = 0;
 	protected double abilityTimer_Proj_Tracker = 0;
-	protected double abilityTimerTransformed_pound = 0;
-	protected double abilityTimerTransformed_hit = 0;
 	private double xSave = 0;
 	private double ySave = 0;
 	private boolean usedDionysusWine = false;
@@ -71,11 +69,7 @@ public final class Player extends Human
 		touching = false;
 		x = 370;
 		y = 160;
-		hp = (int)(4890 * Math.pow((double)control.activity.upgrades[1]/10, 0.9))+2000;
-		if(control.lowerHp)
-		{
-			hp = (int)(hp/8);
-		}
+		hp = 7000;
 		setHpMax(hp);
 		deleted = false;
 		playing = false;
@@ -88,16 +82,6 @@ public final class Player extends Human
 	Override
 	protected void frameCall()
 	{
-		if(control.drainHp)
-		{
-			hpAccurate += (double)hp/1000;
-			super.getHit((int)hpAccurate);
-			hpAccurate -= (int)hpAccurate;
-			if(deleted)
-			{
-				control.activity.loseFight();
-			}
-		}
 		minimumShootTime--;
 		powerUpTimer--;
 		if(usedDionysusWine)
@@ -106,8 +90,7 @@ public final class Player extends Human
 		}
 		sp -= 0.0001;
 		spMod = 1;
-		speedCur = 4.7*Math.pow((double)control.activity.upgrades[2]/10, 0.4);
-		speedCur *= 1.2;
+		speedCur = 3.7;
 		if(sp > 1.5)
 		{
 			sp = 1.5;
@@ -116,28 +99,21 @@ public final class Player extends Human
 		{
 			sp = 0.5;
 		}
-			double cooldown;
-			cooldown = (double)control.activity.upgrades[3]*(double)control.activity.upgrades[2]/100;
+			double cooldown = 1;
 			abilityTimer_roll += cooldown*1.4;
 			if(abilityTimer_roll >= 120)
 			{
 				abilityTimer_roll = 120;
 			}
-			cooldown = (double)control.activity.upgrades[3]/10;
 			abilityTimer_burst += cooldown*1.4;
 			abilityTimer_Proj_Tracker += cooldown*5;
 			if(abilityTimer_burst >= 500)
 			{
 				abilityTimer_burst = 500;
 			}
-			if(abilityTimer_Proj_Tracker >= 91+(control.activity.premiumUpgrades[0]*20))
+			if(abilityTimer_Proj_Tracker >= 91)
 			{
-				abilityTimer_Proj_Tracker = 91+(control.activity.premiumUpgrades[0]*20);
-			}
-			if(control.limitSpells)
-			{
-				abilityTimer_burst = 0;
-				abilityTimer_roll = 0;
+				abilityTimer_Proj_Tracker = 91;
 			}
 			rollTimer--;
 			if(frame == 30) // roll finished
@@ -238,42 +214,6 @@ public final class Player extends Human
 		}
 	}
 	/**
-	 * When player is transformed this pounds the ground or shield to create explosion
-	 */
-	protected void pound()
-	{
-		if(abilityTimerTransformed_pound > 100)
-		{
-			if(frame<21)
-			{
-				playing = true;
-				frame = 39;
-				abilityTimerTransformed_pound -= 100;
-			}
-		} else
-		{
-			Toast.makeText(control.context, "Cool Down", Toast.LENGTH_SHORT).show();
-		}
-	}
-	/**
-	 * When player is transformed this swings sword or hammer
-	 */
-	protected void hit()
-	{
-		if(abilityTimerTransformed_hit > 10)
-		{
-			if(frame<21)
-			{
-				playing = true;
-				frame = 21;
-				abilityTimerTransformed_hit -= 15;
-			}
-		} else
-		{
-			Toast.makeText(control.context, "Cool Down", Toast.LENGTH_SHORT).show();
-		}
-	}
-	/**
 	 * players burst attack
 	 */
 	protected void burst()
@@ -322,7 +262,7 @@ public final class Player extends Human
 			damage *= damageMultiplier;
 			super.getHit(damage);
 			sp -= sp*damage/1500;
-			if(deleted) control.activity.loseFight();
+			if(deleted) control.die();
 	}
 	/**
 	 * gives player a benefit, ranging from health to transformation
@@ -358,21 +298,6 @@ public final class Player extends Human
 		case 6:
 			powerUpTimer=300;
 			powerID=4;
-			break;
-		case 7:
-			control.moneyMade += control.moneyMultiplier;
-			control.activity.gameCurrency += control.moneyMultiplier;
-			break;
-		case 8:
-			control.hasKey = true;
-			break;
-		case 9:
-			control.moneyMade += 5*control.moneyMultiplier;
-			control.activity.gameCurrency += 5*control.moneyMultiplier;
-			break;
-		case 10:
-			control.moneyMade += 20*control.moneyMultiplier;
-			control.activity.gameCurrency += 20*control.moneyMultiplier;
 			break;
 		}
 	}

@@ -71,7 +71,7 @@ abstract public class Enemy extends Human
 		height = 30;
 		lastPlayerX = x;
 		lastPlayerY = y;
-		speedCur = 1.8 + (Math.pow(control.getDifficultyLevelMultiplier(), 0.4)*2.6);
+		speedCur = 1.8;
 		image = control.imageLibrary.enemy_Image[0];
 		if(hide) image = control.imageLibrary.enemy_Image[94]; //TODO change to arrayList position
 		baseHp(HP);
@@ -111,10 +111,6 @@ abstract public class Enemy extends Human
 		pYVelocity = control.player.y-pYSpot;
 		pXSpot = control.player.x;
 		pYSpot = control.player.y;
-		if(control.enemyRegen)
-		{
-			hp += 40;
-		}
 		hp += 4;
 		super.frameCall();
 		clearArray(levelX, 30);
@@ -179,13 +175,11 @@ abstract public class Enemy extends Human
 		if(!deleted)
 		{
 			if(action.equals("Hide")) action = "Nothing";
-			damage /= control.getDifficultyLevelMultiplier();
 			damage /= 1.2;
 			super.getHit(damage);
-			control.player.abilityTimer_burst += damage*control.activity.premiumUpgrades[2]/30;
-			control.player.abilityTimer_roll += damage*control.activity.premiumUpgrades[2]/50;
-			control.player.abilityTimerTransformed_pound += damage*control.activity.premiumUpgrades[2]/50;
-			control.player.abilityTimer_Proj_Tracker += damage*control.activity.premiumUpgrades[2]/100;
+			control.player.abilityTimer_burst += damage/30;
+			control.player.abilityTimer_roll += damage/50;
+			control.player.abilityTimer_Proj_Tracker += damage/100;
 			control.player.sp += damage*0.00003;
 			if(deleted)
 			{
@@ -523,7 +517,7 @@ abstract public class Enemy extends Human
 		distanceFound = checkDistance(x + Math.cos(rads) * 25, y + Math.sin(rads) * 25, control.player.x, control.player.y);
 		if(distanceFound < 25)
 		{
-			control.player.getHit((int)(damage*control.getDifficultyLevelMultiplier()));
+			control.player.getHit((int)(damage));
 			control.activity.playEffect("sword2");
 			if(control.getRandomInt(3) == 0)
 			{
@@ -830,7 +824,7 @@ abstract public class Enemy extends Human
 	}
 	protected void baseHp(int setHP)
 	{
-		hp = (int)(setHP*Math.pow(control.getDifficultyLevelMultiplier(), ((double)hp/10000)));
+		hp = setHP;
 		setHpMax(hp);
 	}
 }
