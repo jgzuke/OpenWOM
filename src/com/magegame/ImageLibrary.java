@@ -26,8 +26,8 @@ public final class ImageLibrary extends ImageLoader
 	protected Bitmap[] powerUps = new Bitmap[11];
 	protected Bitmap[] powerUpBigs = new Bitmap[4];
 	protected Bitmap[] coins = new Bitmap[2];
-	protected Bitmap[][] currentLevel;
-	protected Bitmap[][] currentLevelTop;
+	protected Bitmap currentLevel;
+	protected Bitmap currentLevelTop;
 	protected Bitmap backDrop;
 	private Controller control;
 	/**
@@ -109,23 +109,39 @@ public final class ImageLibrary extends ImageLoader
 	 */
 	protected void loadLevel(int levelNum, int width, int height)
 	{
-		recycleArray(currentLevel);
-		recycleArray(currentLevelTop);
+		if(currentLevel != null)
+		{
+			currentLevel.recycle();
+			currentLevel = null;
+		}
+		if(currentLevelTop != null)
+		{
+			currentLevelTop.recycle();
+			currentLevelTop = null;
+		}
 		if(backDrop!= null)
 		{
 			backDrop.recycle();
 		}
 		backDrop = loadImage("level_back", 300, 300);
-		currentLevel = loadArray2D(width/50, height/50, "level"+Integer.toString(levelNum), 50, 50);
-		currentLevelTop = loadArray2D(width/50, height/50, "leveltop"+Integer.toString(levelNum), 50, 50);
+		currentLevel = loadImage("level"+Integer.toString(levelNum), width, height);
+		currentLevelTop = loadImage("leveltop"+Integer.toString(levelNum), width, height);
 	}
 	/**
 	 * recycles images to save memory
 	 */
 	protected void recycleImages()
 	{
-		recycleArray(currentLevel);
-		recycleArray(currentLevelTop);
+		if(currentLevel != null)
+		{
+			currentLevel.recycle();
+			currentLevel = null;
+		}
+		if(currentLevelTop != null)
+		{
+			currentLevelTop.recycle();
+			currentLevelTop = null;
+		}
 		recycleArray(player_Image);
 		recycleArray(powerUpBigs);
 		recycleArray(powerUps);

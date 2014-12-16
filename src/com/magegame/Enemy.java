@@ -97,10 +97,6 @@ abstract public class Enemy extends Human
 	Override
 	protected void frameCall()
 	{
-		everySingleFrame();
-	}
-	private void everySingleFrame()
-	{
 		hadLOSLastTime--;
 		if(sick)
 		{
@@ -120,6 +116,68 @@ abstract public class Enemy extends Human
 		clearArray(pathedToHit, 30);
 		sizeImage();
 		pushOtherPeople();
+		doAction = true;
+	}
+	protected boolean otherActions()
+	{
+		if(action.equals("Stun"))
+		{
+			frame=93;
+			stunTimer--;
+			if(stunTimer==0) action = "Nothing";		//stun over, go have fun
+		} else if(action.equals("Melee"))
+		{
+			frame++;
+			if(frame==53)
+			{
+				meleeAttack(300);
+			} else if(frame==63)
+			{
+				meleeAttack(420);
+			}
+			if(frame==71) action = "Nothing";	//attack over
+		} else if(action.equals("Sheild"))
+		{
+			frame++;
+			if(frame==81) action = "Nothing";	//block done
+		} else if(action.equals("Roll"))
+		{
+			x += xMove;
+			y += yMove;
+			frame++;
+			if(frame==93) action = "Nothing";	//roll done
+		} else if(action.equals("Hide"))
+		{
+			frame = 94;
+			if(checkDistance(x, y, control.player.x,  control.player.y) < 30) //player close enough to attack
+			{
+				action = "Melee";
+				frame = 49;
+			}
+		} else if(action.equals("Shoot"))
+		{
+			frame++;
+			if(frame<27) //geting weapon ready+aiming
+			{
+				aimAheadOfPlayer();
+			} else if(frame==36) // shoots
+			{
+				shootLaser();
+				checkLOS((int)control.player.x, (int)control.player.y);
+				if(LOS&&hp>600) frame=25; // shoots again
+			} else if(frame==45) action = "Nothing";   // attack done
+		} else if(action.equals("Run"))
+		{
+			frame++;
+			if(frame == 19) frame = 0; // restart walking motion
+			x += xMove;
+			y += yMove;
+			runTimer--;
+			if(runTimer<1) action = "Nothing"; // stroll done
+		} else
+		{
+			return false;
+		}
 	}
 	/**
 	 * checks who else this guy is getting in the way of and pushes em

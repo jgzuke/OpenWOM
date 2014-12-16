@@ -458,22 +458,14 @@ public final class Controller extends View
 				drawBitmapLevel(imageLibrary.backDrop, w, h, g);
 			}
 		}
-		for(int w = 0; w<levelWidth; w+=50)
-		{
-			for(int h = 0; h<levelHeight; h+=50)
-			{
+		
 				drawBitmapLevel(imageLibrary.currentLevel[w/50][h/50], w, h, g);
-			}
-		}
+				
 		spriteController.drawStructures(g, paint, imageLibrary);
 		spriteController.drawSprites(g, paint, imageLibrary, aoeRect);
-		for(int w = 0; w<levelWidth; w+=50)
-		{
-			for(int h = 0; h<levelHeight; h+=50)
-			{
+		
 				drawBitmapLevel(imageLibrary.currentLevelTop[w/50][h/50], w, h, g);
-			}
-		}
+				
 		if(player.powerUpTimer > 0)
 		{
 			drawBitmapLevel(imageLibrary.effects[player.powerID - 1], (int) player.x - 30, (int) player.y - 30, g);
