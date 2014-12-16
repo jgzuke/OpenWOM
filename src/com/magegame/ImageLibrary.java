@@ -19,7 +19,6 @@ public final class ImageLibrary extends ImageLoader
 	protected Bitmap isPlayer;
 	protected int isPlayerWidth;
 	protected Bitmap haskey;
-	protected Bitmap exitFightPortal;
 	protected Bitmap shotPlayer;
 	protected Bitmap shotAOEPlayer;
 	protected Bitmap shotEnemy;
@@ -27,14 +26,10 @@ public final class ImageLibrary extends ImageLoader
 	protected Bitmap[] powerUps = new Bitmap[11];
 	protected Bitmap[] powerUpBigs = new Bitmap[4];
 	protected Bitmap[] coins = new Bitmap[2];
-	protected Bitmap[] trans = new Bitmap[10];
-	protected Bitmap currentLevel;
-	protected Bitmap currentLevelTop;
-	protected Bitmap directionsTutorial;
+	protected Bitmap[][] currentLevel;
+	protected Bitmap[][] currentLevelTop;
 	protected Bitmap backDrop;
 	private Controller control;
-	protected Bitmap transattack;
-	protected int scrollPosition = 0;
 	/**
 	 * loads in images and optimizes settings for loading
 	 * @param contextSet start activity for getting resources etc
@@ -90,7 +85,6 @@ public final class ImageLibrary extends ImageLoader
 	 */
 	protected void loadAllImages()
 	{
-		exitFightPortal = loadImage("icon_exitfightportal", 60, 60);
 		loadPlayerImage();
 		powerUps = loadArray1D(11, "icon_powerup", 30, 30);
 		powerUpBigs = loadArray1D(5, "icon_powerupbig", 70, 70);
@@ -105,7 +99,7 @@ public final class ImageLibrary extends ImageLoader
 		haskey = loadImage("icon_haskey", 40, 40);
 		isPlayer = loadImage("icon_isplayer", 40, 40);
 		loadLevel(control.levelNum, control.levelWidth, control.levelHeight);
-		backDrop = loadImage("level_back", 300, 300);
+		backDrop = loadImage("level_back", 100, 100);
 	}
 	/**
 	 * loads level image layers and background image
@@ -115,37 +109,23 @@ public final class ImageLibrary extends ImageLoader
 	 */
 	protected void loadLevel(int levelNum, int width, int height)
 	{
-		if(currentLevel!= null)
-		{
-			currentLevel.recycle();
-		}
-		if(currentLevelTop!= null)
-		{
-			currentLevelTop.recycle();
-		}
+		recycleArray(currentLevel);
+		recycleArray(currentLevelTop);
 		if(backDrop!= null)
 		{
 			backDrop.recycle();
 		}
 		backDrop = loadImage("level_back", 300, 300);
-		currentLevel = loadImage("level"+correctDigits(levelNum, 4), width, height);
-		currentLevelTop = loadImage("leveltop"+correctDigits(levelNum, 4), width, height);
+		currentLevel = loadArray2D(width/50, height/50, "level"+Integer.toString(levelNum), 50, 50);
+		currentLevelTop = loadArray2D(width/50, height/50, "leveltop"+Integer.toString(levelNum), 50, 50);
 	}
 	/**
 	 * recycles images to save memory
 	 */
 	protected void recycleImages()
 	{
-		if(currentLevel != null)
-		{
-			currentLevel.recycle();
-			currentLevel = null;
-		}
-		if(currentLevelTop != null)
-		{
-			currentLevelTop.recycle();
-			currentLevelTop = null;
-		}
+		recycleArray(currentLevel);
+		recycleArray(currentLevelTop);
 		recycleArray(player_Image);
 		recycleArray(powerUpBigs);
 		recycleArray(powerUps);

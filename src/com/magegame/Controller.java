@@ -451,24 +451,28 @@ public final class Controller extends View
 	{
 		Bitmap drawTo = Bitmap.createBitmap(levelWidth, levelHeight, Config.ARGB_8888);
 		Canvas g = new Canvas(drawTo);
-		int w = 0;
-		int h = 0;
-		while(w < levelWidth)
+		for(int w = 0; w<levelWidth; w+=100)
 		{
-			while(h < levelHeight)
+			for(int h = 0; h<levelHeight; h+=100)
 			{
 				drawBitmapLevel(imageLibrary.backDrop, w, h, g);
-				h += 300;
 			}
-			w += 300;
-			h = 0;
 		}
-		g.drawBitmap(imageLibrary.currentLevel, 0, 0, paint);
+		for(int w = 0; w<levelWidth; w+=50)
+		{
+			for(int h = 0; h<levelHeight; h+=50)
+			{
+				drawBitmapLevel(imageLibrary.currentLevel[w/50][h/50], w, h, g);
+			}
+		}
 		spriteController.drawStructures(g, paint, imageLibrary);
 		spriteController.drawSprites(g, paint, imageLibrary, aoeRect);
-		if(imageLibrary.currentLevelTop != null)
+		for(int w = 0; w<levelWidth; w+=50)
 		{
-			drawBitmapLevel(imageLibrary.currentLevelTop, 0, 0, g);
+			for(int h = 0; h<levelHeight; h+=50)
+			{
+				drawBitmapLevel(imageLibrary.currentLevelTop[w/50][h/50], w, h, g);
+			}
 		}
 		if(player.powerUpTimer > 0)
 		{
