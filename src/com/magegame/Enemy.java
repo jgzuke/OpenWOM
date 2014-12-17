@@ -39,10 +39,6 @@ abstract public class Enemy extends Human
 	private double pYSpot=0;
 	protected double xMove;
 	protected double yMove;
-	protected boolean hasSheild;
-	protected boolean hasGun;
-	protected boolean hasSword;
-	protected double projectileVelocity=20;
 	protected int enemyType;
 	protected int hadLOSLastTime=-1;
 	int [][] frames;
@@ -51,8 +47,7 @@ abstract public class Enemy extends Human
 	 * sets danger arrays, speed and control object
 	 * @param creator control object
 	 */
-	public Enemy(Controller creator, double X, double Y, int HP, int Worth,
-			boolean gun, boolean sheild, boolean hide, boolean sword, boolean Sick, int type)
+	public Enemy(Controller creator, double X, double Y, int HP, boolean Sick)
 	{
 		super(X, Y, 0, 0, true, false, creator.imageLibrary.enemy_Image[0]);
 		control = creator;
@@ -60,23 +55,13 @@ abstract public class Enemy extends Human
 		danger[1] = levelY;
 		danger[2] = levelXForward;
 		danger[3] = levelYForward;
-		hasSheild = sheild;
-		hasGun = gun;
 		sick = Sick;
-		hasSword = sword;
-		frame=0;
 		x = X;
 		y = Y;
-		enemyType = type;
 		width = 30;
 		height = 30;
 		lastPlayerX = x;
 		lastPlayerY = y;
-		speedCur = 1.8;
-		image = control.imageLibrary.enemy_Image[0];
-		if(hide) image = control.imageLibrary.enemy_Image[94]; //TODO change to arrayList position
-		baseHp(HP);
-		worth = Worth;
 		action = "Nothing";
 	}
 	/**
@@ -352,7 +337,7 @@ abstract public class Enemy extends Human
 	/**
 	 * Aims towards player
 	 */
-	protected void aimAheadOfPlayer()
+	protected void aimAheadOfPlayer(double projectileVelocity)
 	{
 			double timeToHit = (checkDistance(x, y, control.player.x, control.player.y))/projectileVelocity;
 			timeToHit *= (control.getRandomDouble()*0.7)+0.4;
@@ -362,15 +347,6 @@ abstract public class Enemy extends Human
 			double yDif = newPY-y;
 			rads = Math.atan2(yDif, xDif); // ROTATES TOWARDS PLAYER
 			rotation = rads * r2d;
-	}
-	/**
-	 * Releases arrow towards player
-	 */
-	protected void shootLaser()
-	{
-		rads = rotation/r2d;
-			control.spriteController.createProj_TrackerEnemy(rotation, Math.cos(rads) * projectileVelocity, Math.sin(rads) * projectileVelocity, 130, x, y);
-			control.activity.playEffect("arrowrelease");
 	}
 	/**
 	 * Runs in direction object is rotated for 10 frames

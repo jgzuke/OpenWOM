@@ -4,10 +4,15 @@
 package com.magegame;
 public final class Enemy_Default extends Enemy
 {
-	public Enemy_Default(Controller creator, double X, double Y, int HP, int Worth,
-		boolean gun, boolean sheild, boolean hide, boolean sword, boolean Sick, int type)
+	public Enemy_Default(Controller creator, double X, double Y, int HP, boolean Sick)
 	{
-		super(creator, X, Y, HP, Worth, gun, sheild, hide, sword, Sick, type);
+		super(creator, X, Y, HP, Sick);
+		enemyType = 0;
+		speedCur = 1.8;
+		frame=0;
+		image = control.imageLibrary.enemy_Image[0];
+		baseHp(HP);
+		worth = 5;
 		if(control.getRandomInt(3) == 0)
 		{
 			runRandom();
@@ -37,7 +42,7 @@ public final class Enemy_Default extends Enemy
 		distanceFound = checkDistance(danger[0][0], danger[1][0], x, y);
 		if(distanceFound < 100)
 		{
-			if(hasSheild)
+			if(true)//hasSheild
 			{
 				action = "Sheild";
 				frame=72;
@@ -69,7 +74,7 @@ public final class Enemy_Default extends Enemy
 		{
 			if(distanceFound < 30)
 			{
-					if(hasSword)
+					if(true)//hasSword
 					{
 						action = "Melee";
 						frame = 46;
@@ -79,7 +84,7 @@ public final class Enemy_Default extends Enemy
 					}
 			} else if(distanceFound < 200)
 			{
-					if(hasGun)
+					if(true)//hasGun
 					{
 						if(LOS)
 						{
@@ -147,12 +152,15 @@ public final class Enemy_Default extends Enemy
 	}
 	@Override
 	protected void shooting() {
+		int velocity = 5; //projectile velocity
 		if(frame<27) //geting weapon ready+aiming
 		{
-			aimAheadOfPlayer();
+			aimAheadOfPlayer(velocity);
 		} else if(frame==36) // shoots
 		{
-			shootLaser();
+			rads = rotation/r2d;
+			control.spriteController.createProj_TrackerEnemy(rotation, Math.cos(rads) * velocity, Math.sin(rads) * velocity, 130, x, y);
+			control.activity.playEffect("arrowrelease");
 			checkLOS((int)control.player.x, (int)control.player.y);
 			if(LOS&&hp>600) frame=25; // shoots again
 		}

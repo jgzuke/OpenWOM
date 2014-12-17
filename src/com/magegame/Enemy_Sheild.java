@@ -4,10 +4,15 @@
 package com.magegame;
 public final class Enemy_Sheild extends Enemy
 {
-	public Enemy_Sheild(Controller creator, double X, double Y, int HP, int Worth,
-		boolean gun, boolean sheild, boolean hide, boolean sword, boolean Sick, int type)
+	public Enemy_Sheild(Controller creator, double X, double Y, int HP, boolean Sick)
 	{
-		super(creator, X, Y, HP, Worth, gun, sheild, hide, sword, Sick, type);
+		super(creator, X, Y, HP, Sick);
+		enemyType = 0;
+		speedCur = 1.8;
+		frame=0;
+		image = control.imageLibrary.enemy_Image[0];
+		baseHp(HP);
+		worth = 5;
 		if(control.getRandomInt(3) == 0)
 		{
 			runRandom();
@@ -37,15 +42,8 @@ public final class Enemy_Sheild extends Enemy
 		distanceFound = checkDistance(danger[0][0], danger[1][0], x, y);
 		if(distanceFound < 100)
 		{
-			if(hasSheild)
-			{
-				action = "Sheild";
-				frame=72;
-			} else
-			{
-				rads = Math.atan2((danger[1][0] - y), (danger[0][0] - x));
-				roll();
-			}
+			action = "Sheild";
+			frame=frames[4][0];
 		} else
 		{
 			frameReactionsNoDangerNoLOS();
@@ -69,30 +67,8 @@ public final class Enemy_Sheild extends Enemy
 		{
 			if(distanceFound < 30)
 			{
-					if(hasSword)
-					{
-						action = "Melee";
-						frame = 46;
-					} else
-					{
-						rollAway();
-					}
-			} else if(distanceFound < 200)
-			{
-					if(hasGun)
-					{
-						if(LOS)
-						{
-							action = "Shoot";
-							frame = 21;
-						} else
-						{
-							runTowardsPoint(control.player.x, control.player.y);
-						}
-					} else
-					{
-						runTowardsPoint(control.player.x, control.player.y);
-					}
+				action = "Melee";
+				frame=frames[3][0];
 			} else
 			{
 				runTowardsPoint(control.player.x, control.player.y);
@@ -138,25 +114,9 @@ public final class Enemy_Sheild extends Enemy
 		}
 	}
 	@Override
-	protected void hiding() {
-		if(checkDistance(x, y, control.player.x,  control.player.y) < 30) //player close enough to attack
-		{
-			action = "Melee";
-			frame = frames[3][0];
-		}
-	}
+	protected void hiding() {}
 	@Override
-	protected void shooting() {
-		if(frame<27) //geting weapon ready+aiming
-		{
-			aimAheadOfPlayer();
-		} else if(frame==36) // shoots
-		{
-			shootLaser();
-			checkLOS((int)control.player.x, (int)control.player.y);
-			if(LOS&&hp>600) frame=25; // shoots again
-		}
-	}
+	protected void shooting() {}
 	@Override
 	protected void finishWandering() {
 		if(control.getRandomInt(20) != 0) // we probably just keep wandering
