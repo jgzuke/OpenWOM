@@ -45,6 +45,7 @@ abstract public class Enemy extends Human
 	protected double projectileVelocity=20;
 	protected int enemyType;
 	protected int hadLOSLastTime=-1;
+	int [][] frames = new int[][];
 	protected String action; //"Nothing", "Move", "Alert", "Shoot", "Melee", "Roll", "Hide", "Sheild", "Stun"
 	/**
 	 * sets danger arrays, speed and control object
@@ -116,69 +117,93 @@ abstract public class Enemy extends Human
 		clearArray(pathedToHit, 30);
 		sizeImage();
 		pushOtherPeople();
-		doAction = true;
 	}
-	protected boolean otherActions()
+	protected void otherActions()
 	{
+		/* int [][] frames[action][start/finish or 1/2/3]
+		 * actions	move=0;
+		 * 			roll=1;		0:start, 1:end
+		 * 			stun=2;
+		 * 			melee=3;
+		 * 			sheild=4;
+		 * 			hide=5;
+		 * 			shoot=6;
+		 */
 		if(action.equals("Stun"))
 		{
-			frame=93;
+			frame=frames[2][0];
 			stunTimer--;
 			if(stunTimer==0) action = "Nothing";		//stun over, go have fun
-		} else if(action.equals("Melee"))
-		{
-			frame++;
-			if(frame==53)
-			{
-				meleeAttack(300);
-			} else if(frame==63)
-			{
-				meleeAttack(420);
-			}
-			if(frame==71) action = "Nothing";	//attack over
-		} else if(action.equals("Sheild"))
-		{
-			frame++;
-			if(frame==81) action = "Nothing";	//block done
 		} else if(action.equals("Roll"))
 		{
 			x += xMove;
 			y += yMove;
 			frame++;
-			if(frame==93) action = "Nothing";	//roll done
+			if(frame==frames[1][1]) action = "Nothing";	//roll done
+		} else if(action.equals("Melee"))
+		{
+			frame++;
+			attacking();
+			if(frame==frames[3][1]) action = "Nothing";	//attack over
+		} else if(action.equals("Sheild"))
+		{
+			frame++;
+			if(frame==frames[4][1]) action = "Nothing";	//block done
 		} else if(action.equals("Hide"))
 		{
-			frame = 94;
-			if(checkDistance(x, y, control.player.x,  control.player.y) < 30) //player close enough to attack
-			{
-				action = "Melee";
-				frame = 49;
-			}
+			frame = frames[5][0];
+			hiding();
 		} else if(action.equals("Shoot"))
 		{
 			frame++;
-			if(frame<27) //geting weapon ready+aiming
-			{
-				aimAheadOfPlayer();
-			} else if(frame==36) // shoots
-			{
-				shootLaser();
-				checkLOS((int)control.player.x, (int)control.player.y);
-				if(LOS&&hp>600) frame=25; // shoots again
-			} else if(frame==45) action = "Nothing";   // attack done
+			shooting();
+			if(frame==frames[6][1]) action = "Nothing"; // attack done
 		} else if(action.equals("Run"))
 		{
 			frame++;
-			if(frame == 19) frame = 0; // restart walking motion
+			if(frame == frames[0][1]) frame = 0; // restart walking motion
 			x += xMove;
 			y += yMove;
 			runTimer--;
 			if(runTimer<1) action = "Nothing"; // stroll done
-		} else
+		} else if(action.equals("Move")||action.equals("Wander"))
 		{
-			return false;
+			if(pathedToHitLength > 0 || LOS)
+			{
+				 action = "Nothing";
+			} else
+			{
+				frame++;
+				if(frame == frames[0][1]) frame = 0; // restart walking motion
+				x += xMove;
+				y += yMove;
+				runTimer--;
+				if(runTimer<1) //stroll over
+				{
+					action = "Nothing";
+					if(action.equals("Move"))
+					{
+						frameReactionsNoDangerNoLOS();
+					} else
+					{
+						finishWandering();
+					}
+				}
+			}
 		}
 	}
+	protected void pickAction()
+	{
+		
+	}
+	abstract protected void attacking();
+	abstract protected void hiding();
+	abstract protected void shooting();
+	abstract protected void finishWandering();
+	abstract protected void frameReactionsNoDangerLOS();
+	abstract protected void frameReactionsDangerNoLOS();
+	abstract protected void frameReactionsNoDangerNoLOS();
+	abstract protected void frameReactionsDangerLOS();
 	/**
 	 * checks who else this guy is getting in the way of and pushes em
 	 */

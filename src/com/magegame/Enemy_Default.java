@@ -20,63 +20,10 @@ public final class Enemy_Default extends Enemy
 	{
 		checkLOS((int)control.player.x, (int)control.player.y);
 		checkDanger();
-		if(otherActions())
-		{
-			
-		} else if(action.equals("Move")||action.equals("Wander"))
-		{
-			if(pathedToHitLength > 0 || LOS)
-			{
-				 action = "Nothing";
-			} else
-			{
-				frame++;
-				if(frame == 19) frame = 0; // restart walking motion
-				x += xMove;
-				y += yMove;
-				runTimer--;
-				if(runTimer<1) //stroll over
-				{
-					if(action.equals("Move"))
-					{
-						frameReactionsNoDangerNoLOS();
-					} else
-					{
-						if(control.getRandomInt(20) != 0) // we probably just keep wandering
-						{
-							runRandom();
-						} else
-						{
-							action = "Nothing";
-						}
-					}
-				}
-			}
-		}
-		
+		otherActions();
 		if(action.equals("Nothing"))
 		{
-			frame=0;
-			if(pathedToHitLength > 0)
-			{
-				if(HasLocation)
-				{
-					frameReactionsDangerLOS();
-				} else
-				{
-					frameReactionsDangerNoLOS();
-				}
-			} else
-			{
-				if(HasLocation)
-				{
-					frameReactionsNoDangerLOS();
-				}
-				else
-				{
-					frameReactionsNoDangerNoLOS();
-				}
-			}
+			pickAction();
 		}
 		image = control.imageLibrary.enemy_Image[frame];
 		super.frameCall();
@@ -177,6 +124,44 @@ public final class Enemy_Default extends Enemy
 				checkedPlayerLast = true;
 			}
 			LOS = temp;
+		}
+	}
+	@Override
+	protected void attacking()
+	{
+		for(int i = 0; i < frames[4].length; i++)
+		{
+			if(frame==frames[4][i])
+			{
+				meleeAttack(damage);
+			}
+		}
+	}
+	@Override
+	protected void hiding() {
+		if(checkDistance(x, y, control.player.x,  control.player.y) < 30) //player close enough to attack
+		{
+			action = "Melee";
+			frame = frames[3][0];
+		}
+	}
+	@Override
+	protected void shooting() {
+		if(frame<27) //geting weapon ready+aiming
+		{
+			aimAheadOfPlayer();
+		} else if(frame==36) // shoots
+		{
+			shootLaser();
+			checkLOS((int)control.player.x, (int)control.player.y);
+			if(LOS&&hp>600) frame=25; // shoots again
+		}
+	}
+	@Override
+	protected void finishWandering() {
+		if(control.getRandomInt(20) != 0) // we probably just keep wandering
+		{
+			runRandom();
 		}
 	}
 }
