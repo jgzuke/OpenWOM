@@ -20,113 +20,10 @@ public final class Enemy_Sheild extends Enemy
 	{
 		checkLOS((int)control.player.x, (int)control.player.y);
 		checkDanger();
-		if(action.equals("Stun"))
-		{
-			frame=93;
-			stunTimer--;
-			if(stunTimer==0) action = "Nothing";		//stun over, go have fun
-		} else if(action.equals("Melee"))
-		{
-			frame++;
-			if(frame==53)
-			{
-				meleeAttack(300);
-			} else if(frame==63)
-			{
-				meleeAttack(420);
-			}
-			if(frame==71) action = "Nothing";	//attack over
-		} else if(action.equals("Sheild"))
-		{
-			frame++;
-			if(frame==81) action = "Nothing";	//block done
-		} else if(action.equals("Roll"))
-		{
-			x += xMove;
-			y += yMove;
-			frame++;
-			if(frame==93) action = "Nothing";	//roll done
-		} else if(action.equals("Hide"))
-		{
-			frame = 94;
-			if(checkDistance(x, y, control.player.x,  control.player.y) < 30) //player close enough to attack
-			{
-				action = "Melee";
-				frame = 49;
-			}
-		} else if(action.equals("Shoot"))
-		{
-			frame++;
-			if(frame<27) //geting weapon ready+aiming
-			{
-				aimAheadOfPlayer();
-			} else if(frame==36) // shoots
-			{
-				shootLaser();
-				checkLOS((int)control.player.x, (int)control.player.y);
-				if(LOS&&hp>600) frame=25; // shoots again
-			} else if(frame==45) action = "Nothing";   // attack done
-		} else if(action.equals("Run"))
-		{
-			frame++;
-			if(frame == 19) frame = 0; // restart walking motion
-			x += xMove;
-			y += yMove;
-			runTimer--;
-			if(runTimer<1) action = "Nothing"; // stroll done
-		} else if(action.equals("Move")||action.equals("Wander"))
-		{
-			if(pathedToHitLength > 0 || LOS)
-			{
-				 action = "Nothing";
-			} else
-			{
-				frame++;
-				if(frame == 19) frame = 0; // restart walking motion
-				x += xMove;
-				y += yMove;
-				runTimer--;
-				if(runTimer<1) //stroll over
-				{
-					if(action.equals("Move"))
-					{
-						frameReactionsNoDangerNoLOS();
-					} else
-					{
-						if(control.getRandomInt(20) != 0) // we probably just keep wandering
-						{
-							runRandom();
-						} else
-						{
-							action = "Nothing";
-						}
-					}
-				}
-			}
-		}
+		otherActions();
 		if(action.equals("Nothing"))
 		{
-			frame=0;
-			if(pathedToHitLength > 0)
-			{
-				if(HasLocation)
-				{
-					frameReactionsDangerLOS();
-				} else
-				{
-					frameReactionsDangerNoLOS();
-				}
-			} else
-			{
-				if(HasLocation)
-				{
-					frameReactionsNoDangerLOS();
-				}
-				else
-				{
-					frameReactionsNoDangerNoLOS();
-				}
-			}
+			pickAction();
 		}
 		image = control.imageLibrary.enemy_Image[frame];
 		super.frameCall();
@@ -227,6 +124,44 @@ public final class Enemy_Sheild extends Enemy
 				checkedPlayerLast = true;
 			}
 			LOS = temp;
+		}
+	}
+	@Override
+	protected void attacking()
+	{
+		for(int i = 0; i < frames[4].length; i++)
+		{
+			if(frame==frames[4][i])
+			{
+				meleeAttack(200);
+			}
+		}
+	}
+	@Override
+	protected void hiding() {
+		if(checkDistance(x, y, control.player.x,  control.player.y) < 30) //player close enough to attack
+		{
+			action = "Melee";
+			frame = frames[3][0];
+		}
+	}
+	@Override
+	protected void shooting() {
+		if(frame<27) //geting weapon ready+aiming
+		{
+			aimAheadOfPlayer();
+		} else if(frame==36) // shoots
+		{
+			shootLaser();
+			checkLOS((int)control.player.x, (int)control.player.y);
+			if(LOS&&hp>600) frame=25; // shoots again
+		}
+	}
+	@Override
+	protected void finishWandering() {
+		if(control.getRandomInt(20) != 0) // we probably just keep wandering
+		{
+			runRandom();
 		}
 	}
 }

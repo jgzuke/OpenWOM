@@ -45,7 +45,7 @@ abstract public class Enemy extends Human
 	protected double projectileVelocity=20;
 	protected int enemyType;
 	protected int hadLOSLastTime=-1;
-	int [][] frames = new int[][];
+	int [][] frames;
 	protected String action; //"Nothing", "Move", "Alert", "Shoot", "Melee", "Roll", "Hide", "Sheild", "Stun"
 	/**
 	 * sets danger arrays, speed and control object

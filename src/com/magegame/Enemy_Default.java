@@ -133,7 +133,7 @@ public final class Enemy_Default extends Enemy
 		{
 			if(frame==frames[4][i])
 			{
-				meleeAttack(damage);
+				meleeAttack(200);
 			}
 		}
 	}
