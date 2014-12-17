@@ -85,11 +85,9 @@ public final class Controller extends View
 	protected PlayerGestureDetector detect;
 	protected int levelWidth = 300;
 	protected int levelHeight = 300;
-	protected int xShiftLevel;
-	protected int yShiftLevel;
 	private Handler mHandler = new Handler();
-	private int curXShift;
-	private int curYShift;
+	protected int curXShift;
+	protected int curYShift;
 	private int healthColor = Color.rgb(150, 0, 0);
 	private int cooldownColor = Color.rgb(190, 190, 0);
 	protected Sprite shootStick;
@@ -442,14 +440,13 @@ public final class Controller extends View
 				drawBitmapLevel(imageLibrary.backDrop, w, h, g);
 			}
 		}
-		
-				drawBitmapLevel(imageLibrary.currentLevel[w/50][h/50], w, h, g);
-				
+		Rect selection = new Rect(curXShift, curYShift, curXShift+300, curYShift+300);
+		Rect onLevel = new Rect(0, 0, 300, 300);
+		g.drawBitmap(imageLibrary.currentLevel, selection, onLevel, paint);
 		spriteController.drawStructures(g, paint, imageLibrary);
 		spriteController.drawSprites(g, paint, imageLibrary, aoeRect);
-		
-				drawBitmapLevel(imageLibrary.currentLevelTop[w/50][h/50], w, h, g);
-				
+		g.drawBitmap(imageLibrary.currentLevelTop, selection, onLevel, paint);
+
 		if(player.powerUpTimer > 0)
 		{
 			drawBitmapLevel(imageLibrary.effects[player.powerID - 1], (int) player.x - 30, (int) player.y - 30, g);
@@ -546,27 +543,25 @@ public final class Controller extends View
 		paint.setStyle(Paint.Style.FILL);
 		paint.setColor(Color.GRAY);
 		g.drawRect(90, 10, 390, 310, paint);
-			xShiftLevel = 150 - (int) player.x;
-			yShiftLevel = 150 - (int) player.y;
+		curXShift = 150 - (int) player.x;
+		curYShift = 150 - (int) player.y;
 			if(player.x < 150)
 			{
-				xShiftLevel = 0;
+				curXShift = 0;
 			}
 			if(player.y < 150)
 			{
-				yShiftLevel = 0;
+				curYShift = 0;
 			}
 			if(player.x > levelWidth - 150)
 			{
-				xShiftLevel = 300 - levelWidth;
+				curXShift = 300 - levelWidth;
 			}
 			if(player.y > levelHeight - 150)
 			{
-				yShiftLevel = 300 - levelHeight;
+				curYShift = 300 - levelHeight;
 			}
-		curXShift = xShiftLevel;
-		curYShift = yShiftLevel;
-		g.drawBitmap(drawLevel(), xShiftLevel + 90, yShiftLevel + 10, paint);
+		g.drawBitmap(drawLevel(), curXShift + 90, curYShift + 10, paint);
 		paint.setStyle(Paint.Style.FILL);
 		paint.setColor(Color.BLACK);
 		g.drawRect(-1000, -1000, 0, 1320, paint);

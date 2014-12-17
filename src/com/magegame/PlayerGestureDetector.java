@@ -184,7 +184,7 @@ public class PlayerGestureDetector implements OnTouchListener {
 	 */
 	protected double screenX(double x)
 	{
-		return (visualX(x)-90)-control.xShiftLevel;
+		return (visualX(x)-90)-control.curXShift;
 	}
 	/**
 	 * converts value from click y point to where on the level it would be
@@ -193,7 +193,7 @@ public class PlayerGestureDetector implements OnTouchListener {
 	 */
 	protected double screenY(double y)
 	{
-		return (visualX(y)+10)-control.yShiftLevel;
+		return (visualX(y)+10)-control.curYShift;
 	}
 	/**
 	 * converts value from click x point to where on the screen it would be
