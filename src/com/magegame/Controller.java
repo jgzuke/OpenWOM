@@ -391,26 +391,10 @@ public final class Controller extends View
 		playerHit++;
 		playerBursted++;
 		spriteController.frameCall();
-		if(!player.deleted)
-		{
-			player.frameCall();
-			if(player.x < 10) player.x = (10);
-			if(player.x > levelWidth - 10) player.x = (levelWidth - 10);
-			if(player.y < 10) player.y = (10);
-			if(player.y > levelHeight - 10) player.y = (levelHeight - 10);
-		}
-		for(int i = 0; i < wallRects.size(); i++)
-		{
-				wallRects.get(i).frameCall();
-		}
-		for(int i = 0; i < wallCircles.size(); i++)
-		{
-				wallCircles.get(i).frameCall();
-		}
-		for(int i = 0; i < wallRings.size(); i++)
-		{
-				wallRings.get(i).frameCall();
-		}
+		if(!player.deleted) player.frameCall();
+		for(int i = 0; i < wallRects.size(); i++) wallRects.get(i).frameCall();
+		for(int i = 0; i < wallCircles.size(); i++) wallCircles.get(i).frameCall();
+		for(int i = 0; i < wallRings.size(); i++) wallRings.get(i).frameCall();
 		invalidate();
 	}
 	protected boolean playerOnSquare(double x1, double y1, double width, double height)

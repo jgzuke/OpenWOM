@@ -20,7 +20,6 @@ public final class Player extends Human
 	protected double abilityTimer_Proj_Tracker = 0;
 	private double xSave = 0;
 	private double ySave = 0;
-	private boolean usedDionysusWine = false;
 	protected int projectileSpeed = 40;
 	protected double touchX;
 	protected boolean touching;
@@ -64,7 +63,6 @@ public final class Player extends Human
 		abilityTimer_roll = 120;
 		abilityTimer_burst = 250;
 		abilityTimer_Proj_Tracker = 0;
-		usedDionysusWine = false;
 		projectileSpeed = 40;
 		touching = false;
 		x = 370;
@@ -84,38 +82,24 @@ public final class Player extends Human
 	{
 		minimumShootTime--;
 		powerUpTimer--;
-		if(usedDionysusWine)
-		{
-			super.getHit(100);
-		}
 		sp -= 0.0001;
 		spMod = 1;
 		speedCur = 3.7;
-		if(sp > 1.5)
-		{
-			sp = 1.5;
-		}
-		if(sp < 0.5)
-		{
-			sp = 0.5;
-		}
+		if(sp > 1.5) sp = 1.5;
+		if(sp < 0.5) sp = 0.5;
 			double cooldown = 1;
 			abilityTimer_roll += cooldown*1.4;
-			if(abilityTimer_roll >= 120)
-			{
-				abilityTimer_roll = 120;
-			}
 			abilityTimer_burst += cooldown*1.4;
 			abilityTimer_Proj_Tracker += cooldown*5;
-			if(abilityTimer_burst >= 500)
+			if(abilityTimer_burst >= 500) abilityTimer_burst = 500;
+			if(abilityTimer_Proj_Tracker >= 91) abilityTimer_Proj_Tracker = 91;
+			if(abilityTimer_roll >= 120) abilityTimer_roll = 120;
+			if(rollTimer > 0)
 			{
-				abilityTimer_burst = 500;
+				rollTimer--;
+				x += xMoveRoll;
+				y += yMoveRoll;
 			}
-			if(abilityTimer_Proj_Tracker >= 91)
-			{
-				abilityTimer_Proj_Tracker = 91;
-			}
-			rollTimer--;
 			if(frame == 30) // roll finished
 			{
 				frame = 0;
@@ -156,13 +140,13 @@ public final class Player extends Human
 						}
 					}
 				}
-			} else
-			{			
-					x += xMoveRoll;
-					y += yMoveRoll;
 			}
 		image = control.imageLibrary.player_Image[frame];
 		sizeImage();
+		if(x < 10) x = (10);
+		if(x > control.levelWidth - 10) x = (control.levelWidth - 10);
+		if(y < 10) y = (10);
+		if(y > control.levelHeight - 10) y = (control.levelHeight - 10);
 	}
 	/**
 	 * moves player at a set speed, direction is based of move stick
@@ -300,17 +284,5 @@ public final class Player extends Human
 			powerID=4;
 			break;
 		}
-	}
-	/**
-	 * checks distance between two points
-	 * @param fromX point one x
-	 * @param fromY point one y
-	 * @param toX point 2 x
-	 * @param toY point 2 y
-	 * @return distance between points
-	 */
-	private double checkDistance(double fromX, double fromY, double toX, double toY)
-	{
-		return Math.sqrt((Math.pow(fromX - toX, 2)) + (Math.pow(fromY - toY, 2)));
 	}
 }
