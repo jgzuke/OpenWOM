@@ -4,9 +4,9 @@
 package com.magegame;
 public final class Enemy_Default extends Enemy
 {
-	public Enemy_Default(Controller creator, double X, double Y, int HP, boolean Sick)
+	public Enemy_Default(Controller creator, double X, double Y, int HP)
 	{
-		super(creator, X, Y, HP, Sick);
+		super(creator, X, Y, HP);
 		enemyType = 0;
 		speedCur = 1.8;
 		frame=0;

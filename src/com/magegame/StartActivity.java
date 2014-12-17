@@ -7,21 +7,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 import com.magegame.R;
-import com.magegame.util.IabHelper;
-import com.magegame.util.IabResult;
-import com.magegame.util.Inventory;
-import com.magegame.util.Purchase;
-
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,9 +28,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 public class StartActivity extends Activity
 {
 	protected Controller control;
@@ -58,15 +48,8 @@ public class StartActivity extends Activity
 	protected AudioManager audioManager;
 	protected double volumeMusic = 127;
 	protected double volumeEffect = 100;
-	private String TAG = "game";
-	private String SKU_100 = "platinum_100";
-	private String SKU_250 = "platinum_250";
-	private String SKU_1000 = "platinum_1000";
-	private String SKU_5000 = "platinum_5000";
-	private int RC_REQUEST = 10001;
-	IabHelper mHelper;
-	private Context context;@
-	Override
+	private Context context;
+	@Override
 	/**
 	 * sets screen and window variables and reads in data
 	 * creates control object and sets up IAB
@@ -75,13 +58,13 @@ public class StartActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setWindowAndAudio();
-		boolean firstTime = readSavedData();
+		readSavedData();
 		context = this;
 		startMusic();
 		control = new Controller(this, this);
 		setContentView(control);
 	}
-	private boolean readSavedData()
+	private void readSavedData()
 	{
 		read();
 		if(savedData[0] == 0)
@@ -89,104 +72,8 @@ public class StartActivity extends Activity
 			savedData[0] = 1;
 			setSaveData();
 			write();
-			return true;
 		}
 		readSaveData();
-		return false;
-	}
-	
-	Button easyClick;
-	Button medClick;
-	Button hardClick;
-	Button extClick;
-	Button sickClick;
-	Button hurtClick;
-	Button limitedClick;
-	Button regenerateClick;
-	private int difficultyLevel = 10;
-	private LayoutInflater layoutInflater;
-	private int levelSelectedToPlay = 10;
-	private String[] levelNames = new String[] {"    Tutorial", "    Level 1", "    Level 2"};
-	ListView playLevelList;
-	private boolean drainHp=false;
-	private boolean lowerHp=false;
-	private boolean limitSpells=false;
-	private boolean enemyRegen=false;
-	public void playClickHandler(View v)
-	{
-		setContentView(R.layout.play);
-		easyClick = (Button) findViewById(R.id.easy);
-		medClick = (Button) findViewById(R.id.med);
-		hardClick = (Button) findViewById(R.id.hard);
-		extClick = (Button) findViewById(R.id.ext);
-		switch(difficultyLevel)
-		{
-			case 10: easyClick.setBackgroundResource(R.drawable.menu_text_selected150x40);
-				break;
-			case 6: medClick.setBackgroundResource(R.drawable.menu_text_selected150x40);
-				break;
-			case 3: hardClick.setBackgroundResource(R.drawable.menu_text_selected150x40);
-				break;
-			case 0: extClick.setBackgroundResource(R.drawable.menu_text_selected150x40);
-				break;
-		}
-		levelSelectedToPlay=0;
-		sickClick = (Button) findViewById(R.id.sick);
-		hurtClick = (Button) findViewById(R.id.hurt);
-		limitedClick = (Button) findViewById(R.id.limit);
-		regenerateClick = (Button) findViewById(R.id.regen);
-		if(drainHp) sickClick.setBackgroundResource(R.drawable.menu_text_selected150x40);
-		if(lowerHp) hurtClick.setBackgroundResource(R.drawable.menu_text_selected150x40);
-		if(limitSpells) limitedClick.setBackgroundResource(R.drawable.menu_text_selected150x40);
-		if(enemyRegen) regenerateClick.setBackgroundResource(R.drawable.menu_text_selected150x40);
-		playLevelList = (ListView) findViewById(R.id.scroll);
-		playLevelList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, levelNames)
-		{
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent)
-			{
-			    TextView textView = (TextView) super.getView(position, convertView, parent);
-			    textView.setTextColor(Color.parseColor("#FFFFFF"));
-			    return textView;
-			}
-		});
-		playLevelList.setOnItemClickListener(new OnItemClickListener()
-		{
-	         @Override
-             public void onItemClick(AdapterView<?> parent, View view,int position, long id)
-	         {
-	        	 if(levelSelectedToPlay!=0) highlightSelectedLevel((levelSelectedToPlay/10)-1, false);
-	        	 levelSelectedToPlay=(position+1)*10;
-	        	 highlightSelectedLevel(position, true);
-	         }
-	    });
-		playLevelList.setOnScrollListener(new OnScrollListener()
-		{
-			@Override
-			public void onScroll(AbsListView view, int first, int visibleItemCount, int totalItemCount)
-			{
-				for(int i = 0; i < visibleItemCount; i++)
-				{
-					if(i==(levelSelectedToPlay/10)-1) playLevelList.getChildAt(i).setBackgroundColor(Color.parseColor("#33209af1"));
-					else playLevelList.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
-				}
-			}
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {}
-		});
-	}
-	public void highlightSelectedLevel(int position, boolean selected)
-	{
-		if(selected)
-		{
-			playLevelList.getChildAt(position).setBackgroundColor(Color.parseColor("#33209af1"));
-		} else
-		{
-			if(playLevelList.getFirstVisiblePosition()<=position&& position<=playLevelList.getLastVisiblePosition())
-			{
-				playLevelList.getChildAt(position).setBackgroundColor(Color.TRANSPARENT);
-			}
-		}
 	}
 	public void optionsClickHandler(View v)
 	{
@@ -213,7 +100,6 @@ public class StartActivity extends Activity
 	 */
 	protected void setWindowAndAudio()
 	{
-		layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);

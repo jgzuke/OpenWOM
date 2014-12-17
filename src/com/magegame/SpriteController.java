@@ -101,12 +101,10 @@ public final class SpriteController extends SpriteDrawer
 	{
 		if(type==1)
 		{
-			enemies.add(new Enemy_Default(control, x, y, 2000, 9, //x, y, hp, worth 
-					true, false, false, false, false, type)); //gun, sheild, hide, sword, sick
+			enemies.add(new Enemy_Sheild(control, x, y, 2000)); //x, y, hp, sick
 		} else if(type==2)
 		{
-			enemies.add(new Enemy_Default(control, x, y, 2000, 9, //x, y, hp, worth 
-				false, true, false, true, false, type)); //gun, sheild, hide, sword, sick
+			enemies.add(new Enemy_Default(control, x, y, 2000)); //x, y, hp, sick
 		}
 	}
 	/**

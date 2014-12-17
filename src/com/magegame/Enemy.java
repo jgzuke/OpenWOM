@@ -47,7 +47,7 @@ abstract public class Enemy extends Human
 	 * sets danger arrays, speed and control object
 	 * @param creator control object
 	 */
-	public Enemy(Controller creator, double X, double Y, int HP, boolean Sick)
+	public Enemy(Controller creator, double X, double Y, int HP)
 	{
 		super(X, Y, 0, 0, true, false, creator.imageLibrary.enemy_Image[0]);
 		control = creator;
@@ -55,7 +55,6 @@ abstract public class Enemy extends Human
 		danger[1] = levelY;
 		danger[2] = levelXForward;
 		danger[3] = levelYForward;
-		sick = Sick;
 		x = X;
 		y = Y;
 		width = 30;
