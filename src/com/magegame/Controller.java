@@ -201,15 +201,20 @@ public final class Controller extends View
 		levelNum = toLoad;
 		if(toLoad==1)
 		{
+			//LEVEL
 			levelWidth = 450; // height of level
 			levelHeight = 300; // width of level
+			//PLAYER
 			player.x = 30; // player start x
 			player.y = 30; // player start y
-			spriteController.makeEnemy(1, 269, 86);
+			//ENEMIES
+			imageLibrary.loadEnemy(95, "human_enemy", 100, 70, 1); // length, name,width, height, index
+			spriteController.makeEnemy(1, 269, 86); //type, x, y
 			spriteController.makeEnemy(1, 358, 140);
 			spriteController.makeEnemy(1, 365, 204);
 			spriteController.makeEnemy(2, 146, 61);
 			spriteController.makeEnemy(2, 327, 231);
+			//WALLS
 			makeWall_Rectangle(78, 122, 41, 24, true, false);
 			makeWall_Rectangle(63, -20, 31, 142, true, true);
 			makeWall_Rectangle(73, 238, 47, 62, true, true);
@@ -266,23 +271,37 @@ public final class Controller extends View
 				saveEnemyInformation.get(j)[1] = (int) enemies.get(i).x;
 				saveEnemyInformation.get(j)[2] = (int) enemies.get(i).y;
 				saveEnemyInformation.get(j)[3] = enemies.get(i).hp;
-				saveEnemyInformation.get(j)[4] = enemies.get(i).imageIndex;
 				j++;
 			}
 		}
 		endFightSection(tempSave);
 		if(levelNum == 21)
 		{
-			levelWidth = 555;
-			player.x = 25; 						// same format as loading levels
-			spriteController.makeEnemy(2, 99, 195);
-			makeWall_Rectangle(503 - 506, -100, 15, 500, true, true);
-			makeWall_Rectangle(665 - 506, -77, 15, 205, true, true);
-			makeWall_Rectangle(665 - 506, 172, 15, 205, true, true);
-			makeWall_Rectangle(825 - 506+40, -77, 15, 205, true, true);
-			makeWall_Rectangle(825 - 506+40, 172, 15, 205, true, true);
-			makeWall_Rectangle(1014 - 506+40, -77, 15, 205, true, true);
-			makeWall_Rectangle(1014 - 506+40, 172, 15, 205, true, true);
+			//LEVEL
+			levelWidth = 450; // height of level
+			levelHeight = 300; // width of level
+			//PLAYER
+			player.x = 30; // player start x
+			player.y = 30; // player start y
+			//ENEMIES
+			imageLibrary.loadEnemy(95, "human_enemy", 100, 70, 1); // length, name,width, height, index
+			spriteController.makeEnemy(1, 269, 86); //type, x, y
+			spriteController.makeEnemy(1, 358, 140);
+			spriteController.makeEnemy(1, 365, 204);
+			spriteController.makeEnemy(2, 146, 61);
+			spriteController.makeEnemy(2, 327, 231);
+			//WALLS
+			makeWall_Rectangle(78, 122, 41, 24, true, false);
+			makeWall_Rectangle(63, -20, 31, 142, true, true);
+			makeWall_Rectangle(73, 238, 47, 62, true, true);
+			makeWall_Rectangle(94, -19, 25, 152, true, false);
+			makeWall_Rectangle(252, 269, 234, 62, true, true);
+			makeWall_Rectangle(412, 82, 74, 250, true, true);
+			makeWall_Rectangle(382, 133, 30, 83, true, false);
+			makeWall_Circle(330, 297, 47, 1, false);
+			makeWall_Rectangle(217, -15, 109, 81, true, false);
+			makeWall_Rectangle(179, -32, 38, 63, true, true);
+			makeWall_Rectangle(318, -41, 66, 63, true, true);
 		}
 		imageLibrary.loadLevel(levelNum, levelWidth, levelHeight);
 	}

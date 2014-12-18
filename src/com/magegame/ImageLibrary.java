@@ -13,7 +13,7 @@ import android.graphics.BitmapFactory;
 public final class ImageLibrary extends ImageLoader
 {
 	protected Bitmap[] player_Image = new Bitmap[32];
-	protected Bitmap[] enemy_Image = new Bitmap[95];
+	protected Bitmap[][] enemyImages; //array holding videos for each enemy, null when uneeded
 	protected Bitmap structure_Spawn;
 	protected Bitmap[] effects = new Bitmap[4];
 	protected Bitmap isPlayer;
@@ -81,6 +81,13 @@ public final class ImageLibrary extends ImageLoader
 		isPlayer = loadImage("icon_isplayer", 2*isPlayerWidth, 2*isPlayerWidth);
 	}
 	/**
+	 * loads a selection into enemyImages
+	 */
+	protected void loadEnemy(int length, String start, int width, int height, int index)
+	{
+		enemyImages[index]= loadArray1D(length, start, width, height);
+	}
+	/**
 	 * loads all required images for all games
 	 */
 	protected void loadAllImages()
@@ -89,8 +96,6 @@ public final class ImageLibrary extends ImageLoader
 		powerUps = loadArray1D(11, "icon_powerup", 30, 30);
 		powerUpBigs = loadArray1D(5, "icon_powerupbig", 70, 70);
 		coins = loadArray1D(2, "icon_menu_coin", 30, 30);
-		enemy_Image = loadArray1D(95, "human_enemy", 100, 70);//TODO change size
-
 		shotAOEEnemy = loadImage("shotexplodeenemy", 80, 80);
 		shotEnemy = loadImage("shotenemy", 40, 3);
 		shotAOEPlayer = loadImage("shotexplodeplayer", 80, 80);

@@ -13,7 +13,6 @@ public final class Enemy_Sheild extends Enemy
 		enemyType = 0;
 		speedCur = 1.8;
 		frame=0;
-		image = control.imageLibrary.enemy_Image[0];
 		baseHp(HP);
 		worth = 5;
 		if(control.getRandomInt(3) == 0)

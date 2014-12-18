@@ -10,13 +10,15 @@ public class Structure_Spawn extends Structure
 	 * sets danger arrays, speed and control object
 	 * @param creator control object
 	 */
-	public Structure_Spawn(Controller creator, double X, double Y)
+	int childType;
+	public Structure_Spawn(Controller creator, double X, double Y, int ChildType)
 	{
 		super(X, Y, 25, 25, 0, creator.imageLibrary.structure_Spawn);
 		control = creator;
 		hp = 6000;
 		hpMax = hp;
 		worth = 17;
+		childType = ChildType;
 	}
 	/**
 	 * Clears danger arrays, sets current dimensions, and counts timers
@@ -27,7 +29,7 @@ public class Structure_Spawn extends Structure
 		if(timer == 100)
 		{
 			timer = 0;
-			control.spriteController.makeEnemy(1, (int)x, (int)y);
+			control.spriteController.makeEnemy(childType, (int)x, (int)y);
 			control.spriteController.createProj_TrackerEnemyAOE(x, y, 140, false);
 			control.activity.playEffect("burst");
 		}

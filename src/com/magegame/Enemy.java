@@ -52,7 +52,7 @@ abstract public class Enemy extends Human
 	 */
 	public Enemy(Controller creator, double X, double Y, int HP, int ImageIndex)
 	{
-		super(X, Y, 0, 0, true, false, creator.imageLibrary.enemyImages.get(ImageIndex)[0]);
+		super(X, Y, 0, 0, true, false, creator.imageLibrary.enemyImages[ImageIndex][0]);
 		control = creator;
 		danger[0] = levelX;
 		danger[1] = levelY;
@@ -66,7 +66,8 @@ abstract public class Enemy extends Human
 		lastPlayerY = y;
 		action = "Nothing";
 		imageIndex = ImageIndex;
-		myImage = creator.imageLibrary.enemyImages.get(ImageIndex);
+		myImage = creator.imageLibrary.enemyImages[ImageIndex];
+		image = myImage[frame];
 	}
 	/**
 	 * clears desired array

@@ -82,20 +82,20 @@ public final class SpriteController extends SpriteDrawer
 	 */
 	void createEnemy(int[] info)
 	{
-		makeEnemy(info[0], info[1], info[2], info[4]);
+		makeEnemy(info[0], info[1], info[2]);
 		if(info[3] != 0) // if enemy has set health change it, otherwise leave as starting health
 		{
 			enemies.get(enemies.size()-1).hp = info[3];
 		}
 	}
-	protected void makeEnemy(int type, int x, int y, int ImageIndex)
+	protected void makeEnemy(int type, int x, int y)
 	{
 		if(type==1)
 		{
-			enemies.add(new Enemy_Sheild(control, x, y, 2000, ImageIndex)); //x, y, hp, sick
+			enemies.add(new Enemy_Sheild(control, x, y, 2000, type)); //x, y, hp, sick, type is ImageIndex
 		} else if(type==2)
 		{
-			enemies.add(new Enemy_Default(control, x, y, 2000, ImageIndex)); //x, y, hp, sick
+			enemies.add(new Enemy_Default(control, x, y, 2000, type)); //x, y, hp, sick, type is ImageIndex
 		}
 	}
 	/**
