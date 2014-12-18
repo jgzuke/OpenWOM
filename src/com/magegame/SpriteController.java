@@ -34,21 +34,16 @@
  */
 package com.magegame;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
-
 import java.util.ArrayList;
-
-import com.spritelib.Sprite;
 import com.spritelib.SpriteDrawer;
 public final class SpriteController extends SpriteDrawer
 {
 	private Controller control;
-	private Context context;
 	protected ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	protected ArrayList<Structure> structures = new ArrayList<Structure>();
 	protected ArrayList<PowerUp> powerUps = new ArrayList<PowerUp>();
@@ -61,7 +56,6 @@ public final class SpriteController extends SpriteDrawer
 	{
 		super();
 		control = controlSet;
-		context = contextSet;
 	}
 	/*
 	 * 

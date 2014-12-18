@@ -7,7 +7,6 @@ package com.magegame;
 import java.util.ArrayList;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.widget.Toast;
 
 abstract public class Enemy extends Human

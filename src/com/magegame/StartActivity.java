@@ -2,7 +2,6 @@
  * all variables to store as well as some base level behaviors, pause and resume and start functions
  */
 package com.magegame;
-import android.view.ViewGroup;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -14,21 +13,10 @@ import android.media.SoundPool;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 public class StartActivity extends Activity
 {
 	protected Controller control;
@@ -48,7 +36,6 @@ public class StartActivity extends Activity
 	protected AudioManager audioManager;
 	protected double volumeMusic = 127;
 	protected double volumeEffect = 100;
-	private Context context;
 	@Override
 	/**
 	 * sets screen and window variables and reads in data
@@ -59,7 +46,6 @@ public class StartActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setWindowAndAudio();
 		readSavedData();
-		context = this;
 		startMusic();
 		control = new Controller(this, this);
 		setContentView(control);
@@ -127,7 +113,6 @@ public class StartActivity extends Activity
 	 */
 	protected void playMoney()
 	{
-		Log.e("game", "money");
 		float newV = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		newV = (float)(newV * volumeEffect / 127);
 		if(Math.random()>0.5)

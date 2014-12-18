@@ -2,14 +2,10 @@
  * Loads, stores and resizes all graphics
  */
 package com.magegame;
-import java.util.ArrayList;
-
 import com.spritelib.ImageLoader;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 public final class ImageLibrary extends ImageLoader
 {
 	protected Bitmap[] player_Image = new Bitmap[32];

@@ -3,8 +3,6 @@
  */
 package com.magegame;
 
-import android.graphics.Bitmap;
-
 public final class Enemy_Default extends Enemy
 {
 	public Enemy_Default(Controller creator, double X, double Y, int HP, int ImageIndex)

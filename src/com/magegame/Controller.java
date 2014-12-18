@@ -43,11 +43,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Rect;
-import android.graphics.Paint.Style;
 import android.graphics.Typeface;
-import android.media.AudioManager;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -136,6 +133,7 @@ public final class Controller extends View
 		setBackgroundColor(Color.BLACK);
 		setKeepScreenOn(true); // so screen doesnt shut off when game is left inactive
 		detect = new PlayerGestureDetector(this); // creates gesture detector object
+		//TODO what is this all about
 		setOnTouchListener(detect);
 		detect.setPlayer(player);
 		background = drawStart(); // redraws play screen

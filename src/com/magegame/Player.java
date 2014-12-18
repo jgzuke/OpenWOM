@@ -18,8 +18,6 @@ public final class Player extends Human
 	protected double abilityTimer_roll = 0;
 	protected double abilityTimer_burst = 0;
 	protected double abilityTimer_Proj_Tracker = 0;
-	private double xSave = 0;
-	private double ySave = 0;
 	protected int projectileSpeed = 40;
 	protected double touchX;
 	protected boolean touching;
@@ -29,7 +27,6 @@ public final class Player extends Human
 	protected int powerUpTimer = 0;
 	protected int powerID = 0;
 	private int minimumShootTime = 4;
-	private double hpAccurate;
 	Controller control;
 	/**
 	 * Sets all variables to start, sets image

@@ -5,8 +5,6 @@ package com.magegame;
 
 import com.spritelib.Sprite;
 
-import android.util.Log;
-
 public final class PowerUp extends Sprite
 {
 	protected int ID;

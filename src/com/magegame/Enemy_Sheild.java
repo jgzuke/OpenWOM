@@ -3,7 +3,6 @@
  */
 package com.magegame;
 
-import android.graphics.Bitmap;
 
 public final class Enemy_Sheild extends Enemy
 {
