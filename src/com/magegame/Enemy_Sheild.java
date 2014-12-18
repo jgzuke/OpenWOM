@@ -2,11 +2,14 @@
  * AI and variables for rogues
  */
 package com.magegame;
+
+import android.graphics.Bitmap;
+
 public final class Enemy_Sheild extends Enemy
 {
-	public Enemy_Sheild(Controller creator, double X, double Y, int HP)
+	public Enemy_Sheild(Controller creator, double X, double Y, int HP, int ImageIndex)
 	{
-		super(creator, X, Y, HP);
+		super(creator, X, Y, HP, ImageIndex);
 		enemyType = 0;
 		speedCur = 1.8;
 		frame=0;
@@ -30,7 +33,7 @@ public final class Enemy_Sheild extends Enemy
 		{
 			pickAction();
 		}
-		image = control.imageLibrary.enemy_Image[frame];
+		image = myImage[frame];
 		super.frameCall();
 	}
 	protected void frameReactionsDangerLOS()

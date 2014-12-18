@@ -206,7 +206,7 @@ public final class Controller extends View
 			player.x = 30; // player start x
 			player.y = 30; // player start y
 			spriteController.makeEnemy(1, 269, 86);
-			spriteController.makeEnemy(1, 358, 140, true);
+			spriteController.makeEnemy(1, 358, 140);
 			spriteController.makeEnemy(1, 365, 204);
 			spriteController.makeEnemy(2, 146, 61);
 			spriteController.makeEnemy(2, 327, 231);
@@ -255,29 +255,22 @@ public final class Controller extends View
 		{
 			if(spriteController.powerUps.get(i) != null) player.getPowerUp(spriteController.powerUps.get(i).ID);
 		}			 // READS IN AND CREATES ENEMIES IN NEW SECTION, SAVES ENEMIES IN OLD SECTION
-			ArrayList<int[]> tempSave = (ArrayList<int[]>)saveEnemyInformation.clone();
-			int j = 0;
-			for(int i = 0; i < saveEnemyInformation.size(); i++)
+		ArrayList<int[]> tempSave = (ArrayList<int[]>)saveEnemyInformation.clone();
+		int j = 0;
+		for(int i = 0; i < saveEnemyInformation.size(); i++)
+		{
+			ArrayList<Enemy> enemies = spriteController.enemies;
+			if(!enemies.get(i).deleted)
 			{
-				ArrayList<Enemy> enemies = spriteController.enemies;
-				if(!enemies.get(i).deleted)
-				{
-					saveEnemyInformation.get(j)[0] = enemies.get(i).enemyType;
-					saveEnemyInformation.get(j)[1] = (int) enemies.get(i).x;
-					saveEnemyInformation.get(j)[2] = (int) enemies.get(i).y;
-					saveEnemyInformation.get(j)[3] = enemies.get(i).hp;
-					if(enemies.get(i).keyHolder)
-					{
-						saveEnemyInformation.get(j)[4] = 1;
-					}
-					else
-					{
-						saveEnemyInformation.get(j)[4] = 0;
-					}
-					j++;
-				}
+				saveEnemyInformation.get(j)[0] = enemies.get(i).enemyType;
+				saveEnemyInformation.get(j)[1] = (int) enemies.get(i).x;
+				saveEnemyInformation.get(j)[2] = (int) enemies.get(i).y;
+				saveEnemyInformation.get(j)[3] = enemies.get(i).hp;
+				saveEnemyInformation.get(j)[4] = enemies.get(i).imageIndex;
+				j++;
 			}
-			endFightSection(tempSave);
+		}
+		endFightSection(tempSave);
 		if(levelNum == 21)
 		{
 			levelWidth = 555;

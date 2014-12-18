@@ -6,6 +6,7 @@ package com.magegame;
 
 import java.util.ArrayList;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,6 +20,8 @@ abstract public class Enemy extends Human
 	protected double lastPlayerY;
 	protected boolean sick = false;
 	protected boolean checkedPlayerLast = true;
+	protected Bitmap [] myImage;
+	protected int imageIndex;
 	protected double danger[][] = new double[4][30];
 	private double levelX[] = new double[30];
 	private double levelY[] = new double[30];
@@ -47,9 +50,9 @@ abstract public class Enemy extends Human
 	 * sets danger arrays, speed and control object
 	 * @param creator control object
 	 */
-	public Enemy(Controller creator, double X, double Y, int HP)
+	public Enemy(Controller creator, double X, double Y, int HP, int ImageIndex)
 	{
-		super(X, Y, 0, 0, true, false, creator.imageLibrary.enemy_Image[0]);
+		super(X, Y, 0, 0, true, false, creator.imageLibrary.enemyImages.get(ImageIndex)[0]);
 		control = creator;
 		danger[0] = levelX;
 		danger[1] = levelY;
@@ -62,6 +65,8 @@ abstract public class Enemy extends Human
 		lastPlayerX = x;
 		lastPlayerY = y;
 		action = "Nothing";
+		imageIndex = ImageIndex;
+		myImage = creator.imageLibrary.enemyImages.get(ImageIndex);
 	}
 	/**
 	 * clears desired array
