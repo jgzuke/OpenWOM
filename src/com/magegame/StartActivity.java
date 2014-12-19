@@ -27,6 +27,7 @@ public class StartActivity extends Activity
 	protected byte [] worships = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // all the olympians
 	protected boolean [] skins = {false, false, false, false, false, false, false, false}; //skins
 	protected byte currentSkin = 0;
+	protected byte materials[][] = new byte[20][2]; // 2 are type, amount
 	private FileOutputStream fileWrite;
 	private FileInputStream fileRead;
 	private int savePoints = 50;
@@ -416,8 +417,6 @@ public class StartActivity extends Activity
 	
 	
 	
-	
-	byte materials[][] = new byte[10][2]; // 2 are type, amount
 	/**
 	 * set data to write it to save file
 	 */
@@ -434,8 +433,13 @@ public class StartActivity extends Activity
 		{
 			if(skins[i]) savedData[15]+=Math.pow(2, i);
 		}
-		savedData[16] = currentSkin;					//10 current skin
-		
+		savedData[16] = currentSkin;					//16 current skin
+		for(int i = 0; i < 20; i++)						//15 skins as one byte
+		{
+			savedData[i+17]=materials[i][0];
+			savedData[i+37]=materials[i][1];
+		}
+		//savedData[58]=
 	}
 	/**
 	 * read data once it has been put into savedData array
@@ -455,6 +459,12 @@ public class StartActivity extends Activity
 			temp /=2;
 		}
 		currentSkin = savedData[16];
+		for(int i = 0; i < 20; i++)						//15 skins as one byte
+		{
+			materials[i][0]=savedData[i+17];
+			materials[i][1]=savedData[i+37];
+		}
+		//savedData[58]=
 	}
 	/**
 	 * reads saved data
