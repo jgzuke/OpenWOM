@@ -19,8 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 public class ItemController extends Activity
 {
-	protected byte [] items = {0, 0, 0, 0, 0, 0}; // attack, heal
-	protected byte materials[][] = new byte[20][2]; // 2 are type, amount
+	protected byte materials[][] = new byte[20][2]; // 2 are type, amount, put useables in here too
 	public ItemController()
 	{
 	}
