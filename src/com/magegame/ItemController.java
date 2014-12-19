@@ -13,24 +13,57 @@ public class ItemController
 		{{{0, 0}, {0, 0}, {0, 0}}, {{0, 0}, {0, 0}, {0, 0}}},
 		{{{0, 0}, {0, 0}, {0, 0}}, {{0, 0}, {0, 0}, {0, 0}}}
 		};
+	protected int maxWeight = 300;
 	public ItemController()
 	{
 	}
-	protected void useItem(String s)
+	protected void use(String s)
 	{
-		materials[typeOf(s)]--;
+		use(typeOf(s));
 	}
-	protected void getItem(String s)
+	protected void use(int index)
 	{
-		materials[typeOf(s)]++;
+		use(index, 1);
 	}
-	protected void useItem(int index)
+	protected void use(String s, int i)
 	{
-		materials[index]--;
+		use(typeOf(s), i);
 	}
-	protected void getItem(int index)
+	protected void use(int index, int i)
 	{
-		materials[index]++;
+		if(has(index, i)) materials[index]-=i;
+	}
+	protected void get(int index, int i)
+	{
+		if(canGet(index, i)) materials[index]+=i;
+	}
+	protected void get(String s)
+	{
+		get(typeOf(s));
+	}
+	protected void get(int index)
+	{
+		get(index, 1);
+	}
+	protected void get(String s, int i)
+	{
+		get(typeOf(s), i);
+	}
+	
+	protected boolean has(int index)
+	{
+		return has(index, 1);
+	}
+	protected boolean has(int index, int i)
+	{
+		return materials[index]>=i;
+	}
+	protected boolean canGet(int index, int amount)
+	{
+		materials[index]+=amount;
+		boolean allowed = getStacks()<=10&&getWeight()<=maxWeight;
+		materials[index]-=amount;
+		return allowed;
 	}
 	protected boolean canCraft(int recipeIndex)
 	{
@@ -40,6 +73,24 @@ public class ItemController
 			if(materials[need[i][0]]<need[i][1]) return false; // if we dont have enough of any item
 		}
 		return true;
+	}
+	protected int getWeight()
+	{
+		int sum = 0;
+		for(int i = 0; i < 40; i ++)
+		{
+			sum += weigh(i)*materials[i];
+		}
+		return sum;
+	}
+	protected int getStacks()
+	{
+		int count = 0;
+		for(int i = 0; i < 40; i ++)
+		{
+			if(materials[i]>0) count ++;
+		}
+		return count;
 	}
 	protected void craft(int recipeIndex)
 	{
