@@ -8,7 +8,7 @@ public class ItemController
 	//CAP MATERIALS BY STACKS AND TOTAL WEIGHT
 	
 	//FORMAT FOR RECIPEES each recipe{{{matType, matAmount}, {A, T}, {A, T}}, {{endType, endAmount}, {A, T}, {A, T}}};
-	protected byte[][][][] recipees = {
+	private byte[][][][] recipees = {
 		{{{0, 0}, {0, 0}, {0, 0}}, {{0, 0}, {0, 0}, {0, 0}}},
 		{{{0, 0}, {0, 0}, {0, 0}}, {{0, 0}, {0, 0}, {0, 0}}},
 		{{{0, 0}, {0, 0}, {0, 0}}, {{0, 0}, {0, 0}, {0, 0}}}
@@ -16,19 +16,42 @@ public class ItemController
 	public ItemController()
 	{
 	}
-	private boolean canCraft(int recipeIndex)
+	protected void useItem(String s)
+	{
+		materials[typeOf(s)]--;
+	}
+	protected void getItem(String s)
+	{
+		materials[typeOf(s)]++;
+	}
+	protected void useItem(int index)
+	{
+		materials[index]--;
+	}
+	protected void getItem(int index)
+	{
+		materials[index]++;
+	}
+	protected boolean canCraft(int recipeIndex)
 	{
 		byte [][] need = recipees[recipeIndex][0];
-		if(materials[need[0][0]]<need[0][1]) return false;
-		if(materials[need[1][0]]<need[1][1]) return false;
-		if(materials[need[2][0]]<need[2][1]) return false;
+		for(int i = 0; i < 3; i ++)
+		{
+			if(materials[need[i][0]]<need[i][1]) return false; // if we dont have enough of any item
+		}
 		return true;
 	}
-	private void craft(int recipeIndex)
+	protected void craft(int recipeIndex)
 	{
+		byte [][] need = recipees[recipeIndex][0];
+		byte [][] result = recipees[recipeIndex][0];
 		if(canCraft(recipeIndex))
 		{
-			
+			for(int i = 0; i < 3; i ++)
+			{
+				materials[need[i][0]] -= need[i][1];		// remove used mats
+				materials[result[i][0]] += result[i][1];	// reap rewards
+			}
 		}
 	}
 	private String describe(String s)
