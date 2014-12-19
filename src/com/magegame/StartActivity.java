@@ -24,7 +24,8 @@ public class StartActivity extends Activity
 	protected int screenMinX;
 	protected int screenMinY;
 	protected byte [] items = {0, 0, 0, 0, 0, 0}; // attack, heal
-	protected boolean [] skins = {false, false, false, false, false, false, false};
+	protected byte [] worships = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // all the olympians
+	protected boolean [] skins = {false, false, false, false, false, false, false, false}; //skins
 	protected byte currentSkin = 0;
 	private FileOutputStream fileWrite;
 	private FileInputStream fileRead;
@@ -416,45 +417,44 @@ public class StartActivity extends Activity
 	
 	
 	
-	
+	byte materials[][] = new byte[10][2]; // 2 are type, amount
 	/**
 	 * set data to write it to save file
 	 */
 	public void setSaveData()
-	{
-		savedData[1] = 1;
-		savedData[2] = 0;
-		savedData[3] = 1;
-		savedData[29] = 0;
-		savedData[24] = (byte)((int) volumeMusic);
-		savedData[25] = (byte)((int) volumeEffect);
-		savedData[30] = 0;
-		savedData[31] = 0;
-		savedData[32] = 0;
-		savedData[33] = 0;
-		savedData[34] = 0;
-		savedData[35] = 0;
-		savedData[36] = 0;
-		for(int i = 0; i < 7; i++)
+	{ //TODO change some
+		savedData[1] = (byte)((int) volumeMusic);		//1 volume music
+		savedData[2] = (byte)((int) volumeEffect);		//2 volume effect
+		for(int i = 0; i < 12; i++)						//3-14 worships
 		{
-			if(skins[i]) savedData[i+30]=1;
+			savedData[i+3]=worships[i];
 		}
-		savedData[37] = currentSkin;
-		savedData[44] = 1;
+		savedData[15]=0;
+		for(int i = 0; i < 8; i++)						//15 skins as one byte
+		{
+			if(skins[i]) savedData[15]+=Math.pow(2, i);
+		}
+		savedData[16] = currentSkin;					//10 current skin
+		
 	}
 	/**
 	 * read data once it has been put into savedData array
 	 */
 	public void readSaveData()
-	{
-		volumeMusic = savedData[24];
-		volumeEffect = savedData[25];
-		for(int i = 0; i < 7; i++)
+	{ //TODO change some
+		volumeMusic = savedData[1];
+		volumeEffect = savedData[2];
+		for(int i = 0; i < 12; i++)
 		{
-			skins[i]= savedData[i+30]==1;
+			worships[i]= savedData[i+3];
 		}
-		currentSkin = savedData[37];
-		savedData[44] = 1;
+		int temp = savedData[15];
+		for(int i = 0; i <7; i++)
+		{
+			skins[i]=(temp%2==1);
+			temp /=2;
+		}
+		currentSkin = savedData[16];
 	}
 	/**
 	 * reads saved data
@@ -499,7 +499,6 @@ public class StartActivity extends Activity
 		}
 		catch(IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		closeRead();
@@ -516,7 +515,6 @@ public class StartActivity extends Activity
 		}
 		catch(IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		closeWrite();
@@ -548,7 +546,6 @@ public class StartActivity extends Activity
 		}
 		catch(FileNotFoundException e)
 		{
-			// TODO Auto-generated catch block
 		}
 	}
 	/**
@@ -562,8 +559,6 @@ public class StartActivity extends Activity
 		}
 		catch(IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	/**
@@ -577,7 +572,6 @@ public class StartActivity extends Activity
 		}
 		catch(IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
