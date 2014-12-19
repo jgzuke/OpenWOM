@@ -19,15 +19,14 @@ import android.view.Window;
 import android.view.WindowManager;
 public class StartActivity extends Activity
 {
-	protected Controller control;
+	private Controller control;
+	private ItemController itemControl;
 	protected double screenDimensionMultiplier;
 	protected int screenMinX;
 	protected int screenMinY;
-	protected byte [] items = {0, 0, 0, 0, 0, 0}; // attack, heal
 	protected byte [] worships = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // all the olympians
 	protected boolean [] skins = {false, false, false, false, false, false, false, false}; //skins
 	protected byte currentSkin = 0;
-	protected byte materials[][] = new byte[20][2]; // 2 are type, amount
 	private FileOutputStream fileWrite;
 	private FileInputStream fileRead;
 	private int savePoints = 50;
@@ -50,6 +49,7 @@ public class StartActivity extends Activity
 		readSavedData();
 		startMusic();
 		control = new Controller(this, this);
+		itemControl = new ItemController();
 		setContentView(control);
 	}
 	private void readSavedData()
@@ -391,92 +391,6 @@ public class StartActivity extends Activity
 	
 	
 	
-	
-	
-	
-	
-	private String matDescribe(String s)
-	{
-		return matDescribe(matTypeInt(s));
-	}
-	private String matDescribe(int i)
-	{
-		switch(i)
-		{
-			case 0: return "";
-			case 1: return "";
-			case 2: return "";
-			case 3: return "";
-			case 4: return "";
-			case 5: return "";
-			case 6: return "";
-			case 7: return "";
-			case 8: return "";
-			case 9: return "";
-			case 10: return "";
-			case 11: return "";
-			case 12: return "";
-			case 13: return "";
-			case 14: return "";
-			case 15: return "";
-			case 16: return "";
-			case 17: return "";
-			case 18: return "";
-			case 19: return "";
-			default: return "";
-		}
-	}
-	private String matTypeString(int i)
-	{
-		switch(i)
-		{
-			case 0: return "";
-			case 1: return "";
-			case 2: return "";
-			case 3: return "";
-			case 4: return "";
-			case 5: return "";
-			case 6: return "";
-			case 7: return "";
-			case 8: return "";
-			case 9: return "";
-			case 10: return "";
-			case 11: return "";
-			case 12: return "";
-			case 13: return "";
-			case 14: return "";
-			case 15: return "";
-			case 16: return "";
-			case 17: return "";
-			case 18: return "";
-			case 19: return "";
-			default: return "";
-		}
-	}
-	private int matTypeInt(String s)
-	{
-		if(s.equals("rock")) return 0;
-		else if(s.equals("rock")) return 1;
-		else if(s.equals("rock")) return 2;
-		else if(s.equals("rock")) return 3;
-		else if(s.equals("rock")) return 4;
-		else if(s.equals("rock")) return 5;
-		else if(s.equals("rock")) return 6;
-		else if(s.equals("rock")) return 7;
-		else if(s.equals("rock")) return 8;
-		else if(s.equals("rock")) return 9;
-		else if(s.equals("rock")) return 10;
-		else if(s.equals("rock")) return 11;
-		else if(s.equals("rock")) return 12;
-		else if(s.equals("rock")) return 13;
-		else if(s.equals("rock")) return 14;
-		else if(s.equals("rock")) return 15;
-		else if(s.equals("rock")) return 16;
-		else if(s.equals("rock")) return 17;
-		else if(s.equals("rock")) return 18;
-		else if(s.equals("rock")) return 19;
-		return 0;
-	}
 	/**
 	 * set data to write it to save file
 	 */
@@ -496,8 +410,8 @@ public class StartActivity extends Activity
 		savedData[16] = currentSkin;					//16 current skin
 		for(int i = 0; i < 20; i++)						//15 skins as one byte
 		{
-			savedData[i+17]=materials[i][0];
-			savedData[i+37]=materials[i][1];
+			savedData[i+17]=itemControl.materials[i][0];
+			savedData[i+37]=itemControl.materials[i][1];
 		}
 		//savedData[58]=
 	}
@@ -521,8 +435,8 @@ public class StartActivity extends Activity
 		currentSkin = savedData[16];
 		for(int i = 0; i < 20; i++)						//15 skins as one byte
 		{
-			materials[i][0]=savedData[i+17];
-			materials[i][1]=savedData[i+37];
+			itemControl.materials[i][0]=savedData[i+17];
+			itemControl.materials[i][1]=savedData[i+37];
 		}
 		//savedData[58]=
 	}
