@@ -2,32 +2,40 @@
  * all variables to store as well as some base level behaviors, pause and resume and start functions
  */
 package com.magegame;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import com.magegame.R;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.SoundPool;
-import android.os.Bundle;
-import android.app.Activity;
-import android.content.Context;
-import android.view.Menu;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-public class ItemController extends Activity
+public class ItemController
 {
-	protected byte materials[][] = new byte[20][2]; // 2 are type, amount, put useables in here too
+	protected byte materials[] = new byte[40]; // 2 are type, amount, put useables in here too
+	//CAP MATERIALS BY STACKS AND TOTAL WEIGHT
+	
+	//FORMAT FOR RECIPEES each recipe{{{matType, matAmount}, {A, T}, {A, T}}, {{endType, endAmount}, {A, T}, {A, T}}};
+	protected byte[][][][] recipees = {
+		{{{0, 0}, {0, 0}, {0, 0}}, {{0, 0}, {0, 0}, {0, 0}}},
+		{{{0, 0}, {0, 0}, {0, 0}}, {{0, 0}, {0, 0}, {0, 0}}},
+		{{{0, 0}, {0, 0}, {0, 0}}, {{0, 0}, {0, 0}, {0, 0}}}
+		};
 	public ItemController()
 	{
 	}
-	private String matDescribe(String s)
+	private boolean canCraft(int recipeIndex)
 	{
-		return matDescribe(matTypeInt(s));
+		byte [][] need = recipees[recipeIndex][0];
+		if(materials[need[0][0]]<need[0][1]) return false;
+		if(materials[need[1][0]]<need[1][1]) return false;
+		if(materials[need[2][0]]<need[2][1]) return false;
+		return true;
 	}
-	private String matDescribe(int i)
+	private void craft(int recipeIndex)
+	{
+		if(canCraft(recipeIndex))
+		{
+			
+		}
+	}
+	private String describe(String s)
+	{
+		return describe(typeOf(s));
+	}
+	private String describe(int i)
 	{
 		switch(i)
 		{
@@ -54,7 +62,38 @@ public class ItemController extends Activity
 			default: return "";
 		}
 	}
-	private String matTypeString(int i)
+	private int weigh(String s)
+	{
+		return weigh(typeOf(s));
+	}
+	private int weigh(int i)
+	{
+		switch(i)
+		{
+			case 0: return 1;
+			case 1: return 1;
+			case 2: return 1;
+			case 3: return 1;
+			case 4: return 1;
+			case 5: return 1;
+			case 6: return 1;
+			case 7: return 1;
+			case 8: return 1;
+			case 9: return 1;
+			case 10: return 1;
+			case 11: return 1;
+			case 12: return 1;
+			case 13: return 1;
+			case 14: return 1;
+			case 15: return 1;
+			case 16: return 1;
+			case 17: return 1;
+			case 18: return 1;
+			case 19: return 1;
+			default: return 0;
+		}
+	}
+	private String nameOf(int i)
 	{
 		switch(i)
 		{
@@ -81,7 +120,7 @@ public class ItemController extends Activity
 			default: return "";
 		}
 	}
-	private int matTypeInt(String s)
+	private int typeOf(String s)
 	{
 		if(s.equals("rock")) return 0;
 		else if(s.equals("rock")) return 1;

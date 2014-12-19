@@ -223,136 +223,6 @@ public class StartActivity extends Activity
 			backMusic = null;
 		}
 	}
-	/**
-	 * returns item description
-	 * @param toBuy item to get description for
-	 * @return description
-	 */
-	protected String[] getItemDescribe(String toBuy)
-	{
-		String[] describe = new String[2];
-		if(toBuy.equals("Worship Apollo"))
-		{
-			describe[0] = "Damage modifier increased while";
-			describe[1] = "fighting under Apollo";
-		}
-		else if(toBuy.equals("Worship Posiedon"))
-		{
-			describe[0] = "Attack cooldown speed increased";
-			describe[1] = "while fighting under Posiedon";
-		}
-		else if(toBuy.equals("Worship Zues"))
-		{
-			describe[0] = "Movement speed and roll cooldown";
-			describe[1] = "increased while fighting under Zues";
-		}
-		else if(toBuy.equals("Worship Hades"))
-		{
-			describe[0] = "Damage reduction increased while";
-			describe[1] = "fighting under Hades";
-		}
-		else if(toBuy.equals("Worship Hephaestus"))
-		{
-			describe[0] = "Increases health during battles";
-			describe[1] = "";
-		}
-		else if(toBuy.equals("Worship Ares"))
-		{
-			describe[0] = "Increases damage dealt during";
-			describe[1] = "battles";
-		}
-		else if(toBuy.equals("Worship Athena"))
-		{
-			describe[0] = "Decreases cooldown time for all";
-			describe[1] = "attacks or spells during battles";
-		}
-		else if(toBuy.equals("Worship Hermes"))
-		{
-			describe[0] = "Increases movement speed and";
-			describe[1] = "decreases roll cooldown time";
-		}
-		else if(toBuy.equals("Ambrosia"))
-		{
-			describe[0] = "Heals 2000 of players Hp, ";
-			describe[1] = "stopping at full";
-		}
-		else if(toBuy.equals("Cooldown"))
-		{
-			describe[0] = "Teleport, burst and roll";
-			describe[1] = "cooldowns set to full";
-		}
-		else if(toBuy.equals("Posiedon's Shell"))
-		{
-			describe[0] = "Fight under Posiedon for a short";
-			describe[1] = "length of time, reducing cooldowns";
-		}
-		else if(toBuy.equals("Hades' Helm"))
-		{
-			describe[0] = "Fight under Hades for a short";
-			describe[1] = "length of time, increasing armor";
-		}
-		else if(toBuy.equals("Zues's Armor"))
-		{
-			describe[0] = "Fight under Zues for a short length";
-			describe[1] = "of time, increasing movement speed";
-		}
-		else if(toBuy.equals("Apollo's Flame"))
-		{
-			describe[0] = "Fight under Apollo for a short";
-			describe[1] = "length of time, increasing damage";
-		}
-		else if(toBuy.equals("Worship Hera"))
-		{
-			describe[0] = "Increases rate of drop of";
-			describe[1] = "blessings during battles";
-		}
-		else if(toBuy.equals("1000g"))
-		{
-			describe[0] = "One thousand gold to spend";
-			describe[1] = "on upgrades etc.";
-		}
-		else if(toBuy.equals("8000g"))
-		{
-			describe[0] = "Eight thousand gold to";
-			describe[1] = "spend on upgrades etc.";
-		}
-		else if(toBuy.equals("40000g"))
-		{
-			describe[0] = "Forty thousand gold";
-			describe[1] = "to spendon upgrades etc.";
-		}
-		else if(toBuy.equals("Iron Golem"))
-		{
-			describe[0] = "Temporarily transforms player";
-			describe[1] = "into a large iron golem";
-		}
-		else if(toBuy.equals("Gold Golem"))
-		{
-			describe[0] = "Temporarily transforms player";
-			describe[1] = "into a large golden golem";
-		}
-		else if(toBuy.equals("Reserve"))
-		{
-			describe[0] = "Increases the maximum number of";
-			describe[1] = "shots the player can store";
-		}
-		else if(toBuy.equals("Excess"))
-		{
-			describe[0] = "Increases profit from completing";
-			describe[1] = "levels or killing enemies";
-		}
-		else if(toBuy.equals("Replentish"))
-		{
-			describe[0] = "Damaging enemies lowers cooldowns";
-			describe[1] = "for spells etc.";
-		}
-		else if(toBuy.equals("Trailing"))
-		{
-			describe[0] = "Players shots trail enemies better,";
-			describe[1] = "making them more likely to hit";
-		}
-		return describe;
-	}
 	@ Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -408,10 +278,9 @@ public class StartActivity extends Activity
 			if(skins[i]) savedData[15]+=Math.pow(2, i);
 		}
 		savedData[16] = currentSkin;					//16 current skin
-		for(int i = 0; i < 20; i++)						//15 skins as one byte
+		for(int i = 0; i < 40; i++)						//15 skins as one byte
 		{
-			savedData[i+17]=itemControl.materials[i][0];
-			savedData[i+37]=itemControl.materials[i][1];
+			savedData[i+17]=itemControl.materials[i];
 		}
 		//savedData[58]=
 	}
@@ -433,10 +302,9 @@ public class StartActivity extends Activity
 			temp /=2;
 		}
 		currentSkin = savedData[16];
-		for(int i = 0; i < 20; i++)						//15 skins as one byte
+		for(int i = 0; i < 40; i++)						//15 skins as one byte
 		{
-			itemControl.materials[i][0]=savedData[i+17];
-			itemControl.materials[i][1]=savedData[i+37];
+			itemControl.materials[i]=savedData[i+17];
 		}
 		//savedData[58]=
 	}
