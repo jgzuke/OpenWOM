@@ -8,7 +8,6 @@ import android.widget.Toast;
 public final class Player extends Human
 {
 	protected double touchY;
-	private double damageMultiplier = 1;
 	protected boolean playing = false;
 	protected int rollTimer = 0;
 	private double xMoveRoll;
@@ -18,7 +17,6 @@ public final class Player extends Human
 	protected double abilityTimer_roll = 0;
 	protected double abilityTimer_burst = 0;
 	protected double abilityTimer_Proj_Tracker = 0;
-	protected int projectileSpeed = 40;
 	protected double touchX;
 	protected boolean touching;
 	protected boolean touchingShoot;
@@ -32,6 +30,28 @@ public final class Player extends Human
 	 * Sets all variables to start, sets image
 	 * @param creator control object
 	 */
+	
+	
+	/*
+	 * these variables are for changes and stuff
+	 */
+	private double shotDmg = 1;
+	private double burstDmg = 1;
+	private double takenDmg = 1;
+	private int hpStart = 1;
+	private double rollCharge = 1;
+	private double burstCharge = 1;
+	private double shotCharge = 1;
+	private double mySpeed = 3.7;
+	private double stunChance = 1;
+	private double shotSpeed = 1;
+	private int shotHold = 91;
+	private int burstHold = 500;
+	private int rollHold = 120;
+	private double tracking = 1;
+	private double maxSP = 1;
+	private double chargeSP = 1;
+	private double findChance = 1;
 	public Player(Controller creator)
 	{
 		super(0, 0, 0, 0, true, false, creator.imageLibrary.player_Image[0]);
@@ -54,21 +74,43 @@ public final class Player extends Human
 	public void resetVariables()
 	{
 		control.imageLibrary.loadPlayerImage();
-		damageMultiplier = 1;
 		rollTimer = 0;
 		sp = 1;
 		abilityTimer_roll = 120;
 		abilityTimer_burst = 250;
 		abilityTimer_Proj_Tracker = 0;
-		projectileSpeed = 40;
 		touching = false;
 		x = 370;
 		y = 160;
-		hp = 7000;
-		setHpMax(hp);
 		deleted = false;
 		playing = false;
 		powerUpTimer=0;
+		setAttributes();
+		hp = hpStart;
+		setHpMax(hp);
+	}
+	/**
+	 * 
+	 */
+	private void setAttributes()
+	{
+		shotDmg = 1;
+		burstDmg = 1;
+		takenDmg = 1;
+		hpStart = 1;
+		rollCharge = 1;
+		burstCharge = 1;
+		shotCharge = 1;
+		mySpeed = 3.7;
+		stunChance = 1;
+		shotSpeed = 1;
+		shotHold = 91;
+		burstHold = 500;
+		rollHold = 120;
+		tracking = 1;
+		maxSP = 1;
+		chargeSP = 1;
+		findChance = 1;
 	}
 	/**
 	 * Counts timers and executes movement and predefined behaviors
@@ -81,63 +123,62 @@ public final class Player extends Human
 		powerUpTimer--;
 		sp -= 0.0001;
 		spMod = 1;
-		speedCur = 3.7;
+		speedCur = mySpeed;
 		if(sp > 1.5) sp = 1.5;
 		if(sp < 0.5) sp = 0.5;
-			double cooldown = 1;
-			abilityTimer_roll += cooldown*1.4;
-			abilityTimer_burst += cooldown*1.4;
-			abilityTimer_Proj_Tracker += cooldown*5;
-			if(abilityTimer_burst >= 500) abilityTimer_burst = 500;
-			if(abilityTimer_Proj_Tracker >= 91) abilityTimer_Proj_Tracker = 91;
-			if(abilityTimer_roll >= 120) abilityTimer_roll = 120;
-			if(rollTimer > 0)
+		abilityTimer_roll += rollCharge;
+		abilityTimer_burst += burstCharge;
+		abilityTimer_Proj_Tracker += shotCharge;
+		if(abilityTimer_burst >= burstHold) abilityTimer_burst = burstHold;
+		if(abilityTimer_Proj_Tracker >= shotHold) abilityTimer_Proj_Tracker = shotHold;
+		if(abilityTimer_roll >= rollHold) abilityTimer_roll = rollHold;
+		if(rollTimer > 0)
+		{
+			rollTimer--;
+			x += xMoveRoll;
+			y += yMoveRoll;
+		}
+		if(frame == 30) // roll finished
+		{
+			frame = 0;
+			playing = false;
+		}
+		if(frame == 19)frame = 0; // restart walking animation
+		if(playing) frame++;
+		if(frame > 31)frame = 0; // player stopped shooting
+		super.frameCall();
+		if(rollTimer < 1)
+		{
+			if(!deleted)
 			{
-				rollTimer--;
-				x += xMoveRoll;
-				y += yMoveRoll;
-			}
-			if(frame == 30) // roll finished
-			{
-				frame = 0;
-				playing = false;
-			}
-			if(frame == 19)frame = 0; // restart walking animation
-			if(playing) frame++;
-			if(frame > 31)frame = 0; // player stopped shooting
-			super.frameCall();
-			if(rollTimer < 1)
-			{
-				if(!deleted)
+				if(touchingShoot)
 				{
-					if(touchingShoot)
+					frame = 31;
+					playing = false;
+					rads = Math.atan2(touchShootY, touchShootX);
+			        rotation=rads*180/Math.PI;
+			        if(abilityTimer_Proj_Tracker > 30&&minimumShootTime<1)
+		           	{
+			        	releaseProj_Tracker();
+			        	control.shootStick.rotation=rads*180/Math.PI;
+		            	minimumShootTime = 2;
+		           	}
+				} else
+				{
+					if(!touching || (Math.abs(touchX) < 5 && Math.abs(touchY) < 5))
 					{
-						frame = 31;
 						playing = false;
-						rads = Math.atan2(touchShootY, touchShootX);
-				        rotation=rads*180/Math.PI;
-				        if(abilityTimer_Proj_Tracker > 30&&minimumShootTime<1)
-		            	{
-				        	releaseProj_Tracker();
-				        	control.shootStick.rotation=rads*180/Math.PI;
-			            	minimumShootTime = 2;
-		            	}
-					} else
+						frame = 0;
+					}
+					else
 					{
-						if(!touching || (Math.abs(touchX) < 5 && Math.abs(touchY) < 5))
-						{
-							playing = false;
-							frame = 0;
-						}
-						else
-						{
-							rads = Math.atan2(touchY, touchX);
-							rotation = rads * r2d;
-							movement();
-						}
+						rads = Math.atan2(touchY, touchX);
+						rotation = rads * r2d;
+						movement();
 					}
 				}
 			}
+		}
 		image = control.imageLibrary.player_Image[frame];
 		sizeImage();
 		if(x < 10) x = (10);
@@ -165,7 +206,7 @@ public final class Player extends Human
 		{
 			if(rollTimer < 0)
 			{
-					control.spriteController.createProj_TrackerPlayer(rads*r2d, projectileSpeed, 130, x, y);
+					control.spriteController.createProj_TrackerPlayer(rads*r2d, shotSpeed, 130, x, y);
 					abilityTimer_Proj_Tracker -= 30;
 					control.activity.playEffect("shoot");
 			}
@@ -240,7 +281,7 @@ public final class Player extends Human
 	{
 		control.playerHit = 0;
 		damage *= 0.7;
-			damage *= damageMultiplier;
+			damage *= takenDmg;
 			super.getHit(damage);
 			sp -= sp*damage/1500;
 			if(deleted) control.die();
