@@ -249,10 +249,10 @@ abstract public class Enemy extends Human
 			if(action.equals("Hide")) action = "Nothing";
 			damage /= 1.2;
 			super.getHit(damage);
-			control.player.abilityTimer_burst += damage/30;
-			control.player.abilityTimer_roll += damage/50;
-			control.player.abilityTimer_Proj_Tracker += damage/100;
-			control.player.sp += damage*0.00003;
+			control.player.abilityTimer_burst += damage/30*control.player.chargeCooldown;
+			control.player.abilityTimer_roll += damage/50*control.player.chargeCooldown;
+			control.player.abilityTimer_Proj_Tracker += damage/100*control.player.chargeCooldown;
+			control.player.sp += damage*0.00003*control.player.chargeSP;
 			if(deleted)
 			{
 				dieDrops();

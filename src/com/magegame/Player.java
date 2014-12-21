@@ -24,7 +24,7 @@ public final class Player extends Human
 	protected double touchShootY;
 	protected int powerUpTimer = 0;
 	protected int powerID = 0;
-	private int minimumShootTime = 4;
+	
 	Controller control;
 	/**
 	 * Sets all variables to start, sets image
@@ -35,10 +35,11 @@ public final class Player extends Human
 	/*
 	 * these variables are for changes and stuff
 	 */
-	private double shotDmg = 1;
-	private double burstDmg = 1;
-	private double takenDmg = 1;
-	private int hpStart = 1;
+	private int minimumShootTime = 4;
+	private int shotDmg = 130;
+	private int burstDmg = 130;
+	private double takenDmg = 0.7;
+	private int hpStart = 7000;
 	private double rollCharge = 1;
 	private double burstCharge = 1;
 	private double shotCharge = 1;
@@ -48,9 +49,13 @@ public final class Player extends Human
 	private int shotHold = 91;
 	private int burstHold = 500;
 	private int rollHold = 120;
-	private double tracking = 1;
-	private double maxSP = 1;
-	private double chargeSP = 1;
+	private double spDrain = 0.0001;
+	private double maxSP = 1.5;
+	private double minSP = 0.5;
+	private int powerUpTime = 300;
+	protected double chargeSP = 1;
+	protected double chargeCooldown = 1;
+	protected double tracking = 1;
 	private double findChance = 1;
 	public Player(Controller creator)
 	{
@@ -94,10 +99,11 @@ public final class Player extends Human
 	 */
 	private void setAttributes()
 	{
-		shotDmg = 1;
-		burstDmg = 1;
-		takenDmg = 1;
-		hpStart = 1;
+		minimumShootTime = 4;
+		shotDmg = 130;
+		burstDmg = 130;
+		takenDmg = 0.7;
+		hpStart = 7000;
 		rollCharge = 1;
 		burstCharge = 1;
 		shotCharge = 1;
@@ -107,9 +113,13 @@ public final class Player extends Human
 		shotHold = 91;
 		burstHold = 500;
 		rollHold = 120;
+		maxSP = 1.5;
+		minSP = 0.5;
+		spDrain = 0.0001;
+		powerUpTime = 300;
 		tracking = 1;
-		maxSP = 1;
 		chargeSP = 1;
+		chargeCooldown = 1;
 		findChance = 1;
 	}
 	/**
@@ -121,11 +131,11 @@ public final class Player extends Human
 	{
 		minimumShootTime--;
 		powerUpTimer--;
-		sp -= 0.0001;
+		sp -= spDrain;
 		spMod = 1;
 		speedCur = mySpeed;
-		if(sp > 1.5) sp = 1.5;
-		if(sp < 0.5) sp = 0.5;
+		if(sp > maxSP) sp = maxSP;
+		if(sp < minSP) sp = minSP;
 		abilityTimer_roll += rollCharge;
 		abilityTimer_burst += burstCharge;
 		abilityTimer_Proj_Tracker += shotCharge;
@@ -143,9 +153,9 @@ public final class Player extends Human
 			frame = 0;
 			playing = false;
 		}
-		if(frame == 19)frame = 0; // restart walking animation
+		if(frame == 19) frame = 0; // restart walking animation
 		if(playing) frame++;
-		if(frame > 31)frame = 0; // player stopped shooting
+		if(frame > 31) frame = 0; // player stopped shooting
 		super.frameCall();
 		if(rollTimer < 1)
 		{
@@ -206,7 +216,7 @@ public final class Player extends Human
 		{
 			if(rollTimer < 0)
 			{
-					control.spriteController.createProj_TrackerPlayer(rads*r2d, shotSpeed, 130, x, y);
+					control.spriteController.createProj_TrackerPlayer(rads*r2d, shotSpeed, shotDmg, x, y);
 					abilityTimer_Proj_Tracker -= 30;
 					control.activity.playEffect("shoot");
 			}
@@ -244,7 +254,7 @@ public final class Player extends Human
 		{
 			for(int i = 0; i<6; i++)
 			{	
-				control.spriteController.createProj_TrackerPlayerAOE(x-20+control.getRandomInt(40), y-20+control.getRandomInt(40), 130, true);
+				control.spriteController.createProj_TrackerPlayerAOE(x-20+control.getRandomInt(40), y-20+control.getRandomInt(40), burstDmg, true);
 			}
 			control.spriteController.createProj_TrackerPlayerBurst(x, y, 0);
 			abilityTimer_burst -= 300;
@@ -262,6 +272,8 @@ public final class Player extends Human
 	 */
 	protected void stun()
 	{
+		if(Math.random()<stunChance)
+		{
 			if(rollTimer<2)
 			{
 				rotation = rads * r2d + 180;
@@ -272,6 +284,7 @@ public final class Player extends Human
 		        abilityTimer_roll += 20;
 		        Toast.makeText(control.context, "Stunned!", Toast.LENGTH_SHORT).show();
 			}
+		}
 	}
 	/**
 	 * reduces and amplifies damage based on shields etc.
@@ -298,27 +311,27 @@ public final class Player extends Human
 		{
 		case 1:
 			hp += 2000;
-			if(hp>getHpMax())hp=getHpMax();
+			if(hp>getHpMax()) hp=getHpMax();
 			break;
 		case 2:
-			abilityTimer_roll = 120;
-			abilityTimer_Proj_Tracker = 90;
-			abilityTimer_burst = 500;
+			abilityTimer_roll = rollHold;
+			abilityTimer_Proj_Tracker = shotHold;
+			abilityTimer_burst = burstHold;
 			break;
 		case 3:
-			powerUpTimer=300;
+			powerUpTimer=powerUpTime;
 			powerID=1;
 			break;
 		case 4:
-			powerUpTimer=300;
+			powerUpTimer=powerUpTime;
 			powerID=2;
 			break;
 		case 5:
-			powerUpTimer=300;
+			powerUpTimer=powerUpTime;
 			powerID=3;
 			break;
 		case 6:
-			powerUpTimer=300;
+			powerUpTimer=powerUpTime;
 			powerID=4;
 			break;
 		}
