@@ -10,7 +10,7 @@ public final class Enemy_Sheild extends Enemy
 	{
 		super(creator, X, Y, HP, ImageIndex);
 		enemyType = 0;
-		speedCur = 1.8;
+		speedCur = 3.8;
 		frame=0;
 		baseHp(HP);
 		worth = 5;
@@ -72,7 +72,8 @@ public final class Enemy_Sheild extends Enemy
 		{
 			if(distanceFound < 30)
 			{
-				rollAway();
+				action = "Melee";
+				frame=frames[3][0];
 			} else
 			{
 				runAway();

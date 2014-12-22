@@ -92,7 +92,13 @@ abstract public class EnemyShell extends Human
 		otherActions();
 		if(action.equals("Nothing"))
 		{
-			pickAction();
+			if(LOS)
+			{
+				frameLOS();
+			} else
+			{
+				frameNoLOS();
+			}
 		}
 		image = myImage[frame];
 		hadLOSLastTime--;
@@ -122,16 +128,6 @@ abstract public class EnemyShell extends Human
 	abstract protected void frameLOS();
 	abstract protected void frameNoLOS();
 	abstract protected void otherActions();
-	protected void pickAction()
-	{
-		if(LOS)
-		{
-			frameLOS();
-		} else
-		{
-			frameNoLOS();
-		}
-	}
 	/**
 	 * checks who else this guy is getting in the way of and pushes em
 	 */

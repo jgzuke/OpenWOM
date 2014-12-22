@@ -8,7 +8,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 public final class ImageLibrary extends ImageLoader
 {
-	protected Bitmap[] player_Image = new Bitmap[32];
+	protected Bitmap[] player_Image = new Bitmap[32]; //TODO make images smaller
 	protected Bitmap[][] enemyImages = new Bitmap[10][100]; //array holding videos for each enemy, null when uneeded
 	protected Bitmap structure_Spawn;
 	protected Bitmap[] effects = new Bitmap[4];

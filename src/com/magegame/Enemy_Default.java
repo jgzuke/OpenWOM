@@ -20,11 +20,6 @@ public final class Enemy_Default extends Enemy
 		rotation = control.getRandomInt(360);
 		rads = rotation/r2d;
 	}
-	@ Override
-	protected void pickAction()
-	{
-		
-	}
 	protected void frameNoLOS()
 	{
 		if(pathedToHitLength>1 && checkDistance(danger[0][0], danger[1][0], x, y)<100)

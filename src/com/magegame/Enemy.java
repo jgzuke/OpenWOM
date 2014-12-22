@@ -64,8 +64,8 @@ abstract public class Enemy extends EnemyShell
 		{
 			frame++;
 			if(frame == frames[0][1]) frame = 0; // restart walking motion
-			x += xMove;
-			y += yMove;
+			x += xMove*1.2;
+			y += yMove*1.2;
 			runTimer--;
 			if(runTimer<1) action = "Nothing"; // stroll done
 		} else if(action.equals("Move")||action.equals("Wander"))
@@ -164,7 +164,7 @@ abstract public class Enemy extends EnemyShell
 	 */
 	protected void roll()
 	{
-		frame = 82;
+		frame = frames[1][0];
 		action = "Roll";
 		rotation = rads * r2d;
 		xMove = Math.cos(rads) * 8;
