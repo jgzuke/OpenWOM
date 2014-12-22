@@ -311,6 +311,7 @@ public final class SpriteController extends SpriteDrawer
 	 */
 	protected void createProj_TrackerPlayer(double rotation, double Vel, int power, double x, double y)
 	{
+		Log.e("mine", "sadgsadg");
 		proj_Trackers.add(new Proj_Tracker_Player(control, (int)x, (int)y, power, Vel, rotation, this));
 	}
 	/**
@@ -322,6 +323,7 @@ public final class SpriteController extends SpriteDrawer
 	 */
 	protected void createProj_TrackerEnemyAOE(double x, double y, double power, boolean damaging)
 	{
+		Log.e("mine", "sadgsadg");
 		proj_Tracker_AOEs.add(new Proj_Tracker_AOE_Enemy(control, (int) x, (int) y, power, true, this));
 		if(!damaging) proj_Tracker_AOEs.get(proj_Tracker_AOEs.size()-1).damaging = false;
 	}

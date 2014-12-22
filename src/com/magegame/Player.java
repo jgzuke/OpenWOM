@@ -3,6 +3,7 @@
  */
 package com.magegame;
 
+import android.util.Log;
 import android.widget.Toast;
 
 public final class Player extends Human
@@ -214,13 +215,16 @@ public final class Player extends Human
 	 */
 	protected void releaseProj_Tracker()
 	{
+		Log.e("mine", "sdg");
 		if(abilityTimer_Proj_Tracker > 30)
 		{
-			if(rollTimer < 0)
+			Log.e("mine", "dsfh");
+			if(rollTimer < 1)
 			{
-					control.spriteController.createProj_TrackerPlayer(rads*r2d, shotSpeed, shotDmg, x, y);
-					abilityTimer_Proj_Tracker -= 30;
-					control.activity.playEffect("shoot");
+				Log.e("mine", "ljh");
+				control.spriteController.createProj_TrackerPlayer(rads*r2d, shotSpeed, shotDmg, x, y);
+				abilityTimer_Proj_Tracker -= 30;
+				control.activity.playEffect("shoot");
 			}
 		} else
 		{
