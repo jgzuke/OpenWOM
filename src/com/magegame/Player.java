@@ -35,28 +35,29 @@ public final class Player extends Human
 	/*
 	 * these variables are for changes and stuff
 	 */
-	private int minimumShootTime = 4;
-	private int shotDmg = 130;
-	private int burstDmg = 130;
-	private double takenDmg = 0.7;
-	private int hpStart = 7000;
-	private double rollCharge = 1;
-	private double burstCharge = 1;
-	private double shotCharge = 1;
-	private double mySpeed = 3.7;
-	private double stunChance = 1;
-	private double shotSpeed = 1;
-	private int shotHold = 91;
-	private int burstHold = 500;
-	private int rollHold = 120;
-	private double spDrain = 0.0001;
-	private double maxSP = 1.5;
-	private double minSP = 0.5;
-	private int powerUpTime = 300;
-	protected double chargeSP = 1;
-	protected double chargeCooldown = 1;
-	protected double tracking = 1;
-	private double findChance = 1;
+	private int minimumShootTime = 4;	// time between shots
+	private int shotDmg = 130;			// damage of shot
+	private int burstDmg = 130;			// damage of burst
+	private double takenDmg = 0.7;		// part of damage player takes
+	private int hpStart = 7000;			// plaers base hp
+	private double rollCharge = 1;		// how fast roll charges
+	private double burstCharge = 1;		// how fast burst charges
+	private double shotCharge = 1;		// how fast shot charges
+	private double mySpeed = 3.7;		// players speed
+	private double stunChance = 1;		// change to actully get stunned
+	private double shotSpeed = 40;		// speed of shots
+	private int shotHold = 91;			// ax shots stored
+	private int burstHold = 500;		// max burst stored
+	private int rollHold = 120;			// max roll stored
+	private double spDrain = 0.0001;	// sp drained every frame
+	private double maxSP = 1.5;			// maximum sp
+	private double minSP = 0.5;			// minimum sp
+	private int powerUpTime = 300;		// time cooldowns last for
+	protected double chargeSP = 1;		// how much doing damage charges sp
+	protected double chargeCooldown = 1;// how much doing damage charges cooldowns
+	protected double tracking = 6;		// how much tracking can turn fireballs
+	private double findChance = 1;		// chance of finding items
+	private double spLose = 1;			// sp lost on hit
 	public Player(Controller creator)
 	{
 		super(0, 0, 0, 0, true, false, creator.imageLibrary.player_Image[0]);
@@ -99,28 +100,29 @@ public final class Player extends Human
 	 */
 	private void setAttributes()
 	{
-		minimumShootTime = 4;
-		shotDmg = 130;
-		burstDmg = 130;
-		takenDmg = 0.7;
-		hpStart = 7000;
-		rollCharge = 1;
-		burstCharge = 1;
-		shotCharge = 1;
-		mySpeed = 3.7;
-		stunChance = 1;
-		shotSpeed = 1;
-		shotHold = 91;
-		burstHold = 500;
-		rollHold = 120;
-		maxSP = 1.5;
-		minSP = 0.5;
-		spDrain = 0.0001;
-		powerUpTime = 300;
-		tracking = 1;
-		chargeSP = 1;
-		chargeCooldown = 1;
-		findChance = 1;
+		minimumShootTime = 4;	// time between shots
+		shotDmg = 130;			// damage of shot
+		burstDmg = 130;			// damage of burst
+		takenDmg = 0.7;		// part of damage player takes
+		hpStart = 7000;			// plaers base hp
+		rollCharge = 1;		// how fast roll charges
+		burstCharge = 1;		// how fast burst charges
+		shotCharge = 1;		// how fast shot charges
+		mySpeed = 3.7;		// players speed
+		stunChance = 1;		// change to actully get stunned
+		shotSpeed = 40;		// speed of shots
+		shotHold = 91;			// ax shots stored
+		burstHold = 500;		// max burst stored
+		rollHold = 120;			// max roll stored
+		spDrain = 0.0001;	// sp drained every frame
+		maxSP = 1.5;			// maximum sp
+		minSP = 0.5;			// minimum sp
+		powerUpTime = 300;		// time cooldowns last for
+		chargeSP = 1;		// how much doing damage charges sp
+		chargeCooldown = 1;// how much doing damage charges cooldowns
+		tracking = 6;		// how much tracking can turn fireballs
+		findChance = 1;		// chance of finding items
+		spLose = 1;			// sp lost on hit
 	}
 	/**
 	 * Counts timers and executes movement and predefined behaviors
@@ -293,10 +295,9 @@ public final class Player extends Human
 	protected void getHit(double damage)
 	{
 		control.playerHit = 0;
-		damage *= 0.7;
 			damage *= takenDmg;
 			super.getHit(damage);
-			sp -= sp*damage/1500;
+			sp -= sp*damage/1500*spLose;
 			if(deleted) control.die();
 	}
 	/**
