@@ -41,7 +41,7 @@ public final class ImageLibrary extends ImageLoader
 	 */
 	protected void loadPlayerImage()
 	{
-		player_Image = loadArray1D(32, "human_playerzack", 46, 50);
+		player_Image = loadArray1D(32, "human_playerzack", 35, 40);
 		isPlayerWidth = 26;
 		/*switch(control.activity.currentSkin)
 		{

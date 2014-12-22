@@ -143,21 +143,17 @@ public final class Controller extends View
 		if(toLoad==1)
 		{
 			//LEVEL
-			levelWidth = 450; // height of level
-			levelHeight = 300; // width of level
+			levelWidth = 1000; // height of level
+			levelHeight = 1000; // width of level
 			//PLAYER
 			player.x = 30; // player start x
 			player.y = 30; // player start y
 			//ENEMIES
 			imageLibrary.loadEnemy(55, "goblin_swordsman", 110, 70, 0); // length, name,width, height, index
-			imageLibrary.loadEnemy(49, "goblin_archer", 80, 50, 1);
 			spriteController.makeEnemy(0, 269, 86); //type, x, y
 			spriteController.makeEnemy(0, 358, 140);
-			spriteController.makeEnemy(0, 365, 204);
-			spriteController.makeEnemy(1, 146, 61);
-			spriteController.makeEnemy(1, 327, 231);
 			//WALLS
-			wallController.makeWall_Rectangle(78, 122, 41, 24, true, false);
+			/*wallController.makeWall_Rectangle(78, 122, 41, 24, true, false);
 			wallController.makeWall_Rectangle(63, -20, 31, 142, true, true);
 			wallController.makeWall_Rectangle(73, 238, 47, 62, true, true);
 			wallController.makeWall_Rectangle(94, -19, 25, 152, true, false);
@@ -167,7 +163,7 @@ public final class Controller extends View
 			wallController.makeWall_Circle(330, 297, 47, 1, false);
 			wallController.makeWall_Rectangle(217, -15, 109, 81, true, false);
 			wallController.makeWall_Rectangle(179, -32, 38, 63, true, true);
-			wallController.makeWall_Rectangle(318, -41, 66, 63, true, true);
+			wallController.makeWall_Rectangle(318, -41, 66, 63, true, true);*/
 		}
 		imageLibrary.loadLevel(toLoad, levelWidth, levelHeight);
 	}
@@ -381,8 +377,8 @@ public final class Controller extends View
 				drawBitmapLevel(imageLibrary.backDrop, w, h, g);
 			}
 		}
-		Rect selection = new Rect(curXShift, curYShift, curXShift+300, curYShift+300);
-		Rect onLevel = new Rect(0, 0, 300, 300);
+		Rect selection = new Rect(-curXShift, -curYShift, -curXShift+300, -curYShift+300);
+		Rect onLevel = new Rect(-curXShift, -curYShift, -curXShift+300, -curYShift+300);
 		g.drawBitmap(imageLibrary.currentLevel, selection, onLevel, paint);
 		spriteController.drawStructures(g, paint, imageLibrary);
 		spriteController.drawSprites(g, paint, imageLibrary, aoeRect);
