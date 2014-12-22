@@ -170,13 +170,6 @@ abstract public class Enemy extends EnemyShell
 		yMove = Math.sin(rads) * speedCur;
         if(frame>17) frame = 0;
 	}
-	protected void turnToward(double nx, double ny)
-	{
-		LOS=true;
-		hadLOSLastTime = 5;
-		//rads = Math.atan2((ny - y), (nx - x));
-		//rotation = rads*r2d;
-	}
 	/**
 	 * rolls forward for 11 frames
 	 */
@@ -270,10 +263,6 @@ abstract public class Enemy extends EnemyShell
 			}
 		}
 	}
-	protected void hitWall()
-	{
-		//action="Nothing";
-	}
 	/**
 	 * rolls towards player for 11 frames
 	 */
@@ -281,15 +270,6 @@ abstract public class Enemy extends EnemyShell
 	{
 		rads = Math.atan2((control.player.y - y), (control.player.x - x));
 		roll();
-	}
-	/**
-	 * stuns enemy
-	 * @param time time to stun enemy for
-	 */
-	protected void stun(int time)
-	{
-		action ="Stun";
-		stunTimer=time;
 	}
 	/**
 	 * when enemy swings at player, check whether it hits
