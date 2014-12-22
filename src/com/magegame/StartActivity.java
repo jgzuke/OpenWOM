@@ -29,7 +29,7 @@ public class StartActivity extends Activity
 	protected byte currentSkin = 0;
 	private FileOutputStream fileWrite;
 	private FileInputStream fileRead;
-	private int savePoints = 50;
+	private int savePoints = 120;
 	protected byte[] savedData = new byte[savePoints];
 	protected MediaPlayer backMusic;
 	private SoundPool spool;
@@ -46,10 +46,10 @@ public class StartActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setWindowAndAudio();
+		itemControl = new ItemController();
 		readSavedData();
 		startMusic();
 		control = new Controller(this, this);
-		itemControl = new ItemController();
 		setContentView(control);
 	}
 	private void readSavedData()
