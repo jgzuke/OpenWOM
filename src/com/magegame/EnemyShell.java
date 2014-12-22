@@ -87,6 +87,14 @@ abstract public class EnemyShell extends Human
 	Override
 	protected void frameCall()
 	{
+		checkLOS((int)control.player.x, (int)control.player.y);
+		checkDanger();
+		otherActions();
+		if(action.equals("Nothing"))
+		{
+			pickAction();
+		}
+		image = myImage[frame];
 		hadLOSLastTime--;
 		if(sick)
 		{
@@ -106,6 +114,23 @@ abstract public class EnemyShell extends Human
 		clearArray(pathedToHit, 30);
 		sizeImage();
 		pushOtherPeople();
+	}
+	abstract protected void attacking();
+	abstract protected void hiding();
+	abstract protected void shooting();
+	abstract protected void finishWandering();
+	abstract protected void frameLOS();
+	abstract protected void frameNoLOS();
+	abstract protected void otherActions();
+	protected void pickAction()
+	{
+		if(LOS)
+		{
+			frameLOS();
+		} else
+		{
+			frameNoLOS();
+		}
 	}
 	/**
 	 * checks who else this guy is getting in the way of and pushes em

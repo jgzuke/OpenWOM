@@ -5,6 +5,7 @@ package com.magegame;
 
 import com.spritelib.Sprite;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 public final class Proj_Tracker_Player extends Proj_Tracker
@@ -26,8 +27,9 @@ public final class Proj_Tracker_Player extends Proj_Tracker
 	private SpriteController spriteController;
 	protected Proj_Tracker_Player(Controller creator, int X, int Y, int Power, double Speed, double Rotation, SpriteController spriteControllerSet)
 	{
-		super(X, Y, Rotation, creator.imageLibrary.shotPlayer);
+		super(X, Y, Rotation, creator.imageLibrary.shotPlayer[0]);
 		spriteController = spriteControllerSet;
+		video = creator.imageLibrary.shotPlayer;
 		control = creator;
 		speed = Speed;
 		xForward = Math.cos(Rotation/r2d) * Speed;

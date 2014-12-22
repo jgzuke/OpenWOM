@@ -43,10 +43,10 @@ public final class Player extends Human
 	private int hpStart = 7000;			// plaers base hp
 	private double rollCharge = 1;		// how fast roll charges
 	private double burstCharge = 1;		// how fast burst charges
-	private double shotCharge = 1;		// how fast shot charges
-	private double mySpeed = 3.7;		// players speed
+	private double shotCharge = 1.8;		// how fast shot charges
+	private double mySpeed = 4.2;		// players speed
 	private double stunChance = 1;		// change to actully get stunned
-	private double shotSpeed = 40;		// speed of shots
+	private double shotSpeed = 7;		// speed of shots
 	private int shotHold = 91;			// ax shots stored
 	private int burstHold = 500;		// max burst stored
 	private int rollHold = 120;			// max roll stored
@@ -108,10 +108,10 @@ public final class Player extends Human
 		hpStart = 7000;			// plaers base hp
 		rollCharge = 1;		// how fast roll charges
 		burstCharge = 1;		// how fast burst charges
-		shotCharge = 1;		// how fast shot charges
-		mySpeed = 3.7;		// players speed
+		shotCharge = 3;		// how fast shot charges
+		mySpeed = 6;		// players speed
 		stunChance = 1;		// change to actully get stunned
-		shotSpeed = 40;		// speed of shots
+		shotSpeed = 15;		// speed of shots
 		shotHold = 91;			// ax shots stored
 		burstHold = 500;		// max burst stored
 		rollHold = 120;			// max roll stored

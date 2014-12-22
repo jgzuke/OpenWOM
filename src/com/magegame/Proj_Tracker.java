@@ -22,6 +22,7 @@ abstract public class Proj_Tracker extends Sprite
 	protected double yDif = 0;
 	protected double realX;
 	protected double realY;
+	protected Bitmap [] video;
 	Controller control;
 	/**
 	 * moves ball forward and decreases power
@@ -29,6 +30,7 @@ abstract public class Proj_Tracker extends Sprite
 	@ Override
 	protected void frameCall()
 	{
+		image = video[control.getRandomInt(5)];
 		for(int i = 0; i < 8; i++)
 		{
 			realX += xForward/8;

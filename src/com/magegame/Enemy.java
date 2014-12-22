@@ -19,6 +19,7 @@ abstract public class Enemy extends EnemyShell
 	{
 		super(creator, X, Y, HP, ImageIndex);
 	}
+	@ Override
 	protected void otherActions()
 	{
 		/* int [][] frames[action][start/finish or 1/2/3]
@@ -84,7 +85,7 @@ abstract public class Enemy extends EnemyShell
 					action = "Nothing";
 					if(action.equals("Move"))
 					{
-						frameReactionsNoDangerNoLOS();
+						frameNoLOS();
 					} else
 					{
 						finishWandering();
@@ -93,18 +94,6 @@ abstract public class Enemy extends EnemyShell
 			}
 		}
 	}
-	protected void pickAction()
-	{
-		
-	}
-	abstract protected void attacking();
-	abstract protected void hiding();
-	abstract protected void shooting();
-	abstract protected void finishWandering();
-	abstract protected void frameReactionsNoDangerLOS();
-	abstract protected void frameReactionsDangerNoLOS();
-	abstract protected void frameReactionsNoDangerNoLOS();
-	abstract protected void frameReactionsDangerLOS();
 	/**
 	 * Rotates to run away from player 
 	 */

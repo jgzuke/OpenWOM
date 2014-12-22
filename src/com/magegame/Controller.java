@@ -68,8 +68,6 @@ public final class Controller extends View
 	private Random randomGenerator = new Random();
 	protected int levelNum = 1;
 	private Bitmap background;
-	protected Bitmap tempPicture;
-	protected Bitmap tempPictureLock;
 	protected PlayerGestureDetector detect;
 	protected int levelWidth = 300;
 	protected int levelHeight = 300;

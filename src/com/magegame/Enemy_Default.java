@@ -20,27 +20,14 @@ public final class Enemy_Default extends Enemy
 		rotation = control.getRandomInt(360);
 		rads = rotation/r2d;
 	}
-	@Override
-	protected void frameCall()
+	@ Override
+	protected void pickAction()
 	{
-		checkLOS((int)control.player.x, (int)control.player.y);
-		checkDanger();
-		otherActions();
-		if(action.equals("Nothing"))
-		{
-			pickAction();
-		}
-		image = myImage[frame];
-		super.frameCall();
+		
 	}
-	protected void frameReactionsDangerLOS()
+	protected void frameNoLOS()
 	{
-		frameReactionsNoDangerLOS();
-	}
-	protected void frameReactionsDangerNoLOS()
-	{
-		distanceFound = checkDistance(danger[0][0], danger[1][0], x, y);
-		if(distanceFound < 100)
+		if(pathedToHitLength>1 && checkDistance(danger[0][0], danger[1][0], x, y)<100)
 		{
 			if(true)//hasSheild
 			{
@@ -53,10 +40,33 @@ public final class Enemy_Default extends Enemy
 			}
 		} else
 		{
-			frameReactionsNoDangerNoLOS();
+			distanceFound = checkDistance(x, y, lastPlayerX, lastPlayerY); // lastPlayerX and Y are the last seen coordinates
+			if(checkedPlayerLast || distanceFound < 20)
+			{
+				frame=0;
+				action = "Nothing";
+				if(control.getRandomInt(20) == 0) // around ten frames of pause between random wandering
+				{
+					runRandom();
+				}
+				checkedPlayerLast = true; // has checked where player was last seen
+			} else
+			{
+				boolean temp = LOS;
+				checkLOS((int)lastPlayerX, (int)lastPlayerY);
+				if(LOS)
+				{
+					runTowardsPoint(lastPlayerX, lastPlayerY);
+					action = "Move";
+				} else
+				{
+					checkedPlayerLast = true;
+				}
+				LOS = temp;
+			}
 		}
 	}
-	protected void frameReactionsNoDangerLOS()
+	protected void frameLOS()
 	{
 		rads = Math.atan2(( control.player.y - y), (control.player.x - x));
 		rotation = rads * r2d;
@@ -102,33 +112,6 @@ public final class Enemy_Default extends Enemy
 			{
 				runTowardsPoint(control.player.x, control.player.y);
 			}
-		}
-	}
-	protected void frameReactionsNoDangerNoLOS()
-	{
-		distanceFound = checkDistance(x, y, lastPlayerX, lastPlayerY); // lastPlayerX and Y are the last seen coordinates
-		if(checkedPlayerLast || distanceFound < 20)
-		{
-			frame=0;
-			action = "Nothing";
-			if(control.getRandomInt(20) == 0) // around ten frames of pause between random wandering
-			{
-				runRandom();
-			}
-			checkedPlayerLast = true; // has checked where player was last seen
-		} else
-		{
-			boolean temp = LOS;
-			checkLOS((int)lastPlayerX, (int)lastPlayerY);
-			if(LOS)
-			{
-				runTowardsPoint(lastPlayerX, lastPlayerY);
-				action = "Move";
-			} else
-			{
-				checkedPlayerLast = true;
-			}
-			LOS = temp;
 		}
 	}
 	@Override

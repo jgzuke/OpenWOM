@@ -14,9 +14,9 @@ public final class ImageLibrary extends ImageLoader
 	protected Bitmap[] effects = new Bitmap[4];
 	protected Bitmap isPlayer;
 	protected int isPlayerWidth;
-	protected Bitmap shotPlayer;
+	protected Bitmap[] shotPlayer;
 	protected Bitmap shotAOEPlayer;
-	protected Bitmap shotEnemy;
+	protected Bitmap[] shotEnemy;
 	protected Bitmap shotAOEEnemy;
 	protected Bitmap[] powerUps = new Bitmap[11];
 	protected Bitmap[] powerUpBigs = new Bitmap[4];
@@ -91,14 +91,14 @@ public final class ImageLibrary extends ImageLoader
 		powerUps = loadArray1D(11, "icon_powerup", 30, 30);
 		powerUpBigs = loadArray1D(5, "icon_powerupbig", 70, 70);
 		coins = loadArray1D(2, "icon_menu_coin", 30, 30);
-		shotAOEEnemy = loadImage("shotexplodeenemy", 80, 80);
-		shotEnemy = loadImage("shotenemy", 40, 3);
-		shotAOEPlayer = loadImage("shotexplodeplayer", 80, 80);
-		shotPlayer = loadImage("shotplayer", 40, 3);
+		shotAOEEnemy = loadImage("shootenemyaoe", 80, 80);
+		shotEnemy = loadArray1D(5, "shootenemy", 35, 15);
+		shotAOEPlayer = loadImage("shootplayeraoe", 80, 80);
+		shotPlayer = loadArray1D(5, "shootplayer", 35, 15);
 		effects = loadArray1D(4, "effect", 60, 60);
 		isPlayer = loadImage("icon_isplayer", 40, 40);
 		loadLevel(control.levelNum, control.levelWidth, control.levelHeight);
-		backDrop = loadImage("level_back", 100, 100);
+		backDrop = loadImage("leveltile1", 100, 100);
 	}
 	/**
 	 * loads level image layers and background image
@@ -122,7 +122,7 @@ public final class ImageLibrary extends ImageLoader
 		{
 			backDrop.recycle();
 		}
-		backDrop = loadImage("level_back", 300, 300);
+		backDrop = loadImage("leveltile1", 100, 100);
 		currentLevel = loadImage("level"+Integer.toString(levelNum), width, height);
 		currentLevelTop = loadImage("leveltop"+Integer.toString(levelNum), width, height);
 	}

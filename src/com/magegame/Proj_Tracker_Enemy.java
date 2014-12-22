@@ -16,7 +16,8 @@ public final class Proj_Tracker_Enemy extends Proj_Tracker
 	 */
 	public Proj_Tracker_Enemy(Controller creator, int X, int Y, int Power, double Xforward, double Yforward, double Rotation)
 	{
-		super(X, Y, Rotation, creator.imageLibrary.shotEnemy);
+		super(X, Y, Rotation, creator.imageLibrary.shotEnemy[0]);
+		video = creator.imageLibrary.shotEnemy;
 		control = creator;
 		realX = x;
 		realY = y;
@@ -47,6 +48,7 @@ public final class Proj_Tracker_Enemy extends Proj_Tracker
 	protected void frameCall()
 	{
 		super.frameCall();
+		image = control.imageLibrary.shotEnemy[control.getRandomInt(5)];
 	}
 	@ Override
 	/**
