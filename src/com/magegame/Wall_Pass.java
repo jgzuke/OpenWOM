@@ -25,10 +25,10 @@ public class Wall_Pass extends Wall
 		oRY2 = ORY+wallHeight;
 		if(fullPass)
 		{
-			creator.setOPassage(oRX1, oRX2, oRY1, oRY2, 1);
+			creator.wallController.setOPassage(oRX1, oRX2, oRY1, oRY2, 1);
 		} else
 		{
-			creator.setOPassage(oRX1, oRX2, oRY1, oRY2, 0);
+			creator.wallController.setOPassage(oRX1, oRX2, oRY1, oRY2, 0);
 		}
 	}
 	@Override

@@ -32,13 +32,13 @@ public final class Proj_Tracker_Player extends Proj_Tracker
 		speed = Speed;
 		xForward = Math.cos(Rotation/r2d) * Speed;
 		yForward = Math.sin(Rotation/r2d) * Speed;
-		if(control.checkHitBack(x, y, false))
+		if(control.wallController.checkHitBack(x, y, false))
 		{
 			explodeBack();
 		}
 		x +=(xForward);
 		y +=(yForward);
-		if(control.checkHitBack(x, y, false) && !deleted)
+		if(control.wallController.checkHitBack(x, y, false) && !deleted)
 		{
 			explodeBack();
 		}
@@ -156,7 +156,7 @@ public final class Proj_Tracker_Player extends Proj_Tracker
 	@Override
 	protected void hitBack(int x, int y)
 	{
-		if(control.checkHitBack(x, y, false) && !deleted)
+		if(control.wallController.checkHitBack(x, y, false) && !deleted)
 		{
 			explodeBack();
 		}
