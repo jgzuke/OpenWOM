@@ -20,6 +20,14 @@ public final class Enemy_Sheild extends Enemy
 		}
 		rotation = control.getRandomInt(360);
 		rads = rotation/r2d;
+		frames = makeFrames();
+		
+	}
+	private int[][] makeFrames()
+	{
+		//				 move	  roll	  stun	 melee		sheild	  hide	 shoot
+		int[][] temp = {{0, 19}, {0, 0}, {0, 0}, {20, 45}, {46, 55}, {0, 0}, {0, 0}};
+		return temp;
 	}
 	@Override
 	protected void frameCall()

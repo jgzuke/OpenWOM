@@ -66,7 +66,7 @@ public final class Controller extends View
 	protected Context context;
 	protected ImageLibrary imageLibrary;
 	private Random randomGenerator = new Random();
-	protected int levelNum = 10;
+	protected int levelNum = 1;
 	private Bitmap background;
 	protected Bitmap tempPicture;
 	protected Bitmap tempPictureLock;
@@ -149,12 +149,13 @@ public final class Controller extends View
 			player.x = 30; // player start x
 			player.y = 30; // player start y
 			//ENEMIES
-			imageLibrary.loadEnemy(95, "human_enemy", 100, 70, 1); // length, name,width, height, index
-			spriteController.makeEnemy(1, 269, 86); //type, x, y
-			spriteController.makeEnemy(1, 358, 140);
-			spriteController.makeEnemy(1, 365, 204);
-			spriteController.makeEnemy(2, 146, 61);
-			spriteController.makeEnemy(2, 327, 231);
+			imageLibrary.loadEnemy(55, "goblin_swordsman", 110, 70, 0); // length, name,width, height, index
+			imageLibrary.loadEnemy(49, "goblin_archer", 80, 50, 1);
+			spriteController.makeEnemy(0, 269, 86); //type, x, y
+			spriteController.makeEnemy(0, 358, 140);
+			spriteController.makeEnemy(0, 365, 204);
+			spriteController.makeEnemy(1, 146, 61);
+			spriteController.makeEnemy(1, 327, 231);
 			//WALLS
 			wallController.makeWall_Rectangle(78, 122, 41, 24, true, false);
 			wallController.makeWall_Rectangle(63, -20, 31, 142, true, true);
@@ -650,14 +651,6 @@ public final class Controller extends View
 	protected double getRandomDouble()
 	{
 		return randomGenerator.nextDouble();
-	}
-	/**
-	 * returns levelNum
-	 * @return levelNum
-	 */
-	protected int getLevelNum()
-	{
-		return levelNum;
 	}
 	/**
 	 * Replaces canvas.drawBitmap(Bitmap, Matrix, Paint) and auto scales and rotates image based on drawnSprite values

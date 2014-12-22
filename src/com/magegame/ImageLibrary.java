@@ -9,12 +9,11 @@ import android.graphics.Bitmap;
 public final class ImageLibrary extends ImageLoader
 {
 	protected Bitmap[] player_Image = new Bitmap[32];
-	protected Bitmap[][] enemyImages; //array holding videos for each enemy, null when uneeded
+	protected Bitmap[][] enemyImages = new Bitmap[10][100]; //array holding videos for each enemy, null when uneeded
 	protected Bitmap structure_Spawn;
 	protected Bitmap[] effects = new Bitmap[4];
 	protected Bitmap isPlayer;
 	protected int isPlayerWidth;
-	protected Bitmap haskey;
 	protected Bitmap shotPlayer;
 	protected Bitmap shotAOEPlayer;
 	protected Bitmap shotEnemy;
@@ -97,7 +96,6 @@ public final class ImageLibrary extends ImageLoader
 		shotAOEPlayer = loadImage("shotexplodeplayer", 80, 80);
 		shotPlayer = loadImage("shotplayer", 40, 3);
 		effects = loadArray1D(4, "effect", 60, 60);
-		haskey = loadImage("icon_haskey", 40, 40);
 		isPlayer = loadImage("icon_isplayer", 40, 40);
 		loadLevel(control.levelNum, control.levelWidth, control.levelHeight);
 		backDrop = loadImage("level_back", 100, 100);

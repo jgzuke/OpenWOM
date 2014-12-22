@@ -84,12 +84,12 @@ public final class SpriteController extends SpriteDrawer
 	}
 	protected void makeEnemy(int type, int x, int y)
 	{
-		if(type==1)
+		if(type==0)
 		{
 			enemies.add(new Enemy_Sheild(control, x, y, 2000, type)); //x, y, hp, sick, type is ImageIndex
-		} else if(type==2)
+		} else if(type==1)
 		{
-			enemies.add(new Enemy_Default(control, x, y, 2000, type)); //x, y, hp, sick, type is ImageIndex
+			enemies.add(new Enemy_Sheild(control, x, y, 2000, type));
 		}
 	}
 	/**
@@ -245,10 +245,6 @@ public final class SpriteController extends SpriteDrawer
 		{
 			if(enemies.get(i) != null)
 			{
-				if(enemies.get(i).keyHolder)
-				{
-					control.drawBitmapLevel(imageLibrary.haskey, (int) enemies.get(i).x - 20, (int) enemies.get(i).y - 20, g);
-				}
 				draw(enemies.get(i), g, paint);
 			}
 		}
@@ -276,10 +272,6 @@ public final class SpriteController extends SpriteDrawer
 		{
 			if(powerUps.get(i) != null)
 			{
-				if(powerUps.get(i).ID==8)
-				{
-					drawFlat(powerUps.get(i), imageLibrary.haskey, g, paint);
-				}
 				drawFlat(powerUps.get(i), g, paint);
 			}
 		}
