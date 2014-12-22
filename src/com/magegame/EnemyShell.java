@@ -9,173 +9,282 @@ import java.util.ArrayList;
 import android.graphics.Bitmap;
 import android.widget.Toast;
 
-abstract public class Enemy extends EnemyShell
+abstract public class EnemyShell extends Human
 {
+	protected int fromWall = 5;
+	protected int runTimer = 0;
+	protected int stunTimer = 0;
+	protected int worth = 3;
+	protected double lastPlayerX;
+	protected double lastPlayerY;
+	protected boolean sick = false;
+	protected boolean checkedPlayerLast = true;
+	protected Bitmap [] myImage;
+	protected int imageIndex;
+	protected double danger[][] = new double[4][30];
+	private double levelX[] = new double[30];
+	private double levelY[] = new double[30];
+	private double levelXForward[] = new double[30];
+	private double levelYForward[] = new double[30];
+	protected int levelCurrentPosition = 0;
+	protected int pathedToHitLength = 0;
+	protected boolean HasLocation = false;
+	protected boolean LOS = false;
+	protected double distanceFound;
+	private int dangerCheckCounter;
+	protected boolean keyHolder = false;
+	private double pathedToHit[] = new double[30];
+	protected int radius = 20;
+	protected double pXVelocity=0;
+	protected double pYVelocity=0;
+	private double pXSpot=0;
+	private double pYSpot=0;
+	protected double xMove;
+	protected double yMove;
+	protected int enemyType;
+	protected int hadLOSLastTime=-1;
+	int [][] frames;
+	protected String action; //"Nothing", "Move", "Alert", "Shoot", "Melee", "Roll", "Hide", "Sheild", "Stun"
 	/**
 	 * sets danger arrays, speed and control object
 	 * @param creator control object
 	 */
-	public Enemy(Controller creator, double X, double Y, int HP, int ImageIndex)
+	public EnemyShell(Controller creator, double X, double Y, int HP, int ImageIndex)
 	{
-		super(creator, X, Y, HP, ImageIndex);
+		super(X, Y, 0, 0, true, false, creator.imageLibrary.enemyImages[ImageIndex][0]);
+		control = creator;
+		danger[0] = levelX;
+		danger[1] = levelY;
+		danger[2] = levelXForward;
+		danger[3] = levelYForward;
+		x = X;
+		y = Y;
+		width = 30;
+		height = 30;
+		lastPlayerX = x;
+		lastPlayerY = y;
+		action = "Nothing";
+		imageIndex = ImageIndex;
+		myImage = creator.imageLibrary.enemyImages[ImageIndex];
+		image = myImage[frame];
 	}
-	protected void otherActions()
+	/**
+	 * clears desired array
+	 * @param array array to clear
+	 * @param length length of array to clear
+	 */
+	protected void clearArray(double[] array, int length)
 	{
-		/* int [][] frames[action][start/finish or 1/2/3]
-		 * actions	move=0;
-		 * 			roll=1;		0:start, 1:end
-		 * 			stun=2;
-		 * 			melee=3;
-		 * 			sheild=4;
-		 * 			hide=5;
-		 * 			shoot=6;
-		 */
-		if(action.equals("Stun"))
+		for(int i = 0; i < length; i++)
 		{
-			frame=frames[2][0];
-			stunTimer--;
-			if(stunTimer==0) action = "Nothing";		//stun over, go have fun
-		} else if(action.equals("Roll"))
+			array[i] = -11111;
+		}
+	}
+	/**
+	 * Clears danger arrays, sets current dimensions, and counts timers
+	 */
+	@
+	Override
+	protected void frameCall()
+	{
+		hadLOSLastTime--;
+		if(sick)
 		{
-			x += xMove;
-			y += yMove;
-			frame++;
-			if(frame==frames[1][1]) action = "Nothing";	//roll done
-		} else if(action.equals("Melee"))
+			hp -= 20;
+			getHit(0);
+		}
+		pXVelocity = control.player.x-pXSpot;
+		pYVelocity = control.player.y-pYSpot;
+		pXSpot = control.player.x;
+		pYSpot = control.player.y;
+		hp += 4;
+		super.frameCall();
+		clearArray(levelX, 30);
+		clearArray(levelY, 30);
+		clearArray(levelXForward, 30);
+		clearArray(levelYForward, 30);
+		clearArray(pathedToHit, 30);
+		sizeImage();
+		pushOtherPeople();
+	}
+	/**
+	 * checks who else this guy is getting in the way of and pushes em
+	 */
+	private void pushOtherPeople()
+	{
+		double movementX;
+		double movementY;
+		double moveRads;
+		double xdif = x - control.player.x;
+		double ydif = y - control.player.y;
+		if(Math.pow(xdif, 2) + Math.pow(ydif, 2) < Math.pow(radius, 2))
 		{
-			frame++;
-			attacking();
-			if(frame==frames[3][1]) action = "Nothing";	//attack over
-		} else if(action.equals("Sheild"))
-		{
-			frame++;
-			if(frame==frames[4][1]) action = "Nothing";	//block done
-		} else if(action.equals("Hide"))
-		{
-			frame = frames[5][0];
-			hiding();
-		} else if(action.equals("Shoot"))
-		{
-			frame++;
-			shooting();
-			if(frame==frames[6][1]) action = "Nothing"; // attack done
-		} else if(action.equals("Run"))
-		{
-			frame++;
-			if(frame == frames[0][1]) frame = 0; // restart walking motion
-			x += xMove;
-			y += yMove;
-			runTimer--;
-			if(runTimer<1) action = "Nothing"; // stroll done
-		} else if(action.equals("Move")||action.equals("Wander"))
-		{
-			if(pathedToHitLength > 0 || LOS)
+			moveRads = Math.atan2(ydif, xdif);
+			movementX = (x - (Math.cos(moveRads) * radius) - control.player.x)/2;
+			movementY = (y - (Math.sin(moveRads) * radius) - control.player.y)/2;
+			if(control.player.rollTimer<1)
 			{
-				 action = "Nothing";
-			} else
+				control.player.x += movementX;
+				control.player.y += movementY;
+				x -= movementX;
+				y -= movementY;
+			}
+		}
+		ArrayList<Enemy> enemies = control.spriteController.enemies;
+		for(int i = 0; i < enemies.size(); i++)
+		{
+			if(enemies.get(i) != null&& enemies.get(i).x != x)
 			{
-				frame++;
-				if(frame == frames[0][1]) frame = 0; // restart walking motion
-				x += xMove;
-				y += yMove;
-				runTimer--;
-				if(runTimer<1) //stroll over
+				xdif = x - enemies.get(i).x;
+				ydif = y - enemies.get(i).y;
+				if(Math.pow(xdif, 2) + Math.pow(ydif, 2) < Math.pow(radius, 2))
 				{
-					action = "Nothing";
-					if(action.equals("Move"))
+					moveRads = Math.atan2(ydif, xdif);
+					movementX = (x - (Math.cos(moveRads) * radius) - enemies.get(i).x)/2;
+					movementY = (y - (Math.sin(moveRads) * radius) - enemies.get(i).y)/2;
+					enemies.get(i).x += movementX;
+					enemies.get(i).y += movementY;
+					x -= movementX;
+					y -= movementY;
+				}
+			}
+		}
+	}
+	/**
+	 * Takes a sent amount of damage, modifies based on shields etc.
+	 * if health below 0 kills enemy
+	 * @param damage amount of damage to take
+	 */
+	protected void getHit(double damage)
+	{
+		turnToward(control.player.x, control.player.y);
+		if(!deleted)
+		{
+			if(action.equals("Hide")) action = "Nothing";
+			damage /= 1.2;
+			super.getHit(damage);
+			control.player.abilityTimer_burst += damage/30*control.player.chargeCooldown;
+			control.player.abilityTimer_roll += damage/50*control.player.chargeCooldown;
+			control.player.abilityTimer_Proj_Tracker += damage/100*control.player.chargeCooldown;
+			control.player.sp += damage*0.00003*control.player.chargeSP;
+			if(deleted)
+			{
+				dieDrops();
+			}
+		}
+	}
+	/**
+	 * Drops items and stuff if enemy dead
+	 */
+	protected void dieDrops()
+	{
+			control.player.sp += 0.15;
+			control.spriteController.createProj_TrackerEnemyAOE(x, y, 140, false);
+			if(!sick)
+			{
+				if(keyHolder)
+				{
+					Toast.makeText(control.context, "Key Dropped!", Toast.LENGTH_LONG).show();
+					control.spriteController.createConsumable(x, y, 8);
+				} else
+				{
+					if(control.getRandomDouble()>0.7)
 					{
-						frameReactionsNoDangerNoLOS();
+						control.spriteController.createConsumable(x, y, 0);
+					}
+				}
+				for(int i = 0; i < worth; i ++)
+				{
+					double rads = control.getRandomDouble()*6.28;
+					if(worth-i>20)
+					{
+						control.spriteController.createConsumable(x+Math.cos(rads)*12, y+Math.sin(rads)*12, 10);
+						i+=19;
+					} else if(worth-i>5)
+					{
+						control.spriteController.createConsumable(x+Math.cos(rads)*12, y+Math.sin(rads)*12, 9);
+						i+=4;
 					} else
 					{
-						finishWandering();
+						control.spriteController.createConsumable(x+Math.cos(rads)*12, y+Math.sin(rads)*12, 7);
 					}
 				}
 			}
-		}
+			control.activity.playEffect("burst");
 	}
-	protected void pickAction()
-	{
-		
-	}
-	abstract protected void attacking();
-	abstract protected void hiding();
-	abstract protected void shooting();
-	abstract protected void finishWandering();
-	abstract protected void frameReactionsNoDangerLOS();
-	abstract protected void frameReactionsDangerNoLOS();
-	abstract protected void frameReactionsNoDangerNoLOS();
-	abstract protected void frameReactionsDangerLOS();
 	/**
-	 * Rotates to run away from player 
+	 * Checks whether object can 'see' player
 	 */
-	protected void runAway()
+	protected void checkLOS(int px, int py)
 	{
-		rads = Math.atan2(-(control.player.y - y), -(control.player.x - x));
-		rotation = rads * r2d;
-		int distance = (int)checkDistance(x, y, control.player.x,  control.player.y);
-		if(checkObstructions(x, y, rads, distance, true, fromWall))
+		double rads2 = Math.atan2((py - y), (px - x));
+		if(control.player.rollTimer>0 && hadLOSLastTime<1)
 		{
-			int runPathChooseCounter = 0;
-			double runPathChooseRotationStore = rotation;
-			while(runPathChooseCounter < 180)
-			{
-				runPathChooseCounter += 10;
-				rotation = runPathChooseRotationStore + runPathChooseCounter;
-				rads = rotation / r2d;
-				if(!checkObstructions(x, y, rads, 40, true, fromWall))
-				{
-					runPathChooseCounter = 300;
-				}
-				else
-				{
-					rotation = runPathChooseRotationStore - runPathChooseCounter;
-					rads = rotation / r2d;
-					if(!checkObstructions(x, y,  rads, 40, true, fromWall))
-					{
-						runPathChooseCounter = 300;
-					}
-				}
-			}
-			if(runPathChooseCounter == 300)
-			{
-				run(10);
-			}
+			LOS = false;
 		} else
 		{
-			run(10);
+			double rot2 = rads2*r2d;
+			double difference = Math.abs(rotation-rot2);
+			if(difference>180) difference = 360-difference;
+			if(difference>90&&checkDistance(x, y, px, py)>50)
+			{
+				LOS = false;
+			} else
+			{
+				if(!checkObstructionsPoint((float)x, (float)y, (float)px, (float)py, false, fromWall))
+				{
+					LOS = true;
+					hadLOSLastTime = 25;
+					lastPlayerX = px;
+					lastPlayerY = py;
+					checkedPlayerLast = false;
+				} else
+				{
+					LOS = false;
+				}
+			}
 		}
-	}        
-	/**
-	 * Aims towards player
-	 */
-	protected void aimAheadOfPlayer(double projectileVelocity)
-	{
-			double timeToHit = (checkDistance(x, y, control.player.x, control.player.y))/projectileVelocity;
-			timeToHit *= (control.getRandomDouble()*0.7)+0.4;
-			double newPX = control.player.x+(pXVelocity*timeToHit);
-			double newPY = control.player.y+(pYVelocity*timeToHit);
-			double xDif = newPX-x;
-			double yDif = newPY-y;
-			rads = Math.atan2(yDif, xDif); // ROTATES TOWARDS PLAYER
-			rotation = rads * r2d;
+		HasLocation = hadLOSLastTime>0;
+		if(HasLocation)	//tell others where player is
+		{
+			for(int i = 0; i < control.spriteController.enemies.size(); i++)
+			{
+				Enemy enemy = control.spriteController.enemies.get(i);
+				if(!enemy.HasLocation&&checkDistance(x, y, enemy.x, enemy.y)<200)
+				{
+					enemy.turnToward(px, py);
+				}
+			}
+		}
 	}
 	/**
-	 * Runs in direction object is rotated for 10 frames
+	 * Checks whether any Proj_Trackers are headed for object
 	 */
-	protected void run(int time)
-	{
-		runTimer = time;
-		action = "Run";
-		xMove = Math.cos(rads) * speedCur;
-		yMove = Math.sin(rads) * speedCur;
-        if(frame>17) frame = 0;
+	protected void checkDanger()
+	{           
+		dangerCheckCounter = 0;
+		while(dangerCheckCounter < levelCurrentPosition)
+		{
+			distanceFound = checkDistance(danger[0][dangerCheckCounter], danger[1][dangerCheckCounter], x, y);
+			distanceFound = checkDistance((int) Math.abs(danger[0][dangerCheckCounter] + (danger[2][dangerCheckCounter] / 10 * distanceFound)), (int) Math.abs(danger[1][dangerCheckCounter] + (danger[3][dangerCheckCounter] / 10 * distanceFound)), x, y);
+			if(distanceFound < 20)
+			{
+				if(!checkObstructionsPoint((float)danger[0][dangerCheckCounter], (float)danger[1][dangerCheckCounter], (float)x, (float)y, false, fromWall))
+				{
+					pathedToHit[pathedToHitLength] = dangerCheckCounter;
+					pathedToHitLength++;         
+				}
+			}
+			dangerCheckCounter++;
+		}
 	}
-	protected void turnToward(double nx, double ny)
+	/**
+	 * Checks distance between two points
+	 * @return Returns distance
+	 */
+	protected double checkDistance(double fromX, double fromY, double toX, double toY)
 	{
-		LOS=true;
-		hadLOSLastTime = 5;
-		//rads = Math.atan2((ny - y), (nx - x));
-		//rotation = rads*r2d;
+		return Math.sqrt((Math.pow(fromX - toX, 2)) + (Math.pow(fromY - toY, 2)));
 	}
 	/**
 	 * rolls forward for 11 frames
@@ -290,6 +399,20 @@ abstract public class Enemy extends EnemyShell
 	{
 		action ="Stun";
 		stunTimer=time;
+	}
+	/**
+	 * sets a certain index in danger arrays
+	 * @param i index to set
+	 * @param levelX x position of danger
+	 * @param levelY y position of danger
+	 * @param levelXForward x velocity of danger
+	 * @param levelYForward y velocity of danger
+	 */
+	protected void setLevels(int i, double levelX, double levelY, double levelXForward, double levelYForward) {
+		this.levelX[i] = levelX;
+		this.levelY[i] = levelY;
+		this.levelXForward[i] = levelXForward;
+		this.levelYForward[i] = levelYForward;
 	}
 	/**
 	 * when enemy swings at player, check whether it hits
@@ -603,6 +726,11 @@ abstract public class Enemy extends EnemyShell
 			run(5);
 			action = "Wander";
 		}
+	}
+	protected void baseHp(int setHP)
+	{
+		hp = setHP;
+		setHpMax(hp);
 	}
 	private boolean checkHitBack(double X, double Y, boolean objectOnGround)
 	{
