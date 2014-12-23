@@ -5,12 +5,26 @@
 package com.magegame;
 
 import java.util.ArrayList;
-
-import android.graphics.Bitmap;
-import android.widget.Toast;
+/* provides already made functions including 
+ * 
+ * run
+ * runAway
+ * runTowardsPoint
+ * runRandom
+ * searchOrWander
+ * 
+ * roll
+ * rollSideways
+ * rollAway
+ * rollTowards
+ * 
+ * aimAheadOfPlayer
+ * meleeAttack
+ */
 
 abstract public class Enemy extends EnemyShell
 {
+	
 	/**
 	 * sets danger arrays, speed and control object
 	 * @param creator control object
@@ -263,10 +277,10 @@ abstract public class Enemy extends EnemyShell
 	/**
 	 * when enemy swings at player, check whether it hits
 	 */
-	protected void meleeAttack(int damage)
+	protected void meleeAttack(int damage, int range, int ahead)
 	{
-		distanceFound = checkDistance(x + Math.cos(rads) * 25, y + Math.sin(rads) * 25, control.player.x, control.player.y);
-		if(distanceFound < 25)
+		distanceFound = checkDistance(x + Math.cos(rads) * ahead, y + Math.sin(rads) * ahead, control.player.x, control.player.y);
+		if(distanceFound < range)
 		{
 			control.player.getHit((int)(damage));
 			control.activity.playEffect("sword2");
@@ -372,140 +386,6 @@ abstract public class Enemy extends EnemyShell
 		return -1;
 	}
 	/**
-	 * runs towards a set x and y
-	 * @param towardsX destination x value
-	 * @param towardsY destination y value
-	 * @param distance distance to run
-	 * @return whether it is possible or not to run here
-	 */
-	protected boolean runTowardDistanceGood(double towardsX, double towardsY, int distance)
-	{
-		int runPathChooseCounter = 0;
-		double runPathChooseRotationStore = rotation;
-		boolean goodMove = false;
-		while(runPathChooseCounter < 180)
-		{
-			runPathChooseCounter += 10;
-			rotation = runPathChooseRotationStore + runPathChooseCounter;
-			rads = rotation / r2d;
-			if(!checkObstructions(x, y,rads, distance, true, fromWall))
-			{
-				if(!checkObstructionsPoint((float)towardsX, (float)towardsY, (float)(x+Math.cos(rads)*distance), (float)(y+Math.sin(rads)*distance), true, fromWall))
-				{
-					runPathChooseCounter = 180;
-					goodMove = true;
-				}
-			}
-			else
-			{
-				rotation = runPathChooseRotationStore - runPathChooseCounter;
-				rads = rotation / r2d;
-				if(!checkObstructions(x, y,rads, distance, true, fromWall))
-				{
-					if(!checkObstructionsPoint((float)towardsX, (float)towardsY, (float)(x+Math.cos(rads)*distance), (float)(y+Math.sin(rads)*distance), true, fromWall))
-					{
-						runPathChooseCounter = 180;
-						goodMove = true;
-					}
-				}
-			}
-		}
-		run(distance/4);
-		return goodMove;
-	}
-	/**
-	 * check whether you can run around a corner to player
-	 * @param towardsX destination x value
-	 * @param towardsY destination y value
-	 * @return whether it is possible to get to player going around the corner
-	 */
-	protected boolean runAroundCorner(double towardsX, double towardsY)
-	{
-		int runPathChooseCounter = 0;
-		double runPathChooseRotationStore = rotation;
-		boolean goodMove = false;
-		while(runPathChooseCounter < 180)
-		{
-			runPathChooseCounter += 10;
-			rotation = runPathChooseRotationStore + runPathChooseCounter;
-			rads = rotation / r2d;
-			if(!checkObstructions(x, y,rads, 80, true, fromWall))
-			{
-				double newX = (x+Math.cos(rads)*80);
-				double newY = (y+Math.sin(rads)*80);
-				if(ranAroundCorner(towardsX, towardsY, newX, newY))
-				{
-					runPathChooseCounter = 180;
-					goodMove = true;
-				}
-			} else
-			{
-				rotation = runPathChooseRotationStore - runPathChooseCounter;
-				rads = rotation / r2d;
-				if(!checkObstructions(x, y,rads, 80, true, fromWall))
-				{
-					float newX = (float)(x+Math.cos(rads)*80);
-					float newY = (float)(y+Math.sin(rads)*80);
-					if(ranAroundCorner(towardsX, towardsY, newX, newY))
-					{
-						runPathChooseCounter = 180;
-						goodMove = true;
-					}
-				}
-			}
-		}
-		run(15);
-		return goodMove;
-	}
-	/**
-	 * part of runAroundCorner
-	 * @param towardsX destination x value
-	 * @param towardsY destination y value
-	 * @param newX enemies x after first segment of movement
-	 * @param newY enemies y after first segment of movement
-	 * @return whether you can run to player from here
-	 */
-	protected boolean ranAroundCorner(double towardsX, double towardsY, double newX, double newY)
-	{
-		int runPathChooseCounter = 0;
-		double runPathChooseRotationStore = rotation;
-		boolean goodMove = false;
-		double testRads;
-		double testRotation;
-		while(runPathChooseCounter < 180)
-		{
-			runPathChooseCounter += 10;
-			testRotation = runPathChooseRotationStore + runPathChooseCounter;
-			testRads = testRotation / r2d;
-			if(!checkObstructions(newX, newY,testRads, 80, true, fromWall))
-			{
-				float endX = (float)(newX+Math.cos(testRads)*80);
-				float endY = (float)(newY+Math.sin(testRads)*80);
-				if(!checkObstructionsPoint((float)towardsX, (float)towardsY, endX, endY, true, fromWall))
-				{
-					runPathChooseCounter = 180;
-					goodMove = true;
-				}
-			}
-			else
-			{
-				testRotation = runPathChooseRotationStore - runPathChooseCounter;
-				testRads = testRotation / r2d;
-				if(!checkObstructions(newX, newY,testRads, 80, true, fromWall))
-				{
-					float endX = (float)(newX+Math.cos(testRads)*80);
-					float endY = (float)(newY+Math.sin(testRads)*80);
-					if(!checkObstructionsPoint((float)towardsX, (float)towardsY, endX, endY, true, fromWall))
-					{
-						runPathChooseCounter = 180;
-						goodMove = true;
-					}
-				}
-			}
-		}
-		return goodMove;
-	}	
-	/**
 	 * Runs random direction for 25 or if not enough space 10 frames
 	 */
 	protected void runRandom()
@@ -571,6 +451,33 @@ abstract public class Enemy extends EnemyShell
 		{
 			run(5);
 			action = "Wander";
+		}
+	}
+	protected void searchOrWander()
+	{
+		distanceFound = checkDistance(x, y, lastPlayerX, lastPlayerY); // lastPlayerX and Y are the last seen coordinates
+		if(checkedPlayerLast || distanceFound < 20)
+		{
+			frame=0;
+			action = "Nothing";
+			if(control.getRandomInt(20) == 0) // around ten frames of pause between random wandering
+			{
+				runRandom();
+			}
+			checkedPlayerLast = true; // has checked where player was last seen
+		} else
+		{
+			boolean temp = LOS;
+			checkLOS((int)lastPlayerX, (int)lastPlayerY);
+			if(LOS)
+			{
+				runTowardsPoint(lastPlayerX, lastPlayerY);
+				action = "Move";
+			} else
+			{
+				checkedPlayerLast = true;
+			}
+			LOS = temp;
 		}
 	}
 	private boolean checkHitBack(double X, double Y, boolean objectOnGround)

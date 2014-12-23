@@ -89,7 +89,10 @@ public final class SpriteController extends SpriteDrawer
 			enemies.add(new Enemy_Sheild(control, x, y, 2000, type)); //x, y, hp, sick, type is ImageIndex
 		} else if(type==1)
 		{
-			enemies.add(new Enemy_Sheild(control, x, y, 2000, type));
+			enemies.add(new Enemy_Archer(control, x, y, 1100, type));
+		} else if(type==2)
+		{
+			enemies.add(new Enemy_Mage(control, x, y, 700, type));
 		}
 	}
 	/**

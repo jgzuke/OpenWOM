@@ -148,8 +148,11 @@ public final class Controller extends View
 			player.y = 30; // player start y
 			//ENEMIES
 			imageLibrary.loadEnemy(55, "goblin_swordsman", 110, 70, 0); // length, name,width, height, index
+			imageLibrary.loadEnemy(49, "goblin_archer", 80, 50, 1);
+			imageLibrary.loadEnemy(31, "goblin_mage", 30, 34, 2);
 			spriteController.makeEnemy(0, 269, 86); //type, x, y
-			spriteController.makeEnemy(0, 358, 140);
+			spriteController.makeEnemy(1, 358, 140);
+			spriteController.makeEnemy(2, 458, 140);
 			//WALLS
 			/*wallController.makeWall_Rectangle(78, 122, 41, 24, true, false);
 			wallController.makeWall_Rectangle(63, -20, 31, 142, true, true);

@@ -37,30 +37,7 @@ public final class Enemy_Sheild extends Enemy
 			frame=frames[4][0];
 		} else
 		{
-			distanceFound = checkDistance(x, y, lastPlayerX, lastPlayerY); // lastPlayerX and Y are the last seen coordinates
-			if(checkedPlayerLast || distanceFound < 20)
-			{
-				frame=0;
-				action = "Nothing";
-				if(control.getRandomInt(20) == 0) // around ten frames of pause between random wandering
-				{
-					runRandom();
-				}
-				checkedPlayerLast = true; // has checked where player was last seen
-			} else
-			{
-				boolean temp = LOS;
-				checkLOS((int)lastPlayerX, (int)lastPlayerY);
-				if(LOS)
-				{
-					runTowardsPoint(lastPlayerX, lastPlayerY);
-					action = "Move";
-				} else
-				{
-					checkedPlayerLast = true;
-				}
-				LOS = temp;
-			}
+			searchOrWander();
 		}
 	}
 	protected void frameLOS()
@@ -68,26 +45,16 @@ public final class Enemy_Sheild extends Enemy
 		rads = Math.atan2(( control.player.y - y), (control.player.x - x));
 		rotation = rads * r2d;
 		distanceFound = checkDistance(x, y, control.player.x,  control.player.y);
-		if(hp<800)
+		if(distanceFound < 30)
 		{
-			if(distanceFound < 30)
-			{
-				action = "Melee";
-				frame=frames[3][0];
-			} else
-			{
+			action = "Melee";
+			frame=frames[3][0];
+		} else if(hp<800)
+		{
 				runAway();
-			}
 		} else
 		{
-			if(distanceFound < 30)
-			{
-				action = "Melee";
-				frame=frames[3][0];
-			} else
-			{
-				runTowardsPoint(control.player.x, control.player.y);
-			}
+			runTowardsPoint(control.player.x, control.player.y);
 		}
 	}
 	@Override
@@ -97,7 +64,7 @@ public final class Enemy_Sheild extends Enemy
 		{
 			if(frame==frames[4][i])
 			{
-				meleeAttack(200);
+				meleeAttack(200, 25, 20);
 			}
 		}
 	}

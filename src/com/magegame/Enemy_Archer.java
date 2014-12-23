@@ -31,59 +31,32 @@ public final class Enemy_Archer extends Enemy
 	}
 	protected void frameNoLOS()
 	{
-		if(pathedToHitLength>1 && checkDistance(danger[0][0], danger[1][0], x, y)<100)
-		{
-			action = "Sheild";
-			frame=frames[4][0];
-		} else
-		{
-			distanceFound = checkDistance(x, y, lastPlayerX, lastPlayerY); // lastPlayerX and Y are the last seen coordinates
-			if(checkedPlayerLast || distanceFound < 20)
-			{
-				frame=0;
-				action = "Nothing";
-				if(control.getRandomInt(20) == 0) // around ten frames of pause between random wandering
-				{
-					runRandom();
-				}
-				checkedPlayerLast = true; // has checked where player was last seen
-			} else
-			{
-				boolean temp = LOS;
-				checkLOS((int)lastPlayerX, (int)lastPlayerY);
-				if(LOS)
-				{
-					runTowardsPoint(lastPlayerX, lastPlayerY);
-					action = "Move";
-				} else
-				{
-					checkedPlayerLast = true;
-				}
-				LOS = temp;
-			}
-		}
+		searchOrWander();
 	}
 	protected void frameLOS()
 	{
 		rads = Math.atan2(( control.player.y - y), (control.player.x - x));
 		rotation = rads * r2d;
 		distanceFound = checkDistance(x, y, control.player.x,  control.player.y);
-		if(hp<800)
+		if(hp<600)
 		{
-			if(distanceFound < 30)
+			if(distanceFound < 140)
 			{
-				action = "Melee";
-				frame=frames[3][0];
-			} else
-			{
-				runAway();
+				if(distanceFound<100)
+				{
+					runAway();
+				} else
+				{
+					action = "Shoot";
+					frame=frames[6][0];
+				}
 			}
 		} else
 		{
-			if(distanceFound < 30)
+			if(distanceFound < 140)
 			{
-				action = "Melee";
-				frame=frames[3][0];
+				action = "Shoot";
+				frame=frames[6][0];
 			} else
 			{
 				runTowardsPoint(control.player.x, control.player.y);
@@ -91,20 +64,25 @@ public final class Enemy_Archer extends Enemy
 		}
 	}
 	@Override
-	protected void attacking()
-	{
-		for(int i = 0; i < frames[4].length; i++)
-		{
-			if(frame==frames[4][i])
-			{
-				meleeAttack(200);
-			}
-		}
-	}
+	protected void attacking() {}
 	@Override
 	protected void hiding() {}
 	@Override
-	protected void shooting() {}
+	protected void shooting()
+	{
+		int v = 10; //projectile velocity
+		if(frame<27) //geting weapon ready+aiming
+		{
+			aimAheadOfPlayer(v);
+		} else if(frame==36) // shoots
+		{
+			rads = rotation/r2d;
+			control.spriteController.createProj_TrackerEnemy(rotation, Math.cos(rads) * v, Math.sin(rads) * v, 130, x, y);
+			control.activity.playEffect("arrowrelease");
+			checkLOS((int)control.player.x, (int)control.player.y);
+			if(LOS&&hp>600) frame=25; // shoots again
+		}
+	}
 	@Override
 	protected void finishWandering()
 	{
