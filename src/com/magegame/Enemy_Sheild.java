@@ -26,7 +26,8 @@ public final class Enemy_Sheild extends Enemy
 	private int[][] makeFrames()
 	{
 		//				 move	  roll	  stun	 melee		sheild	  hide	 shoot
-		int[][] temp = {{0, 19}, {0, 0}, {0, 0}, {20, 45}, {46, 55}, {0, 0}, {0, 0}};
+		int[] e = {0, 0};
+		int[][] temp = {{0, 19}, e, e, {20, 45}, {46, 55}, e, e};
 		return temp;
 	}
 	protected void frameNoLOS()

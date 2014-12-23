@@ -26,7 +26,8 @@ public final class Enemy_Mage extends Enemy
 	private int[][] makeFrames()
 	{
 		//				 move	  roll	    stun   melee   sheild   hide   shoot
-		int[][] temp = {{0, 19}, {20, 31}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}};
+		int[] e = {0, 0};
+		int[][] temp = {{0, 19}, {20, 30}, e, e, e, e, e};
 		return temp;
 	}
 	protected void frameNoLOS()
