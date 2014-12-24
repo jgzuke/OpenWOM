@@ -53,6 +53,7 @@ import java.util.Random;
 import com.spritelib.Sprite;
 public final class Controller extends View
 {
+	private int playScreenSize = 300;
 	private boolean paused = false;
 	protected int screenMinX;
 	protected int screenMinY;
@@ -99,17 +100,23 @@ public final class Controller extends View
 	public Controller(Context startSet, StartActivity activitySet)
 	{
 		super(startSet);
-		spriteController = new SpriteController(startSet, this);
-		wallController = new WallController(startSet, this);
 		activity = activitySet;
 		context = startSet;
+		
+		wallController = new WallController(startSet, this);
+		spriteController = new SpriteController(startSet, this);
 		imageLibrary = new ImageLibrary(startSet, this); // creates image library
+		levelController = new LevelController(this);
+		
+		imageLibrary.loadAllImages();
 		player = new Player(this); // creates player object
-		setUpStuff();
-		levelController = new LevelController(spriteController, wallController, imageLibrary, player);
+		levelController.loadLevel(1);
+		
+		player.resetVariables();
+		setUpPaintStuff();
 		frameCaller.run();
 	}
-	private void setUpStuff()
+	private void setUpPaintStuff()
 	{
 		shootStick = new Graphic_shootStick(imageLibrary.loadImage("icon_shoot", 70, 35));
 		screenMinX = activity.screenMinX;
@@ -297,54 +304,6 @@ public final class Controller extends View
 	protected boolean enemyInView(double x, double y)
 	{
 		return !(x + curXShift > 400 || x + curXShift < -100 || y + curYShift > 400 || y + curYShift < -100);
-	}
-	protected double getLevelWinningsMultiplier(int level)
-	{
-		if(level==0)
-		{
-			return 0;
-		} else
-		{
-			return 1 + ((double)(level-1)/(double)10);
-		}
-	}
-	protected String getLevelName(int level)
-	{
-		switch(level)
-		{
-		case 0:
-			return "Tutorial";
-		case 1:
-			return "Broken Sanctuary";
-		case 2:
-			return "Beyond the Gate";
-		case 3:
-			return "Mouldy Tavern";
-		case 4:
-			return "The Chambers";
-		case 5:
-			return "Orientation";
-		case 6:
-			return "The Outpost";
-		case 7:
-			return "War Preparation";
-		case 8:
-			return "The Labyrinth";
-		case 9:
-			return "Back to Town";
-		case 10:
-			return "Temple of Fire";
-		case 11:
-			return "Temple of Ice";
-		case 12:
-			return "Temple of Earth";
-		case 13:
-			return "Goblin Nest";
-		case 14:
-			return "The Hordes Return";
-		default:
-			return "Default";
-		}
 	}
 	@Override
 	protected void onDraw(Canvas g)

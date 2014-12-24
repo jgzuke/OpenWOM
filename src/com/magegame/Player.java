@@ -61,9 +61,8 @@ public final class Player extends Human
 	private double spLose = 1;			// sp lost on hit
 	public Player(Controller creator)
 	{
-		super(0, 0, 0, 0, true, false, creator.imageLibrary.player_Image[0]);
+		super(0, 0, 0, 0, true, false, null);
 		control = creator;
-		resetVariables();
 		/*if(control.activity.useHestiasBlessing>0)
 		{
 			control.activity.useHestiasBlessing --;
@@ -80,15 +79,13 @@ public final class Player extends Human
 	 */
 	public void resetVariables()
 	{
-		control.imageLibrary.loadPlayerImage();
+		//control.imageLibrary.loadPlayerImage();
 		rollTimer = 0;
 		sp = 1;
 		abilityTimer_roll = 120;
 		abilityTimer_burst = 250;
 		abilityTimer_Proj_Tracker = 0;
 		touching = false;
-		x = 370;
-		y = 160;
 		deleted = false;
 		playing = false;
 		powerUpTimer=0;
