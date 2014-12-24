@@ -53,7 +53,6 @@ public final class Enemy_Mage extends Enemy
 	}
 	protected void frameLOS()
 	{
-		rads = Math.atan2((control.player.y - y), (control.player.x - x));
 		distanceFound = checkDistance(x, y, control.player.x,  control.player.y);
 		if(distanceFound<60)		// MAGES ALWAYS MOVING, DONT STOP TO SHOOT
 		{

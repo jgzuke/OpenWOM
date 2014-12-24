@@ -254,7 +254,7 @@ abstract public class EnemyShell extends Human
 			double rot2 = rads2*r2d;
 			double difference = Math.abs(rotation-rot2);
 			if(difference>180) difference = 360-difference;
-			if(difference>90&&checkDistance(x, y, px, py)>50)
+			if(difference>110&&checkDistance(x, y, px, py)>50)
 			{
 				LOS = false;
 			} else

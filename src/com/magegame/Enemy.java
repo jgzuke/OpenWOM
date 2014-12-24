@@ -49,22 +49,38 @@ abstract public class Enemy extends EnemyShell
 		{
 			frame=frames[2][0];
 			stunTimer--;
-			if(stunTimer==0) action = "Nothing";		//stun over, go have fun
+			if(stunTimer==0)
+			{
+				action = "Nothing";		//stun over, go have fun
+				frame = 0;
+			}
 		} else if(action.equals("Roll"))
 		{
 			x += xMove;
 			y += yMove;
 			frame++;
-			if(frame==frames[1][1]) action = "Nothing";	//roll done
+			if(frame==frames[1][1])
+			{
+				action = "Nothing";	//roll done
+				frame = 0;
+			}
 		} else if(action.equals("Melee"))
 		{
 			frame++;
 			attacking();
-			if(frame==frames[3][1]) action = "Nothing";	//attack over
+			if(frame==frames[3][1])
+			{
+				action = "Nothing";	//attack over
+				frame = 0;
+			}
 		} else if(action.equals("Sheild"))
 		{
 			frame++;
-			if(frame==frames[4][1]) action = "Nothing";	//block done
+			if(frame==frames[4][1])
+			{
+				action = "Nothing";	//block done
+				frame = 0;
+			}
 		} else if(action.equals("Hide"))
 		{
 			frame = frames[5][0];
@@ -73,7 +89,11 @@ abstract public class Enemy extends EnemyShell
 		{
 			frame++;
 			shooting();
-			if(frame==frames[6][1]) action = "Nothing"; // attack done
+			if(frame==frames[6][1])
+			{
+				action = "Nothing"; // attack done
+				frame = 0;
+			}
 		} else if(action.equals("Run"))
 		{
 			frame++;
@@ -81,12 +101,16 @@ abstract public class Enemy extends EnemyShell
 			x += xMove*1.2;
 			y += yMove*1.2;
 			runTimer--;
-			if(runTimer<1) action = "Nothing"; // stroll done
+			if(runTimer<1)
+			{
+				action = "Nothing"; // stroll done
+			}
 		} else if(action.equals("Move")||action.equals("Wander"))
 		{
 			if(pathedToHitLength > 0 || LOS)
 			{
 				 action = "Nothing";
+				 frame = 0;
 			} else
 			{
 				frame++;
@@ -96,12 +120,13 @@ abstract public class Enemy extends EnemyShell
 				runTimer--;
 				if(runTimer<1) //stroll over
 				{
-					action = "Nothing";
 					if(action.equals("Move"))
 					{
+						action = "Nothing";
 						frameNoLOS();
 					} else
 					{
+						action = "Nothing";
 						finishWandering();
 					}
 				}
@@ -139,14 +164,8 @@ abstract public class Enemy extends EnemyShell
 					}
 				}
 			}
-			if(runPathChooseCounter == 300)
-			{
-				run(10);
-			}
-		} else
-		{
-			run(10);
 		}
+		run(4);
 	}        
 	/**
 	 * Aims towards player
@@ -189,6 +208,7 @@ abstract public class Enemy extends EnemyShell
 	 */
 	protected void runSideways()
 	{
+		double oldRads = rads;
 		rads = Math.atan2((control.player.y - y), (control.player.x - x));
 		rotation = rads * r2d;
 		boolean right = !checkObstructions(x, y, (rotation + 90) / r2d, 42, true, fromWall);
@@ -199,11 +219,16 @@ abstract public class Enemy extends EnemyShell
 			if(right) rotation += 90;
 			if(left && right)
 			{
-				rotation -= 90;
-				if(Math.random() > 0.5) rotation += 180;
+				if(Math.abs(oldRads-((rotation -= 90)/r2d))<Math.abs(oldRads-((rotation += 90)/r2d)))
+				{
+					rotation -= 90;
+				} else
+				{
+					rotation += 90;
+				}
 			}
 			rads = rotation / r2d;
-			run(5);
+			run(2);
 		} else
 		{
 			runAway();
@@ -329,15 +354,13 @@ abstract public class Enemy extends EnemyShell
 			{
 				int[] closest = points.get(foundPlayer);
 				rads = Math.atan2(closest[3]*20 - y, closest[2]*20 - x);
-				rotation = rads * r2d;
-				run(8);
 			}
 		} else
 		{
 			rads = Math.atan2(fy - y, fx - x);
-			rotation = rads * r2d;
-			run(8);
 		}
+		rotation = rads * r2d;
+		run(2);
 	}
 	private int iterateSearch(ArrayList<int[]> points, boolean[][] checked, int eX, int eY)
 	{
@@ -450,13 +473,12 @@ abstract public class Enemy extends EnemyShell
 		}
 		if(canMove)
 		{
-			run(10);
-			action = "Wander";
+			run(4);
 		} else
 		{
-			run(5);
-			action = "Wander";
+			run(2);
 		}
+		action = "Wander";
 	}
 	protected void searchOrWander()
 	{
