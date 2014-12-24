@@ -54,7 +54,7 @@ public final class Enemy_Archer extends Enemy
 			}
 		} else
 		{
-			if(distanceFound < 140)
+			if(distanceFound < 160)
 			{
 				action = "Shoot";
 				frame=frames[6][0];

@@ -65,7 +65,7 @@ public final class Enemy_Mage extends Enemy
 			runAway();
 		} else
 		{
-			runSideways();
+			runAround(120, (int)distanceFound);
 		}
 		if(shoot>3&&energy>14)
 		{

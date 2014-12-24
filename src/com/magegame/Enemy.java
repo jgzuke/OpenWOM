@@ -206,7 +206,7 @@ abstract public class Enemy extends EnemyShell
 	/**
 	 * rolls sideways for 11 frames
 	 */
-	protected void runSideways()
+	protected void runAround(int radius, int distance)
 	{
 		double oldRads = rads;
 		rads = Math.atan2((control.player.y - y), (control.player.x - x));
@@ -215,17 +215,28 @@ abstract public class Enemy extends EnemyShell
 		boolean left = !checkObstructions(x, y, (rotation - 90) / r2d, 42, true, fromWall);
 		if(left||right)
 		{
-			if(left) rotation -= 90;
-			if(right) rotation += 90;
-			if(left && right)
+			if(left && right) 		// if left and right pick one
 			{
-				if(Math.abs(oldRads-((rotation -= 90)/r2d))<Math.abs(oldRads-((rotation += 90)/r2d)))
+				double difLeft = Math.abs((oldRads*r2d)-(rotation - 90));
+				double difRight = Math.abs((oldRads*r2d)-(rotation + 90));
+				if(difLeft>300) difLeft -= 360;
+				if(difRight>300) difLeft -= 360;
+				if(difLeft<difRight && control.getRandomInt(20)!=0)
 				{
-					rotation -= 90;
-				} else
-				{
-					rotation += 90;
+					right = false;
 				}
+			}
+			int maxTurn = 5;
+			if(right)		// gotta be one or the other
+			{
+				rotation += 90;
+				if(distance<radius-10) rotation += maxTurn; // get closer
+				if(distance>radius+10) rotation -= maxTurn; // turn away
+			} else
+			{
+				rotation -= 90;
+				if(distance<radius-10) rotation -= maxTurn; // get closer
+				if(distance>radius+10) rotation += maxTurn; // turn away
 			}
 			rads = rotation / r2d;
 			run(2);

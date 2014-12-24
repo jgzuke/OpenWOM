@@ -154,7 +154,7 @@ public final class SpriteController extends SpriteDrawer
 				{
 					enemies.get(i).levelCurrentPosition = 0;
 					enemies.get(i).pathedToHitLength = 0;
-					if(control.enemyInView(enemies.get(i).x, enemies.get(i).y))
+					if(true)//control.enemyInView(enemies.get(i).x, enemies.get(i).y))
 					{
 						enemies.get(i).frameCall();
 						if(enemies.get(i) != null)
