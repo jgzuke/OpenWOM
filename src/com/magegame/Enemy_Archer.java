@@ -72,12 +72,11 @@ public final class Enemy_Archer extends Enemy
 	protected void shooting()
 	{
 		int v = 10; //projectile velocity
-		if(frame<27) //geting weapon ready+aiming
+		if(frame<34) //geting weapon ready+aiming
 		{
-			aimAheadOfPlayer(v);
+			aimAheadOfPlayer(v); //TODO add extra frames for when you aim
 		} else if(frame==36) // shoots
 		{
-			rads = rotation/r2d;
 			control.spriteController.createProj_TrackerEnemy(rotation, Math.cos(rads) * v, Math.sin(rads) * v, 130, x, y);
 			control.activity.playEffect("arrowrelease");
 			checkLOS((int)control.player.x, (int)control.player.y);

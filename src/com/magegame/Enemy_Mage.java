@@ -6,6 +6,8 @@ package com.magegame;
 
 public final class Enemy_Mage extends Enemy
 {
+	int shoot = 4;
+	int energy = 90;
 	public Enemy_Mage(Controller creator, double X, double Y, int HP, int ImageIndex)
 	{
 		super(creator, X, Y, HP, ImageIndex);
@@ -23,11 +25,20 @@ public final class Enemy_Mage extends Enemy
 		frames = makeFrames();
 		
 	}
+	@ Override
+	protected void frameCall()
+	{
+		shoot++;
+		if(shoot>4) shoot = 4;
+		energy++;
+		if (energy>45) energy=45;
+		super.frameCall();
+	}
 	private int[][] makeFrames()
 	{
 		//				 move	  roll	    stun   melee   sheild   hide   shoot
 		int[] e = {0, 0};
-		int[][] temp = {{0, 19}, {20, 30}, e, e, e, e, e};
+		int[][] temp = {{0, 19}, {20, 31}, e, e, e, e, e};
 		return temp;
 	}
 	protected void frameNoLOS()
@@ -42,36 +53,35 @@ public final class Enemy_Mage extends Enemy
 	}
 	protected void frameLOS()
 	{
-		rads = Math.atan2(( control.player.y - y), (control.player.x - x));
-		rotation = rads * r2d;
+		rads = Math.atan2((control.player.y - y), (control.player.x - x));
 		distanceFound = checkDistance(x, y, control.player.x,  control.player.y);
-		if(distanceFound<60)
+		if(distanceFound<60)		// MAGES ALWAYS MOVING, DONT STOP TO SHOOT
 		{
 			rollAway();
-		} else if(hp<400)
+		} else if(pathedToHitLength>1 && checkDistance(danger[0][0], danger[1][0], x, y)<100)
 		{
-			if(distanceFound < 140)
-			{
-				if(distanceFound<100)
-				{
-					runAway();
-				} else
-				{
-					action = "Shoot";
-					frame=frames[6][0];
-				}
-			}
+			rollSideways();
+		} else if(hp<400 && distanceFound < 140)
+		{
+			runAway();
 		} else
 		{
-			if(distanceFound < 140)
-			{
-				action = "Shoot";
-				frame=frames[6][0];
-			} else
-			{
-				runTowardsPoint(control.player.x, control.player.y);
-			}
+			runSideways();
 		}
+		if(shoot>3&&energy>14)
+		{
+			shoot-=4;
+			energy -= 15;
+			int v = 10;		//projectile velocity
+			double saveRads = rads;
+			aimAheadOfPlayer(v*2);	// aim closer to player
+			rads+=0.1;
+			rads-=control.getRandomDouble()*0.2;	// add random factor to shot
+			control.spriteController.createProj_TrackerEnemy(rads * r2d, Math.cos(rads) * v, Math.sin(rads) * v, 130, x, y);
+			control.activity.playEffect("arrowrelease");
+			rads = saveRads;
+		}
+		rotation = rads * r2d;
 	}
 	@Override
 	protected void attacking() {}
@@ -86,5 +96,9 @@ public final class Enemy_Mage extends Enemy
 		{
 			runRandom();
 		}
+	}
+	private void shoot()
+	{
+		
 	}
 }

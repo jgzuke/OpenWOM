@@ -187,46 +187,51 @@ abstract public class Enemy extends EnemyShell
 	/**
 	 * rolls sideways for 11 frames
 	 */
+	protected void runSideways()
+	{
+		rads = Math.atan2((control.player.y - y), (control.player.x - x));
+		rotation = rads * r2d;
+		boolean right = !checkObstructions(x, y, (rotation + 90) / r2d, 42, true, fromWall);
+		boolean left = !checkObstructions(x, y, (rotation - 90) / r2d, 42, true, fromWall);
+		if(left||right)
+		{
+			if(left) rotation -= 90;
+			if(right) rotation += 90;
+			if(left && right)
+			{
+				rotation -= 90;
+				if(Math.random() > 0.5) rotation += 180;
+			}
+			rads = rotation / r2d;
+			run(5);
+		} else
+		{
+			runAway();
+		}
+	}
+	/**
+	 * rolls sideways for 11 frames
+	 */
 	protected void rollSideways()
 	{
 		rads = Math.atan2((control.player.y - y), (control.player.x - x));
 		rotation = rads * r2d;
-		rads = (rotation + 90) / r2d;
-		if(checkObstructions(x, y, rads, 42, true, fromWall))
+		boolean right = !checkObstructions(x, y, (rotation + 90) / r2d, 42, true, fromWall);
+		boolean left = !checkObstructions(x, y, (rotation - 90) / r2d, 42, true, fromWall);
+		if(left||right)
 		{
-			rads = (rotation - 90) / r2d;
-			if(checkObstructions(x, y, rads, 42, true, fromWall))
-			{
-				rollAway();
-			}
-			else
+			if(left) rotation -= 90;
+			if(right) rotation += 90;
+			if(left && right)
 			{
 				rotation -= 90;
-				rads = rotation / r2d;
-				roll();
+				if(Math.random() > 0.5) rotation += 180;
 			}
+			rads = rotation / r2d;
+			roll();
 		} else
 		{
-			rads = (rotation - 90) / r2d;
-			if(checkObstructions(x, y, rads, 42, true, fromWall))
-			{
-				rotation += 90;
-				rads = rotation / r2d;
-				roll();
-			}
-			else
-			{
-				if(Math.random() > 0.5)
-				{
-					rotation += 90;
-					roll();
-				}
-				else
-				{
-					rotation -= 90;
-					roll();
-				}
-			}
+			rollAway();
 		}
 	}
 	/**
