@@ -178,10 +178,7 @@ public final class SpriteController extends SpriteDrawer
 				}
 				else
 				{
-					if(control.enemyInView(structures.get(i).x, structures.get(i).y))
-					{
-						structures.get(i).frameCall();
-					}
+					structures.get(i).frameCall();
 				}
 			}
 		}
@@ -361,17 +358,9 @@ public final class SpriteController extends SpriteDrawer
 	{
 		proj_Tracker_AOEs.add(new Proj_Tracker_AOE_Player(control, (int) x, (int) y, power, false, this));
 	}
-	/**
-		 * checks whether object is in view
-		 * @param lowx objects low x
-		 * @param lowy objects low y
-		 * @param width objects width
-		 * @param height objects height
-		 * @return whether object is in view
-		 */
 	@Override
-	protected boolean onScreen(double x, double y, int width, int height)
-	{
-		return control.inView(x, y, width, height);
+	protected boolean onScreen(double x, double y, int width, int height) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 }

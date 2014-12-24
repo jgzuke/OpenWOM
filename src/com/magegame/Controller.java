@@ -57,6 +57,8 @@ public final class Controller extends View
 	private boolean paused = false;
 	protected int screenMinX;
 	protected int screenMinY;
+	protected int curXShift;
+	protected int curYShift;
 	protected double screenDimensionMultiplier;
 	protected Paint paint = new Paint();
 	protected Matrix rotateImages = new Matrix();
@@ -69,8 +71,6 @@ public final class Controller extends View
 	private Bitmap background;
 	protected PlayerGestureDetector detect;
 	private Handler mHandler = new Handler();
-	protected int curXShift;
-	protected int curYShift;
 	private int healthColor = Color.rgb(150, 0, 0);
 	private int cooldownColor = Color.rgb(190, 190, 0);
 	protected Sprite shootStick;
@@ -267,12 +267,10 @@ public final class Controller extends View
 				drawBitmapLevel(imageLibrary.backDrop, w, h, g);
 			}
 		}
-		Rect selection = new Rect(-curXShift, -curYShift, -curXShift+300, -curYShift+300);
-		Rect onLevel = new Rect(-curXShift, -curYShift, -curXShift+300, -curYShift+300);
-		g.drawBitmap(imageLibrary.currentLevel, selection, onLevel, paint);
+		g.drawBitmap(imageLibrary.currentLevel, 0, 0, paint);
 		spriteController.drawStructures(g, paint, imageLibrary);
 		spriteController.drawSprites(g, paint, imageLibrary, aoeRect);
-		g.drawBitmap(imageLibrary.currentLevelTop, selection, onLevel, paint);
+		g.drawBitmap(imageLibrary.currentLevelTop, 0, 0, paint);
 
 		if(player.powerUpTimer > 0)
 		{
@@ -280,30 +278,6 @@ public final class Controller extends View
 		}
 		spriteController.drawHealthBars(g, paint);
 		return drawTo;
-	}
-	/**
-	 * checks whether object is in view
-	 * @param lowx objects low x
-	 * @param lowy objects low y
-	 * @param width objects width
-	 * @param height objects height
-	 * @return whether object is in view
-	 */
-	protected boolean inView(double x, double y, int width, int height)
-	{
-		x += curXShift;
-		y += curYShift;
-		return !(x > 300+width || x < -width || y > 300+height || y < -height);
-	}
-	/**
-	 * checks whether enemy is in view
-	 * @param x enemy x
-	 * @param y enemy y
-	 * @return whether enemy is in view
-	 */
-	protected boolean enemyInView(double x, double y)
-	{
-		return !(x + curXShift > 400 || x + curXShift < -100 || y + curYShift > 400 || y + curYShift < -100);
 	}
 	@Override
 	protected void onDraw(Canvas g)
@@ -322,25 +296,16 @@ public final class Controller extends View
 		paint.setStyle(Paint.Style.FILL);
 		paint.setColor(Color.GRAY);
 		g.drawRect(90, 10, 390, 310, paint);
-		curXShift = 150 - (int) player.x;
-		curYShift = 150 - (int) player.y;
-			if(player.x < 150)
-			{
-				curXShift = 0;
-			}
-			if(player.y < 150)
-			{
-				curYShift = 0;
-			}
-			if(player.x > levelController.levelWidth - 150)
-			{
-				curXShift = 300 - levelController.levelWidth;
-			}
-			if(player.y > levelController.levelHeight - 150)
-			{
-				curYShift = 300 - levelController.levelHeight;
-			}
-		g.drawBitmap(drawLevel(), curXShift + 90, curYShift + 10, paint);
+		int middle = playScreenSize/2;
+		curXShift = middle - (int) player.x;
+		curYShift = middle - (int) player.y;
+		if(player.x < middle) curXShift = 0;
+		if(player.y < middle) curYShift = 0;
+		if(player.x > levelController.levelWidth - middle) curXShift = playScreenSize - levelController.levelWidth;
+		if(player.y > levelController.levelHeight - middle) curYShift = playScreenSize - levelController.levelHeight;
+		Rect src = new Rect(-curXShift, -curYShift, -curXShift+playScreenSize, -curYShift+playScreenSize);
+		Rect dst = new Rect(90, 10, 390, 310);
+		g.drawBitmap(drawLevel(), src, dst, paint);
 		paint.setStyle(Paint.Style.FILL);
 		paint.setColor(Color.BLACK);
 		g.drawRect(-1000, -1000, 0, 1320, paint);
@@ -507,6 +472,6 @@ public final class Controller extends View
 	 */
 	protected void drawBitmapLevel(Bitmap picture, int x, int y, Canvas g)
 	{
-		if(inView(x, y, picture.getWidth(), picture.getHeight())) g.drawBitmap(picture, x, y, paint);
+		/*if(inView(x, y, picture.getWidth(), picture.getHeight()))*/ g.drawBitmap(picture, x, y, paint);
 	}
 }

@@ -80,8 +80,6 @@ public final class Proj_Tracker_Player extends Proj_Tracker
 			if(needToTurn>20) target = null;
 			if(target.deleted) target = null;
 		}
-		if(control.enemyInView(x, y))
-		{
 			for(int i = 0; i < spriteController.enemies.size(); i++)
 			{
 				if(spriteController.enemies.get(i) != null && !deleted && spriteController.enemies.get(i).action.equals("Nothing"))
@@ -90,7 +88,6 @@ public final class Proj_Tracker_Player extends Proj_Tracker
 					spriteController.enemies.get(i).levelCurrentPosition++;
 				}
 			}
-		}
 	}
 	public double compareRot(double newRotation)
 	{
