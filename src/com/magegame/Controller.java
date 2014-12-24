@@ -53,7 +53,7 @@ import java.util.Random;
 import com.spritelib.Sprite;
 public final class Controller extends View
 {
-	private int playScreenSize = 300;
+	private int playScreenSize = 400;
 	private boolean paused = false;
 	protected int screenMinX;
 	protected int screenMinY;
