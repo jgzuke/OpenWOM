@@ -143,11 +143,11 @@ public final class WallController
 		float circB;
 		float tempX;
 		float tempY;
-		if(x1 < 0 || x1 > control.levelWidth || y1 < 0 || y1 > control.levelHeight)
+		if(x1 < 0 || x1 > control.levelController.levelWidth || y1 < 0 || y1 > control.levelController.levelHeight)
 		{
 			hitBack = true;
 		}
-		if(x2 < 0 || x2 > control.levelWidth || y2 < 0 || y2 > control.levelHeight)
+		if(x2 < 0 || x2 > control.levelController.levelWidth || y2 < 0 || y2 > control.levelController.levelHeight)
 		{
 			hitBack = true;
 		}
@@ -295,7 +295,7 @@ public final class WallController
 	protected boolean checkHitBack(double X, double Y, boolean objectOnGround)
 	{
 		boolean hitBack = false;
-		if(X < 0 || X > control.levelWidth || Y < 0 || Y > control.levelHeight)
+		if(X < 0 || X > control.levelController.levelWidth || Y < 0 || Y > control.levelController.levelHeight)
 		{
 			hitBack = true;
 		}

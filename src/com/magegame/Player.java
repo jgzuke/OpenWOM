@@ -195,9 +195,9 @@ public final class Player extends Human
 		image = control.imageLibrary.player_Image[frame];
 		sizeImage();
 		if(x < 10) x = (10);
-		if(x > control.levelWidth - 10) x = (control.levelWidth - 10);
+		if(x > control.levelController.levelWidth - 10) x = (control.levelController.levelWidth - 10);
 		if(y < 10) y = (10);
-		if(y > control.levelHeight - 10) y = (control.levelHeight - 10);
+		if(y > control.levelController.levelHeight - 10) y = (control.levelController.levelHeight - 10);
 	}
 	/**
 	 * moves player at a set speed, direction is based of move stick

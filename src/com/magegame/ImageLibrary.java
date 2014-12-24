@@ -97,7 +97,7 @@ public final class ImageLibrary extends ImageLoader
 		shotPlayer = loadArray1D(5, "shootplayer", 35, 15);
 		effects = loadArray1D(4, "effect", 60, 60);
 		isPlayer = loadImage("icon_isplayer", 40, 40);
-		loadLevel(control.levelNum, control.levelWidth, control.levelHeight);
+		loadLevel(control.levelController.levelNum, control.levelController.levelWidth, control.levelController.levelHeight);
 		backDrop = loadImage("leveltile1", 100, 100);
 	}
 	/**

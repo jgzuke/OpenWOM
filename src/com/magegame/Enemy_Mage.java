@@ -69,16 +69,7 @@ public final class Enemy_Mage extends Enemy
 		}
 		if(shoot>3&&energy>14)
 		{
-			shoot-=4;
-			energy -= 15;
-			int v = 10;		//projectile velocity
-			double saveRads = rads;
-			aimAheadOfPlayer(v*2);	// aim closer to player
-			rads+=0.1;
-			rads-=control.getRandomDouble()*0.2;	// add random factor to shot
-			control.spriteController.createProj_TrackerEnemy(rads * r2d, Math.cos(rads) * v, Math.sin(rads) * v, 130, x, y);
-			control.activity.playEffect("arrowrelease");
-			rads = saveRads;
+			shoot();
 		}
 		rotation = rads * r2d;
 	}
@@ -98,6 +89,15 @@ public final class Enemy_Mage extends Enemy
 	}
 	private void shoot()
 	{
-		
+		shoot-=4;
+		energy -= 15;
+		int v = 10;		//projectile velocity
+		double saveRads = rads;
+		aimAheadOfPlayer(v*2);	// aim closer to player
+		rads+=0.1;
+		rads-=control.getRandomDouble()*0.2;	// add random factor to shot
+		control.spriteController.createProj_TrackerEnemy(rads * r2d, Math.cos(rads) * v, Math.sin(rads) * v, 130, x, y);
+		control.activity.playEffect("arrowrelease");
+		rads = saveRads;
 	}
 }

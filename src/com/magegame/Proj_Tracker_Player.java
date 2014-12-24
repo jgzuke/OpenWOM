@@ -4,10 +4,6 @@
 package com.magegame;
 
 import com.spritelib.Sprite;
-
-import android.graphics.Bitmap;
-import android.util.Log;
-
 public final class Proj_Tracker_Player extends Proj_Tracker
 {
 	/**
@@ -64,8 +60,6 @@ public final class Proj_Tracker_Player extends Proj_Tracker
 		{
 			xDif = x - target.x;
 			yDif = y - target.y;
-			double distance = Math.pow(xDif, 2) + Math.pow(yDif, 2);
-			if(target.deleted) target = null;
 			double newRotation = Math.atan2(yDif, xDif) * r2d;
 			newRotation -= 180;
 			double fix = compareRot(newRotation/r2d);
@@ -81,6 +75,10 @@ public final class Proj_Tracker_Player extends Proj_Tracker
 			}
 			xForward = Math.cos(rotation/r2d) * speed;
 			yForward = Math.sin(rotation/r2d) * speed;
+			double needToTurn = Math.abs(rotation-newRotation);
+			if(needToTurn>180) needToTurn = Math.abs(needToTurn-360);
+			if(needToTurn>20) target = null;
+			if(target.deleted) target = null;
 		}
 		if(control.enemyInView(x, y))
 		{

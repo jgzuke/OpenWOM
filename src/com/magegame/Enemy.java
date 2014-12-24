@@ -348,7 +348,7 @@ abstract public class Enemy extends EnemyShell
 			int eX = (int)x;
 			int eY = (int)y;
 			int[] p1 = {sX, sY, sX, sY};
-			boolean[][] checked=new boolean[(control.levelWidth/20)][(control.levelHeight/20)];
+			boolean[][] checked=new boolean[(control.levelController.levelWidth/20)][(control.levelController.levelHeight/20)];
 			ArrayList<int[]> points = new ArrayList<int[]>();
 			points.add(p1);
 			checked[sX][sY]=true;

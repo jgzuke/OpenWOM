@@ -60,17 +60,13 @@ public final class Controller extends View
 	protected Paint paint = new Paint();
 	protected Matrix rotateImages = new Matrix();
 	protected StartActivity activity;
-	protected ArrayList<int[]> saveEnemyInformation = new ArrayList<int[]>();
 	private Rect aoeRect = new Rect();
 	protected Player player;
 	protected Context context;
 	protected ImageLibrary imageLibrary;
 	private Random randomGenerator = new Random();
-	protected int levelNum = 1;
 	private Bitmap background;
 	protected PlayerGestureDetector detect;
-	protected int levelWidth = 300;
-	protected int levelHeight = 300;
 	private Handler mHandler = new Handler();
 	protected int curXShift;
 	protected int curYShift;
@@ -79,9 +75,10 @@ public final class Controller extends View
 	protected Sprite shootStick;
 	protected int playerHit=0;
 	protected int playerBursted = 0;
-	SpriteController spriteController;
-	WallController wallController;
-	Typeface magicMedieval; 
+	protected SpriteController spriteController;
+	protected WallController wallController;
+	private Typeface magicMedieval; 
+	protected LevelController levelController;
 	protected Runnable frameCaller = new Runnable()
 	{
 		/**
@@ -109,7 +106,7 @@ public final class Controller extends View
 		imageLibrary = new ImageLibrary(startSet, this); // creates image library
 		player = new Player(this); // creates player object
 		setUpStuff();
-		loadLevel(1); // create enemies walls etc.
+		levelController = new LevelController(spriteController, wallController, imageLibrary, player);
 		frameCaller.run();
 	}
 	private void setUpStuff()
@@ -131,43 +128,6 @@ public final class Controller extends View
 		invalidate();
 		activity.saveGame();
 	}
-	/**
-	 * loads a new level, creates walls enemies etc.
-	 */
-	protected void loadLevel(int toLoad)
-	{
-		wallController.clearWallArrays();
-		levelNum = toLoad;
-		if(toLoad==1)
-		{
-			//LEVEL
-			levelWidth = 1000; // height of level
-			levelHeight = 1000; // width of level
-			//PLAYER
-			player.x = 30; // player start x
-			player.y = 30; // player start y
-			//ENEMIES
-			imageLibrary.loadEnemy(55, "goblin_swordsman", 110, 70, 0); // length, name,width, height, index
-			imageLibrary.loadEnemy(49, "goblin_archer", 80, 50, 1);
-			imageLibrary.loadEnemy(31, "goblin_mage", 30, 34, 2);
-			spriteController.makeEnemy(0, 269, 86); //type, x, y
-			spriteController.makeEnemy(1, 358, 140);
-			spriteController.makeEnemy(2, 458, 140);
-			//WALLS
-			/*wallController.makeWall_Rectangle(78, 122, 41, 24, true, false);
-			wallController.makeWall_Rectangle(63, -20, 31, 142, true, true);
-			wallController.makeWall_Rectangle(73, 238, 47, 62, true, true);
-			wallController.makeWall_Rectangle(94, -19, 25, 152, true, false);
-			wallController.makeWall_Rectangle(252, 269, 234, 62, true, true);
-			wallController.makeWall_Rectangle(412, 82, 74, 250, true, true);
-			wallController.makeWall_Rectangle(382, 133, 30, 83, true, false);
-			wallController.makeWall_Circle(330, 297, 47, 1, false);
-			wallController.makeWall_Rectangle(217, -15, 109, 81, true, false);
-			wallController.makeWall_Rectangle(179, -32, 38, 63, true, true);
-			wallController.makeWall_Rectangle(318, -41, 66, 63, true, true);*/
-		}
-		imageLibrary.loadLevel(toLoad, levelWidth, levelHeight);
-	}
 	protected void die()
 	{
 		//TODO
@@ -175,84 +135,6 @@ public final class Controller extends View
 	protected void pause()
 	{
 		//TODO
-	}
-	/**
-	 * loads a new section of the current level
-	 * @param level id of new section to load
-	 */
-	protected void loadLevelSection(int level)
-	{
-		wallController.clearWallArrays();
-		levelNum = level;
-		for(int i = 0; i < spriteController.powerUps.size(); i++)
-		{
-			if(spriteController.powerUps.get(i) != null) player.getPowerUp(spriteController.powerUps.get(i).ID);
-		}			 // READS IN AND CREATES ENEMIES IN NEW SECTION, SAVES ENEMIES IN OLD SECTION
-		ArrayList<int[]> tempSave = (ArrayList<int[]>)saveEnemyInformation.clone();
-		int j = 0;
-		for(int i = 0; i < saveEnemyInformation.size(); i++)
-		{
-			ArrayList<Enemy> enemies = spriteController.enemies;
-			if(!enemies.get(i).deleted)
-			{
-				saveEnemyInformation.get(j)[0] = enemies.get(i).enemyType;
-				saveEnemyInformation.get(j)[1] = (int) enemies.get(i).x;
-				saveEnemyInformation.get(j)[2] = (int) enemies.get(i).y;
-				saveEnemyInformation.get(j)[3] = enemies.get(i).hp;
-				j++;
-			}
-		}
-		endFightSection(tempSave);
-		if(levelNum == 21)
-		{
-			//LEVEL
-			levelWidth = 450; // height of level
-			levelHeight = 300; // width of level
-			//PLAYER
-			player.x = 30; // player start x
-			player.y = 30; // player start y
-			//ENEMIES
-			imageLibrary.loadEnemy(95, "human_enemy", 100, 70, 1); // length, name,width, height, index
-			spriteController.makeEnemy(1, 269, 86); //type, x, y
-			spriteController.makeEnemy(1, 358, 140);
-			spriteController.makeEnemy(1, 365, 204);
-			spriteController.makeEnemy(2, 146, 61);
-			spriteController.makeEnemy(2, 327, 231);
-			//WALLS
-			wallController.makeWall_Rectangle(78, 122, 41, 24, true, false);
-			wallController.makeWall_Rectangle(63, -20, 31, 142, true, true);
-			wallController.makeWall_Rectangle(73, 238, 47, 62, true, true);
-			wallController.makeWall_Rectangle(94, -19, 25, 152, true, false);
-			wallController.makeWall_Rectangle(252, 269, 234, 62, true, true);
-			wallController.makeWall_Rectangle(412, 82, 74, 250, true, true);
-			wallController.makeWall_Rectangle(382, 133, 30, 83, true, false);
-			wallController.makeWall_Circle(330, 297, 47, 1, false);
-			wallController.makeWall_Rectangle(217, -15, 109, 81, true, false);
-			wallController.makeWall_Rectangle(179, -32, 38, 63, true, true);
-			wallController.makeWall_Rectangle(318, -41, 66, 63, true, true);
-		}
-		imageLibrary.loadLevel(levelNum, levelWidth, levelHeight);
-	}
-	/**
-	 * end a section of a fight, stored enemies in current states
-	 * @param enemyData enemies to create
-	 * @param tempEnemies number of enemies to create
-	 */
-	private void endFightSection(ArrayList<int[]> enemyData)
-	{
-		endFightSection();
-		for(int i = 0; i < enemyData.size(); i++)
-		{
-			spriteController.createEnemy(enemyData.get(i)); // CREATES SAVED ENEMIES
-		}
-	}
-	/**
-	 * ends a fight section with no saved enemies
-	 */
-	private void endFightSection()
-	{
-		spriteController.clearObjectArrays();
-		wallController.clearWallArrays();
 	}
 	/**
 	 * fixes hp bar so it is on screen
@@ -369,11 +251,11 @@ public final class Controller extends View
 	 */
 	protected Bitmap drawLevel()
 	{
-		Bitmap drawTo = Bitmap.createBitmap(levelWidth, levelHeight, Config.ARGB_8888);
+		Bitmap drawTo = Bitmap.createBitmap(levelController.levelWidth, levelController.levelHeight, Config.ARGB_8888);
 		Canvas g = new Canvas(drawTo);
-		for(int w = 0; w<levelWidth; w+=100)
+		for(int w = 0; w<levelController.levelWidth; w+=100)
 		{
-			for(int h = 0; h<levelHeight; h+=100)
+			for(int h = 0; h<levelController.levelHeight; h+=100)
 			{
 				drawBitmapLevel(imageLibrary.backDrop, w, h, g);
 			}
@@ -491,13 +373,13 @@ public final class Controller extends View
 			{
 				curYShift = 0;
 			}
-			if(player.x > levelWidth - 150)
+			if(player.x > levelController.levelWidth - 150)
 			{
-				curXShift = 300 - levelWidth;
+				curXShift = 300 - levelController.levelWidth;
 			}
-			if(player.y > levelHeight - 150)
+			if(player.y > levelController.levelHeight - 150)
 			{
-				curYShift = 300 - levelHeight;
+				curYShift = 300 - levelController.levelHeight;
 			}
 		g.drawBitmap(drawLevel(), curXShift + 90, curYShift + 10, paint);
 		paint.setStyle(Paint.Style.FILL);

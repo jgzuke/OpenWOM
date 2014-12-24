@@ -62,7 +62,7 @@ public final class SpriteController extends SpriteDrawer
 	 */
 	void clearObjectArrays()
 	{
-		control.saveEnemyInformation.clear();
+		control.levelController.saveEnemyInformation.clear();
 		enemies.clear();
 		structures.clear();
 		powerUps.clear();
@@ -160,9 +160,9 @@ public final class SpriteController extends SpriteDrawer
 						if(enemies.get(i) != null)
 						{
 							if(enemies.get(i).x < 10) enemies.get(i).x = 10;
-							if(enemies.get(i).x > control.levelWidth - 10) enemies.get(i).x = (control.levelWidth - 10);
+							if(enemies.get(i).x > control.levelController.levelWidth - 10) enemies.get(i).x = (control.levelController.levelWidth - 10);
 							if(enemies.get(i).y < 10) enemies.get(i).y = 10;
-							if(enemies.get(i).y > control.levelHeight - 10) enemies.get(i).y = (control.levelHeight - 10);
+							if(enemies.get(i).y > control.levelController.levelHeight - 10) enemies.get(i).y = (control.levelController.levelHeight - 10);
 						}
 					}
 				}
