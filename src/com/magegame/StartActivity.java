@@ -20,14 +20,6 @@ import android.view.WindowManager;
 public class StartActivity extends Activity
 {
 	private Controller control;
-	private ItemController itemControl;
-	protected boolean paused = false;
-	protected double screenDimensionMultiplier;
-	protected int screenMinX;
-	protected int screenMinY;
-	protected byte [] worships = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // all the olympians
-	protected boolean [] skins = {false, false, false, false, false, false, false, false}; //skins
-	protected byte currentSkin = 0;
 	private FileOutputStream fileWrite;
 	private FileInputStream fileRead;
 	private int savePoints = 120;
@@ -47,11 +39,10 @@ public class StartActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setWindowAndAudio();
-		itemControl = new ItemController();
 		readSavedData();
 		startMusic();
-		control = new Controller(this, this);
-		setContentView(control);
+		control = new Controller(this, this, getScreenDimensions());
+		setContentView(control.graphicsController);
 	}
 	private void readSavedData()
 	{
@@ -64,26 +55,6 @@ public class StartActivity extends Activity
 		}
 		readSaveData();
 	}
-	public void optionsClickHandler(View v)
-	{
-		//setContentView(R.layout.options);
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	/**
 	 * sets screen variables as well as audio settings
 	 */
@@ -109,7 +80,6 @@ public class StartActivity extends Activity
 		soundPoolMap[12] = spool.load(this, R.raw.effect_pageflip, 1);
 		soundPoolMap[13] = spool.load(this, R.raw.money_1, 1);
 		soundPoolMap[14] = spool.load(this, R.raw.money_2, 1);
-		setScreenDimensions();
 	}
 	/**
 	 * plays a random money effect
@@ -139,7 +109,7 @@ public class StartActivity extends Activity
 	/**
 	 * sets dimensions of screen
 	 */
-	protected void setScreenDimensions()
+	protected double[] getScreenDimensions()
 	{
 		int dimension1 = getResources().getDisplayMetrics().heightPixels;
 		int dimension2 = getResources().getDisplayMetrics().widthPixels;
@@ -157,17 +127,15 @@ public class StartActivity extends Activity
 			screenHeightstart = dimension1;
 		}
 		ratio = (double)(screenWidthstart / screenHeightstart);
+		
 		if(ratio > 1.5)
 		{
-			screenMinX = (int)(screenWidthstart - (screenHeightstart * 1.5)) / 2;
-			screenMinY = 0;
-			screenDimensionMultiplier = ((screenHeightstart * 1.5) / 480);
-		}
-		else
+			double[] dims = {(screenWidthstart - (screenHeightstart * 1.5)) / 2, 0, ((screenHeightstart * 1.5) / 480)};
+			return dims;
+		} else
 		{
-			screenMinY = (int)(screenHeightstart - (screenWidthstart / 1.5)) / 2;
-			screenMinX = 0;
-			screenDimensionMultiplier = ((screenWidthstart / 1.5) / 320);
+			double[] dims = {0, (screenHeightstart - (screenWidthstart / 1.5)) / 2, ((screenWidthstart / 1.5) / 320)};
+			return dims;
 		}
 	}
 	/**
@@ -258,7 +226,7 @@ public class StartActivity extends Activity
 	public void onStart()
 	{
 		super.onStart();
-		paused = false;
+		control.paused = false;
 	}
 	
 	
@@ -272,17 +240,17 @@ public class StartActivity extends Activity
 		savedData[2] = (byte)((int) volumeEffect);		//2 volume effect
 		for(int i = 0; i < 12; i++)						//3-14 worships
 		{
-			savedData[i+3]=worships[i];
+			savedData[i+3]=control.worships[i];
 		}
 		savedData[15]=0;
 		for(int i = 0; i < 8; i++)						//15 skins as one byte
 		{
-			if(skins[i]) savedData[15]+=Math.pow(2, i);
+			if(control.skins[i]) savedData[15]+=Math.pow(2, i);
 		}
-		savedData[16] = currentSkin;					//16 current skin
+		savedData[16] = control.currentSkin;					//16 current skin
 		for(int i = 0; i < 40; i++)						//15 skins as one byte
 		{
-			savedData[i+17]=itemControl.materials[i];
+			savedData[i+17]=control.itemControl.materials[i];
 		}
 		//savedData[58]=
 	}
@@ -295,18 +263,18 @@ public class StartActivity extends Activity
 		volumeEffect = savedData[2];
 		for(int i = 0; i < 12; i++)
 		{
-			worships[i]= savedData[i+3];
+			control.worships[i]= savedData[i+3];
 		}
 		int temp = savedData[15];
 		for(int i = 0; i <7; i++)
 		{
-			skins[i]=(temp%2==1);
+			control.skins[i]=(temp%2==1);
 			temp /=2;
 		}
-		currentSkin = savedData[16];
+		control.currentSkin = savedData[16];
 		for(int i = 0; i < 40; i++)						//15 skins as one byte
 		{
-			itemControl.materials[i]=savedData[i+17];
+			control.itemControl.materials[i]=savedData[i+17];
 		}
 		//savedData[58]=
 	}
@@ -324,7 +292,7 @@ public class StartActivity extends Activity
 			readSaveData();
 		}
 		startMusic();
-		paused = false;
+		control.paused = false;
 	}
 	/**
 	 * stops music, stops timer, saves data
@@ -336,12 +304,12 @@ public class StartActivity extends Activity
 		setSaveData();
 		write();
 		stopMusic();
-		paused = true;
+		control.paused = true;
 	}
 	@ Override
 	public void onStop()
 	{
-		paused = true;
+		control.paused = true;
 		super.onStop();
 	}
 	/**

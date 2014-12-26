@@ -34,13 +34,9 @@
  */
 package com.magegame;
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Handler;
-import android.view.View;
 import java.util.Random;
-public final class Controller extends View
+public final class Controller
 {
 	protected int curXShift;
 	protected int curYShift;
@@ -55,6 +51,13 @@ public final class Controller extends View
 	protected WallController wallController;
 	protected LevelController levelController;
 	protected GraphicsController graphicsController;
+	protected ItemController itemControl;
+	
+
+	protected byte currentSkin = 0;
+	protected byte [] worships = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // all the olympians
+	protected boolean [] skins = {false, false, false, false, false, false, false, false}; //skins
+	protected boolean paused = false;
 	protected Runnable frameCaller = new Runnable()
 	{
 		/**
@@ -62,7 +65,7 @@ public final class Controller extends View
 		 */
 		public void run()
 		{
-			if(!activity.paused)
+			if(!paused)
 			{
 				frameCall();
 				mHandler.postDelayed(this, 50);
@@ -72,11 +75,11 @@ public final class Controller extends View
 	/** 
 	 * Initializes all undecided variables, loads level, creates player and enemy objects, and starts frameCaller
 	 */
-	public Controller(Context startSet, StartActivity activitySet)
+	public Controller(Context startSet, StartActivity activitySet, double [] dimensions)
 	{
-		super(startSet);
 		activity = activitySet;
 		context = startSet;
+		itemControl = new ItemController();
 		
 		wallController = new WallController(startSet, this);
 		spriteController = new SpriteController(startSet, this);
@@ -88,20 +91,14 @@ public final class Controller extends View
 		levelController.loadLevel(1);
 		
 		player.resetVariables();
-		setUpPaintStuff();
-		setOnTouchListener(detect);
+		detect = new PlayerGestureDetector(this); // creates gesture detector object
 		detect.setPlayer(player);
-		graphicsController = new GraphicsController(this, imageLibrary, spriteController, wallController, levelController, player, startSet, activitySet);
+		graphicsController = new GraphicsController(this, imageLibrary, spriteController, wallController, levelController, player, startSet, dimensions);
+		graphicsController.setOnTouchListener(detect);
 		detect.setDimensions();
+		
 		activity.saveGame();
 		frameCaller.run();
-	}
-	private void setUpPaintStuff()
-	{
-		setBackgroundColor(Color.BLACK);
-		setKeepScreenOn(true); // so screen doesnt shut off when game is left inactive
-		detect = new PlayerGestureDetector(this); // creates gesture detector object
-		invalidate();
 	}
 	protected void die()
 	{
@@ -109,6 +106,7 @@ public final class Controller extends View
 	}
 	protected void pause()
 	{
+		paused = true;
 		//TODO
 	}
 	/**
@@ -120,12 +118,6 @@ public final class Controller extends View
 		spriteController.frameCall();
 		player.frameCall();
 		wallController.frameCall();
-		invalidate();
-	}
-	@Override
-	protected void onDraw(Canvas g)
-	{
-		graphicsController.drawScreen(g);
 	}
 	/**
 	 * returns random integer between 0 and i-1

@@ -52,7 +52,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.spritelib.Sprite;
-public final class GraphicsController
+public final class GraphicsController extends View
 {
 	private int playScreenSize = 400;
 	protected int screenMinX;
@@ -80,8 +80,9 @@ public final class GraphicsController
 	/** 
 	 * Initializes all undecided variables, loads level, creates player and enemy objects, and starts frameCaller
 	 */
-	public GraphicsController(Controller c, ImageLibrary i, SpriteController s, WallController w, LevelController l, Player p, Context co, StartActivity st)
+	public GraphicsController(Controller c, ImageLibrary i, SpriteController s, WallController w, LevelController l, Player p, Context co, double [] dims)
 	{
+		super(co);
 		control = c;
 		imageLibrary = i;
 		spriteController = s;
@@ -89,14 +90,16 @@ public final class GraphicsController
 		levelController = l;
 		player = p;
 		context = co;
-		setUpPaintStuff(st);
+		setUpPaintStuff(dims);
 	}
-	private void setUpPaintStuff(StartActivity activity)
+	private void setUpPaintStuff(double [] dimensions)
 	{
+		setBackgroundColor(Color.BLACK);
+		setKeepScreenOn(true); // so screen doesnt shut off when game is left inactive
 		shootStick = new Graphic_shootStick(imageLibrary.loadImage("icon_shoot", 70, 35));
-		screenMinX = activity.screenMinX;
-		screenMinY = activity.screenMinY;
-		screenDimensionMultiplier = activity.screenDimensionMultiplier;
+		screenMinX = (int)dimensions[0];
+		screenMinY = (int)dimensions[1];
+		screenDimensionMultiplier = dimensions[2];
 		paint.setAntiAlias(true);
 		paint.setDither(true);
 		paint.setFilterBitmap(true);
@@ -105,7 +108,7 @@ public final class GraphicsController
 	protected void frameCall()
 	{
 		playerHit++;
-		playerBursted++;
+		playerBursted++;invalidate();
 	}
 	/**
 	 * fixes hp bar so it is on screen
@@ -231,11 +234,12 @@ public final class GraphicsController
 		spriteController.drawHealthBars(g, paint);
 		return drawTo;
 	}
-	protected void drawScreen(Canvas g)
+	@Override
+	protected void onDraw(Canvas g)
 	{
-			g.translate(screenMinX, screenMinY);
-			g.scale((float) screenDimensionMultiplier, (float) screenDimensionMultiplier);
-			drawNotPaused(g);
+		g.translate(screenMinX, screenMinY);
+		g.scale((float) screenDimensionMultiplier, (float) screenDimensionMultiplier);
+		drawNotPaused(g);
 	}
 	/**
 	 * draw normal unpaused screen
