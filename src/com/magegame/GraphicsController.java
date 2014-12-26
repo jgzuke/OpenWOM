@@ -80,7 +80,7 @@ public final class GraphicsController
 	/** 
 	 * Initializes all undecided variables, loads level, creates player and enemy objects, and starts frameCaller
 	 */
-	public GraphicsController(Controller c, ImageLibrary i, SpriteController s, WallController w, LevelController l, Player p, Context co)
+	public GraphicsController(Controller c, ImageLibrary i, SpriteController s, WallController w, LevelController l, Player p, Context co, StartActivity st)
 	{
 		control = c;
 		imageLibrary = i;
@@ -89,6 +89,7 @@ public final class GraphicsController
 		levelController = l;
 		player = p;
 		context = co;
+		setUpPaintStuff(st);
 	}
 	private void setUpPaintStuff(StartActivity activity)
 	{

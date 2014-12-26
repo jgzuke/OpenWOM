@@ -30,7 +30,6 @@ abstract public class Proj_Tracker extends Sprite
 	@ Override
 	protected void frameCall()
 	{
-		image = video[control.getRandomInt(5)];
 		for(int i = 0; i < 8; i++)
 		{
 			realX += xForward/8;

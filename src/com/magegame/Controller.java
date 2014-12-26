@@ -104,7 +104,7 @@ public final class Controller extends View
 		setUpPaintStuff();
 		setOnTouchListener(detect);
 		detect.setPlayer(player);
-		graphicsController = new GraphicsController(this, imageLibrary, spriteController, wallController, levelController, player, startSet);
+		graphicsController = new GraphicsController(this, imageLibrary, spriteController, wallController, levelController, player, startSet, activitySet);
 		detect.setDimensions();
 		activity.saveGame();
 		frameCaller.run();

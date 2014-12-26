@@ -80,14 +80,14 @@ public final class Proj_Tracker_Player extends Proj_Tracker
 			if(needToTurn>20) target = null;
 			if(target.deleted) target = null;
 		}
-			for(int i = 0; i < spriteController.enemies.size(); i++)
+		for(int i = 0; i < spriteController.enemies.size(); i++)
+		{
+			if(spriteController.enemies.get(i) != null && !deleted && spriteController.enemies.get(i).action.equals("Nothing"))
 			{
-				if(spriteController.enemies.get(i) != null && !deleted && spriteController.enemies.get(i).action.equals("Nothing"))
-				{
-					spriteController.enemies.get(i).setLevels(spriteController.enemies.get(i).levelCurrentPosition, x, y, xForward, yForward);
-					spriteController.enemies.get(i).levelCurrentPosition++;
-				}
+				spriteController.enemies.get(i).setLevels(spriteController.enemies.get(i).levelCurrentPosition, x, y, xForward, yForward);
+				spriteController.enemies.get(i).levelCurrentPosition++;
 			}
+		}
 	}
 	public double compareRot(double newRotation)
 	{
