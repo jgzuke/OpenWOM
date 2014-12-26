@@ -8,13 +8,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import com.magegame.R;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.SoundPool;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.view.Menu;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 public class StartActivity extends Activity
@@ -24,12 +21,6 @@ public class StartActivity extends Activity
 	private FileInputStream fileRead;
 	private int savePoints = 120;
 	protected byte[] savedData = new byte[savePoints];
-	protected MediaPlayer backMusic;
-	private SoundPool spool;
-	private int[] soundPoolMap = new int[15];
-	protected AudioManager audioManager;
-	protected double volumeMusic = 127;
-	protected double volumeEffect = 100;
 	@Override
 	/**
 	 * sets screen and window variables and reads in data
@@ -38,73 +29,18 @@ public class StartActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setWindowAndAudio();
-		readSavedData();
-		startMusic();
+		setWindow();
 		control = new Controller(this, this, getScreenDimensions());
 		setContentView(control.graphicsController);
-	}
-	private void readSavedData()
-	{
-		read();
-		if(savedData[0] == 0)
-		{
-			savedData[0] = 1;
-			setSaveData();
-			write();
-		}
-		readSaveData();
+		readSavedData();
 	}
 	/**
 	 * sets screen variables as well as audio settings
 	 */
-	protected void setWindowAndAudio()
+	protected void setWindow()
 	{
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-		spool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-		audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-		soundPoolMap[0] = spool.load(this, R.raw.shoot_burn, 1);
-		soundPoolMap[1] = spool.load(this, R.raw.shoot_electric, 1);
-		soundPoolMap[2] = spool.load(this, R.raw.shoot_water, 1);
-		soundPoolMap[3] = spool.load(this, R.raw.shoot_earth, 1);
-		soundPoolMap[4] = spool.load(this, R.raw.shoot_burst, 1);
-		soundPoolMap[5] = spool.load(this, R.raw.shoot_shoot, 1);
-		soundPoolMap[6] = spool.load(this, R.raw.shoot_teleport, 1);
-		soundPoolMap[7] = spool.load(this, R.raw.enemy_sword1, 1);
-		soundPoolMap[8] = spool.load(this, R.raw.enemy_sword2, 1);
-		soundPoolMap[9] = spool.load(this, R.raw.enemy_swordmiss, 1);
-		soundPoolMap[10] = spool.load(this, R.raw.enemy_arrowhit, 1);
-		soundPoolMap[11] = spool.load(this, R.raw.enemy_arrowrelease, 1);
-		soundPoolMap[12] = spool.load(this, R.raw.effect_pageflip, 1);
-		soundPoolMap[13] = spool.load(this, R.raw.money_1, 1);
-		soundPoolMap[14] = spool.load(this, R.raw.money_2, 1);
-	}
-	/**
-	 * plays a random money effect
-	 */
-	protected void playMoney()
-	{
-		float newV = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-		newV = (float)(newV * volumeEffect / 127);
-		if(Math.random()>0.5)
-		{
-			spool.play(soundPoolMap[13], newV, newV, 1, 0, 1f);
-		} else
-		{
-			spool.play(soundPoolMap[14], newV, newV, 1, 0, 1f);
-		}
-		//TODO
-	}
-	/**
-	 * resets volume
-	 */
-	protected void resetVolume()
-	{
-		float systemVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-		systemVolume = (float)(systemVolume * volumeMusic / 127);
-		backMusic.setVolume(systemVolume, systemVolume);
 	}
 	/**
 	 * sets dimensions of screen
@@ -138,60 +74,6 @@ public class StartActivity extends Activity
 			return dims;
 		}
 	}
-	/**
-	 * starts background music
-	 */
-	protected void startMusic()
-	{
-		stopMusic();
-		backMusic = MediaPlayer.create((Context) this, R.raw.busqueda);
-		backMusic.setOnPreparedListener(new MediaPlayer.OnPreparedListener()
-		{@
-			Override
-			public void onPrepared(MediaPlayer backMusic)
-			{
-				backMusic.start();
-			}
-		});
-		backMusic.setLooping(true);
-		float systemVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-		systemVolume = (float)(systemVolume * volumeMusic / 127);
-		backMusic.setVolume(systemVolume, systemVolume);
-	}
-	/**
-	 * plays effect based on sent integer
-	 * @param toPlay id of effect to play
-	 */
-	protected void playEffect(String toPlay)
-	{
-		float newV = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-		newV = (float)(newV * volumeEffect / 127);
-		if(toPlay.equals("burn")) spool.play(soundPoolMap[0], newV, newV, 1, 0, 1f);
-		if(toPlay.equals("electric")) spool.play(soundPoolMap[1], newV, newV, 1, 0, 1f);
-		if(toPlay.equals("water")) spool.play(soundPoolMap[2], newV, newV, 1, 0, 1f);
-		if(toPlay.equals("earth")) spool.play(soundPoolMap[3], newV, newV, 1, 0, 1f);
-		if(toPlay.equals("burst")) spool.play(soundPoolMap[4], newV, newV, 1, 0, 1f);
-		if(toPlay.equals("shoot")) spool.play(soundPoolMap[5], newV, newV, 1, 0, 1f);
-		if(toPlay.equals("powerup")) spool.play(soundPoolMap[6], newV, newV, 1, 0, 1f);
-		if(toPlay.equals("sword1")) spool.play(soundPoolMap[7], newV, newV, 1, 0, 1f);
-		if(toPlay.equals("sword2")) spool.play(soundPoolMap[8], newV, newV, 1, 0, 1f);
-		if(toPlay.equals("swordmiss")) spool.play(soundPoolMap[9], newV, newV, 1, 0, 1f);
-		if(toPlay.equals("arrowhit")) spool.play(soundPoolMap[10], newV, newV, 1, 0, 1f);
-		if(toPlay.equals("arrowrelease")) spool.play(soundPoolMap[11], newV, newV, 1, 0, 1f);
-		if(toPlay.equals("pageflip")) spool.play(soundPoolMap[12], newV, newV, 1, 0, 1f);
-	}
-	/**
-	 * stops background music and releases it
-	 */
-	protected void stopMusic()
-	{
-		if(backMusic != null)
-		{
-			backMusic.stop();
-			backMusic.release();
-			backMusic = null;
-		}
-	}
 	@ Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -199,20 +81,61 @@ public class StartActivity extends Activity
 		getMenuInflater().inflate(R.menu.start, menu);
 		return true;
 	}
-	/**
-	 * adds 0's to the start of a string until it reaches a certain number of digits
-	 * @param end starting string
-	 * @param digits number or desired digits
-	 * @return complete full length string
-	 */
-	protected String correctDigits(String end, int digits)
+	@ Override
+	public void onStart()
 	{
-		while(end.length() < digits)
-		{
-			end = "0" + end;
-		}
-		return end;
+		super.onStart();
+		control.paused = false;
 	}
+	/**
+	 * reads saved data
+	 * starts music, loads images
+	 */
+	@ Override
+	public void onResume()
+	{
+		super.onResume();
+		read();
+		if(savedData[0] == 1)
+		{
+			readSaveData();
+		}
+		control.soundController.startMusic();
+		control.paused = false;
+	}
+	/**
+	 * stops music, stops timer, saves data
+	 */
+	@ Override
+	public void onPause()
+	{
+		super.onPause();
+		setSaveData();
+		write();
+		control.soundController.stopMusic();
+		control.paused = true;
+	}
+	@ Override
+	public void onStop()
+	{
+		control.paused = true;
+		super.onStop();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 	/**
 	 * saves all required data 
 	 */
@@ -222,22 +145,13 @@ public class StartActivity extends Activity
 		write();
 		readSaveData();
 	}
-	@ Override
-	public void onStart()
-	{
-		super.onStart();
-		control.paused = false;
-	}
-	
-	
-	
 	/**
 	 * set data to write it to save file
 	 */
 	public void setSaveData()
 	{ //TODO change some
-		savedData[1] = (byte)((int) volumeMusic);		//1 volume music
-		savedData[2] = (byte)((int) volumeEffect);		//2 volume effect
+		savedData[1] = (byte)((int) control.soundController.volumeMusic);		//1 volume music
+		savedData[2] = (byte)((int) control.soundController.volumeEffect);		//2 volume effect
 		for(int i = 0; i < 12; i++)						//3-14 worships
 		{
 			savedData[i+3]=control.worships[i];
@@ -254,13 +168,24 @@ public class StartActivity extends Activity
 		}
 		//savedData[58]=
 	}
+	private void readSavedData()
+	{
+		read();
+		if(savedData[0] == 0)
+		{
+			savedData[0] = 1;
+			setSaveData();
+			write();
+		}
+		readSaveData();
+	}
 	/**
 	 * read data once it has been put into savedData array
 	 */
 	public void readSaveData()
 	{ //TODO change some
-		volumeMusic = savedData[1];
-		volumeEffect = savedData[2];
+		control.soundController.volumeMusic = savedData[1];
+		control.soundController.volumeEffect = savedData[2];
 		for(int i = 0; i < 12; i++)
 		{
 			control.worships[i]= savedData[i+3];
@@ -277,40 +202,6 @@ public class StartActivity extends Activity
 			control.itemControl.materials[i]=savedData[i+17];
 		}
 		//savedData[58]=
-	}
-	/**
-	 * reads saved data
-	 * starts music, loads images
-	 */
-	@ Override
-	public void onResume()
-	{
-		super.onResume();
-		read();
-		if(savedData[0] == 1)
-		{
-			readSaveData();
-		}
-		startMusic();
-		control.paused = false;
-	}
-	/**
-	 * stops music, stops timer, saves data
-	 */
-	@ Override
-	public void onPause()
-	{
-		super.onPause();
-		setSaveData();
-		write();
-		stopMusic();
-		control.paused = true;
-	}
-	@ Override
-	public void onStop()
-	{
-		control.paused = true;
-		super.onStop();
 	}
 	/**
 	 * reads data from file and sets variables accordingly

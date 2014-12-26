@@ -33,7 +33,7 @@ public final class Proj_Tracker_Enemy extends Proj_Tracker
 			{
 				control.player.getHit(power*4);
 				deleted = true;
-				control.activity.playEffect("arrowhit");
+				control.soundController.playEffect("arrowhit");
 				if(control.getRandomDouble() > 0.8) // chance of stunning player
 				{
 					control.player.rads = Math.atan2(yForward, xForward);
@@ -108,7 +108,7 @@ public final class Proj_Tracker_Enemy extends Proj_Tracker
 			{
 				control.player.getHit(power*4);
 				deleted = true;
-				control.activity.playEffect("arrowhit");
+				control.soundController.playEffect("arrowhit");
 				if(control.getRandomDouble() > 0.8) // chance of stunning player
 				{
 					control.player.rads = Math.atan2(yForward, xForward);

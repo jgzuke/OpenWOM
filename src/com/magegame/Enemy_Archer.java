@@ -78,7 +78,7 @@ public final class Enemy_Archer extends Enemy
 		} else if(frame==36) // shoots
 		{
 			control.spriteController.createProj_TrackerEnemy(rotation, Math.cos(rads) * v, Math.sin(rads) * v, 130, x, y);
-			control.activity.playEffect("arrowrelease");
+			control.soundController.playEffect("arrowrelease");
 			checkLOS((int)control.player.x, (int)control.player.y);
 			if(LOS&&hp>600) frame=25; // shoots again
 		}

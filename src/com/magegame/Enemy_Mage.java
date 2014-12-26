@@ -97,7 +97,7 @@ public final class Enemy_Mage extends Enemy
 		rads+=0.1;
 		rads-=control.getRandomDouble()*0.2;	// add random factor to shot
 		control.spriteController.createProj_TrackerEnemy(rads * r2d, Math.cos(rads) * v, Math.sin(rads) * v, 130, x, y);
-		control.activity.playEffect("arrowrelease");
+		control.soundController.playEffect("arrowrelease");
 		rads = saveRads;
 	}
 }

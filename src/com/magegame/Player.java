@@ -221,7 +221,7 @@ public final class Player extends Human
 				Log.e("mine", "ljh");
 				control.spriteController.createProj_TrackerPlayer(rads*r2d, shotSpeed, shotDmg, x, y);
 				abilityTimer_Proj_Tracker -= 30;
-				control.activity.playEffect("shoot");
+				control.soundController.playEffect("shoot");
 			}
 		} else
 		{
@@ -261,9 +261,7 @@ public final class Player extends Human
 			}
 			control.spriteController.createProj_TrackerPlayerBurst(x, y, 0);
 			abilityTimer_burst -= 300;
-			control.activity.playEffect("burst");
-			control.activity.playEffect("burst");
-			control.activity.playEffect("burst");
+			control.soundController.playEffect("burst");
 			control.graphicsController.playerBursted = 0;
 		} else
 		{

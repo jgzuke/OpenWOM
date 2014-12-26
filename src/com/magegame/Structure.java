@@ -55,7 +55,7 @@ abstract public class Structure extends Sprite
 				deleted = true;
 				control.player.sp += 0.30;
 				control.spriteController.createProj_TrackerEnemyAOE(x, y, 180, false);
-				control.activity.playEffect("burst");
+				control.soundController.playEffect("burst");
 				control.spriteController.createConsumable(x, y, 0);
 				for(int i = 0; i < worth; i ++)
 				{

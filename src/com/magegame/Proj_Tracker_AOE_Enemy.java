@@ -39,7 +39,7 @@ public final class Proj_Tracker_AOE_Enemy extends Proj_Tracker_AOE
 	@ Override
 	protected void explode(int power)
 	{
-		control.activity.playEffect("electric");
+		control.soundController.playEffect("electric");
 		for(int i = 0; i<6; i++)
 		{
 			spriteController.createProj_TrackerEnemyAOE(x-15+control.getRandomInt(30), y-15+control.getRandomInt(30), power, true);

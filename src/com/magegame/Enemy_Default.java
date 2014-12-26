@@ -138,7 +138,7 @@ public final class Enemy_Default extends Enemy
 		{
 			rads = rotation/r2d;
 			control.spriteController.createProj_TrackerEnemy(rotation, Math.cos(rads) * velocity, Math.sin(rads) * velocity, 130, x, y);
-			control.activity.playEffect("arrowrelease");
+			control.soundController.playEffect("arrowrelease");
 			checkLOS((int)control.player.x, (int)control.player.y);
 			if(LOS&&hp>600) frame=25; // shoots again
 		}

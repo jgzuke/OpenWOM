@@ -51,6 +51,7 @@ public final class Controller
 	protected WallController wallController;
 	protected LevelController levelController;
 	protected GraphicsController graphicsController;
+	protected SoundController soundController;
 	protected ItemController itemControl;
 	
 
@@ -80,6 +81,7 @@ public final class Controller
 		activity = activitySet;
 		context = startSet;
 		itemControl = new ItemController();
+		soundController = new SoundController(startSet, activitySet);
 		
 		wallController = new WallController(startSet, this);
 		spriteController = new SpriteController(startSet, this);

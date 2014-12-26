@@ -116,7 +116,7 @@ public class PlayerGestureDetector implements OnTouchListener {
 		if(pointOnSquare(x, y, 0, 0, 50, 50))
         {
         	pressed = true;
-        	control.activity.playEffect("pageflip");
+        	control.soundController.playEffect("pageflip");
         }
 		return pressed;
 	}

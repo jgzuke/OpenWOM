@@ -238,7 +238,7 @@ abstract public class EnemyShell extends Human
 					}
 				}
 			}
-			control.activity.playEffect("burst");
+			control.soundController.playEffect("burst");
 	}
 	/**
 	 * Checks whether object can 'see' player

@@ -324,7 +324,7 @@ abstract public class Enemy extends EnemyShell
 		if(distanceFound < range)
 		{
 			control.player.getHit((int)(damage));
-			control.activity.playEffect("sword2");
+			control.soundController.playEffect("sword2");
 			if(control.getRandomInt(3) == 0)
 			{
 				control.player.rads = Math.atan2(control.player.y-y, control.player.x-x);
@@ -332,7 +332,7 @@ abstract public class Enemy extends EnemyShell
 			}
 		} else
 		{
-			control.activity.playEffect("swordmiss");
+			control.soundController.playEffect("swordmiss");
 		}
 	}
 	/**
