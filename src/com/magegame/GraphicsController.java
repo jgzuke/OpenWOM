@@ -102,6 +102,11 @@ public final class GraphicsController
 		paint.setFilterBitmap(true);
 		background = drawStart(); // redraws play screen
 	}
+	protected void frameCall()
+	{
+		playerHit++;
+		playerBursted++;
+	}
 	/**
 	 * fixes hp bar so it is on screen
 	 * @param minX small x value of bar

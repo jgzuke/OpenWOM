@@ -14,6 +14,7 @@ public final class Proj_Tracker_Enemy extends Proj_Tracker
 	 * @param Yforward bolts y velocity
 	 * @param Rotation bolts direction of travel
 	 */
+	private double r2d = 180/Math.PI;
 	public Proj_Tracker_Enemy(Controller creator, int X, int Y, int Power, double Xforward, double Yforward, double Rotation)
 	{
 		super(X, Y, Rotation, creator.imageLibrary.shotEnemy[0]);
@@ -48,7 +49,35 @@ public final class Proj_Tracker_Enemy extends Proj_Tracker
 	protected void frameCall()
 	{
 		super.frameCall();
-		
+		xDif = x - control.player.x;
+		yDif = y - control.player.y;
+		double newRotation = Math.atan2(yDif, xDif) * r2d;
+		newRotation -= 180;
+		double rotChange = 4.5;
+		double fix = compareRot(newRotation/r2d);
+		if(fix>rotChange/2)
+		{
+			rotation += rotChange;
+		} else if(fix<-rotChange/2)
+		{
+			rotation -= rotChange;
+		} else
+		{
+			rotation += fix;
+		}
+		xForward = Math.cos(rotation/r2d) * 10;
+		yForward = Math.sin(rotation/r2d) * 10;
+	}
+	public double compareRot(double newRotation)
+	{
+		newRotation*=r2d;
+		double fix = 400;
+		while(newRotation<0) newRotation+=360;
+		while(rotation<0) rotation+=360;
+		if(newRotation>290 && rotation<70) newRotation-=360;
+		if(rotation>290 && newRotation<70) rotation-=360;
+		fix = newRotation-rotation;
+		return fix;
 	}
 	@ Override
 	/**

@@ -21,6 +21,7 @@ public class StartActivity extends Activity
 {
 	private Controller control;
 	private ItemController itemControl;
+	protected boolean paused = false;
 	protected double screenDimensionMultiplier;
 	protected int screenMinX;
 	protected int screenMinY;
@@ -257,6 +258,7 @@ public class StartActivity extends Activity
 	public void onStart()
 	{
 		super.onStart();
+		paused = false;
 	}
 	
 	
@@ -322,6 +324,7 @@ public class StartActivity extends Activity
 			readSaveData();
 		}
 		startMusic();
+		paused = false;
 	}
 	/**
 	 * stops music, stops timer, saves data
@@ -333,10 +336,12 @@ public class StartActivity extends Activity
 		setSaveData();
 		write();
 		stopMusic();
+		paused = true;
 	}
 	@ Override
 	public void onStop()
 	{
+		paused = true;
 		super.onStop();
 	}
 	/**

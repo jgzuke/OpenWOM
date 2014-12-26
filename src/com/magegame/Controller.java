@@ -33,31 +33,18 @@
  * @param frameCaller Calls objects and controllers frameCalls
  */
 package com.magegame;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Paint.Align;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.view.View;
-
-import java.util.ArrayList;
 import java.util.Random;
-
-import com.spritelib.Sprite;
 public final class Controller extends View
 {
-	private boolean paused = false;
 	protected int curXShift;
 	protected int curYShift;
 	protected StartActivity activity;
-	private Rect aoeRect = new Rect();
 	protected Player player;
 	protected Context context;
 	protected ImageLibrary imageLibrary;
@@ -75,7 +62,7 @@ public final class Controller extends View
 		 */
 		public void run()
 		{
-			if(!paused)
+			if(!activity.paused)
 			{
 				frameCall();
 				mHandler.postDelayed(this, 50);
@@ -129,119 +116,16 @@ public final class Controller extends View
 	 */
 	protected void frameCall()
 	{
-		//TODO move maybe
-		graphicsController.playerHit++;
-		graphicsController.playerBursted++;
+		graphicsController.frameCall();
 		spriteController.frameCall();
-		if(!player.deleted) player.frameCall();
+		player.frameCall();
 		wallController.frameCall();
 		invalidate();
-	}
-	/**
-	 * returns distance squared between two objects
-	 * @param x1 first x position
-	 * @param y1 first y position
-	 * @param x2 second x position
-	 * @param y2 second y position
-	 * @return distance between points squared
-	 */
-	protected double distSquared(double x1, double y1, double x2, double y2)
-	{
-		return Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2);
 	}
 	@Override
 	protected void onDraw(Canvas g)
 	{
 		graphicsController.drawScreen(g);
-	}
-	/**
-	 * returns distance between two points
-	 *  @param x1 first x
-	 * @param y1 first y
-	 * @param x2 second x
-	 * @param y2 second y
-	 * @return distance between points
-	 */
-	protected double getDistance(double x1, double y1, double x2, int y2)
-	{
-		return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-	}
-	protected double visualX(double x)
-	{
-		return(x - graphicsController.screenMinX) / graphicsController.screenDimensionMultiplier;
-	}
-	/**
-	 * converts value from click y point to where on the screen it would be
-	 * @param y y value of click
-	 * @return y position of click on screen
-	 */
-	protected double visualY(double y)
-	{
-		return((y - graphicsController.screenMinY) / graphicsController.screenDimensionMultiplier);
-	}
-	/**
-	 * returns whether a point clicked is on  the screen
-	 * @param x x position
-	 * @param y y position
-	 * @return whether it is on screen
-	 */
-	protected boolean pointOnScreen(double x, double y)
-	{
-		x = visualX(x);
-		y = visualY(y);
-		if(x > 90 && x < 390 && y > 10 && y < 310)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	/**
-	 * returns whether a point is on a given square
-	 * @param x x position
-	 * @param y y position
-	 * @param lowX left hand side of square
-	 * @param lowY top of square
-	 * @param highX right hand side of square
-	 * @param highY bottom of square
-	 * @return whether it is on square
-	 */
-	protected boolean pointOnSquare(double x, double y, double lowX, double lowY, double highX, double highY)
-	{
-		x = visualX(x);
-		y = visualY(y);
-		if(x > lowX && x < highX && y > lowY && y < highY)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	/**
-	 * returns whether a point is on a given circle
-	 * @param x x position
-	 * @param y y position
-	 * @param midX x position
-	 * @param midY y position
-	 * @param radius radius of circle
-	 * @return whether it is on circle
-	 */
-	protected boolean pointOnCircle(double x, double y, double midX, double midY, double radius)
-	{
-		x = visualX(x);
-		y = visualY(y);
-		if(Math.sqrt(Math.pow(x - midX, 2) + Math.pow(y - midY, 2)) < radius)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
 	}
 	/**
 	 * returns random integer between 0 and i-1

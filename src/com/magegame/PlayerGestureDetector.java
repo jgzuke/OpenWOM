@@ -113,7 +113,7 @@ public class PlayerGestureDetector implements OnTouchListener {
 	protected boolean pressedBack(float x, float y)
 	{
 		boolean pressed = false;
-		if(control.pointOnSquare(x, y, 0, 0, 50, 50))
+		if(pointOnSquare(x, y, 0, 0, 50, 50))
         {
         	pressed = true;
         	control.activity.playEffect("pageflip");
@@ -131,11 +131,11 @@ public class PlayerGestureDetector implements OnTouchListener {
 	protected boolean clickDownNotPaused(float x, float y, int ID, boolean firstPointer)
 	{
 		boolean touched = false;
-		if(control.pointOnSquare(x, y, 0, 0, 50, 50))
+		if(pointOnSquare(x, y, 0, 0, 50, 50))
         {
         	control.pause();
         	touched = true;
-        } else if(control.pointOnCircle(x, y, 427-(buttonShiftX*0.95897), 267, 65))
+        } else if(pointOnCircle(x, y, 427-(buttonShiftX*0.95897), 267, 65))
         {
         	player.touching = true;
         	player.touchX = visualX(x)-(427-(buttonShiftX*0.95897));
@@ -154,13 +154,13 @@ public class PlayerGestureDetector implements OnTouchListener {
 	 */
 	protected void clickDownNotPausedNormal(float x, float y, int ID, boolean firstPointer)
 	{
-		if(control.pointOnSquare(x, y, buttonShiftX+12, 41, buttonShiftX+82, 111))
+		if(pointOnSquare(x, y, buttonShiftX+12, 41, buttonShiftX+82, 111))
         {
         	player.burst();
-        }else if(control.pointOnSquare(x, y, buttonShiftX+12, 145, buttonShiftX+82, 215))
+        }else if(pointOnSquare(x, y, buttonShiftX+12, 145, buttonShiftX+82, 215))
         {
         	player.roll();
-        } else if(control.pointOnCircle(x, y, 53+(buttonShiftX*0.95897), 267, 65))
+        } else if(pointOnCircle(x, y, 53+(buttonShiftX*0.95897), 267, 65))
         {
         		player.touchingShoot = true;
         		touchingShootID = ID;
@@ -215,5 +215,69 @@ public class PlayerGestureDetector implements OnTouchListener {
 	protected double visualY(double y)
 	{
 		return ((y-screenMinY)/screenDimensionMultiplier);
+	}
+	/**
+	 * returns whether a point clicked is on  the screen
+	 * @param x x position
+	 * @param y y position
+	 * @return whether it is on screen
+	 */
+	protected boolean pointOnScreen(double x, double y)
+	{
+		x = visualX(x);
+		y = visualY(y);
+		if(x > 90 && x < 390 && y > 10 && y < 310)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	/**
+	 * returns whether a point is on a given square
+	 * @param x x position
+	 * @param y y position
+	 * @param lowX left hand side of square
+	 * @param lowY top of square
+	 * @param highX right hand side of square
+	 * @param highY bottom of square
+	 * @return whether it is on square
+	 */
+	protected boolean pointOnSquare(double x, double y, double lowX, double lowY, double highX, double highY)
+	{
+		x = visualX(x);
+		y = visualY(y);
+		if(x > lowX && x < highX && y > lowY && y < highY)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	/**
+	 * returns whether a point is on a given circle
+	 * @param x x position
+	 * @param y y position
+	 * @param midX x position
+	 * @param midY y position
+	 * @param radius radius of circle
+	 * @return whether it is on circle
+	 */
+	protected boolean pointOnCircle(double x, double y, double midX, double midY, double radius)
+	{
+		x = visualX(x);
+		y = visualY(y);
+		if(Math.sqrt(Math.pow(x - midX, 2) + Math.pow(y - midY, 2)) < radius)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
