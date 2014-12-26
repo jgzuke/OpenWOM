@@ -23,10 +23,13 @@ public class PlayerGestureDetector implements OnTouchListener {
 	public PlayerGestureDetector(Controller mainSet)
 	{
 		control = mainSet;
-		screenDimensionMultiplier = mainSet.screenDimensionMultiplier;
-		screenMinX = mainSet.screenMinX;
-		screenMinY = mainSet.screenMinY;
 		buttonShiftX = 390;
+	}
+	protected void setDimensions()
+	{
+		screenDimensionMultiplier = control.graphicsController.screenDimensionMultiplier;
+		screenMinX = control.graphicsController.screenMinX;
+		screenMinY = control.graphicsController.screenMinY;
 	}
 	/**
 	 * sets player as controls player object

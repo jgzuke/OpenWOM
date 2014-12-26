@@ -53,32 +53,19 @@ import java.util.Random;
 import com.spritelib.Sprite;
 public final class Controller extends View
 {
-	private int playScreenSize = 400;
 	private boolean paused = false;
-	protected int screenMinX;
-	protected int screenMinY;
 	protected int curXShift;
 	protected int curYShift;
-	protected double screenDimensionMultiplier;
-	protected Paint paint = new Paint();
-	protected Matrix rotateImages = new Matrix();
 	protected StartActivity activity;
 	private Rect aoeRect = new Rect();
 	protected Player player;
 	protected Context context;
 	protected ImageLibrary imageLibrary;
 	private Random randomGenerator = new Random();
-	private Bitmap background;
 	protected PlayerGestureDetector detect;
 	private Handler mHandler = new Handler();
-	private int healthColor = Color.rgb(150, 0, 0);
-	private int cooldownColor = Color.rgb(190, 190, 0);
-	protected Sprite shootStick;
-	protected int playerHit=0;
-	protected int playerBursted = 0;
 	protected SpriteController spriteController;
 	protected WallController wallController;
-	private Typeface magicMedieval; 
 	protected LevelController levelController;
 	protected GraphicsController graphicsController;
 	protected Runnable frameCaller = new Runnable()
@@ -115,7 +102,11 @@ public final class Controller extends View
 		
 		player.resetVariables();
 		setUpPaintStuff();
+		setOnTouchListener(detect);
+		detect.setPlayer(player);
 		graphicsController = new GraphicsController(this, imageLibrary, spriteController, wallController, levelController, player, startSet);
+		detect.setDimensions();
+		activity.saveGame();
 		frameCaller.run();
 	}
 	private void setUpPaintStuff()
@@ -123,11 +114,7 @@ public final class Controller extends View
 		setBackgroundColor(Color.BLACK);
 		setKeepScreenOn(true); // so screen doesnt shut off when game is left inactive
 		detect = new PlayerGestureDetector(this); // creates gesture detector object
-		//TODO what is this all about
-		setOnTouchListener(detect);
-		detect.setPlayer(player);
 		invalidate();
-		activity.saveGame();
 	}
 	protected void die()
 	{
@@ -142,8 +129,9 @@ public final class Controller extends View
 	 */
 	protected void frameCall()
 	{
-		playerHit++;
-		playerBursted++;
+		//TODO move maybe
+		graphicsController.playerHit++;
+		graphicsController.playerBursted++;
 		spriteController.frameCall();
 		if(!player.deleted) player.frameCall();
 		wallController.frameCall();
@@ -180,7 +168,7 @@ public final class Controller extends View
 	}
 	protected double visualX(double x)
 	{
-		return(x - screenMinX) / screenDimensionMultiplier;
+		return(x - graphicsController.screenMinX) / graphicsController.screenDimensionMultiplier;
 	}
 	/**
 	 * converts value from click y point to where on the screen it would be
@@ -189,7 +177,7 @@ public final class Controller extends View
 	 */
 	protected double visualY(double y)
 	{
-		return((y - screenMinY) / screenDimensionMultiplier);
+		return((y - graphicsController.screenMinY) / graphicsController.screenDimensionMultiplier);
 	}
 	/**
 	 * returns whether a point clicked is on  the screen

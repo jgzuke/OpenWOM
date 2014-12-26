@@ -170,7 +170,7 @@ public final class Player extends Human
 			        if(abilityTimer_Proj_Tracker > 30&&minimumShootTime<1)
 		           	{
 			        	releaseProj_Tracker();
-			        	control.shootStick.rotation=rads*180/Math.PI;
+			        	control.graphicsController.shootStick.rotation=rads*180/Math.PI;
 		            	minimumShootTime = 2;
 		           	}
 				} else
@@ -264,7 +264,7 @@ public final class Player extends Human
 			control.activity.playEffect("burst");
 			control.activity.playEffect("burst");
 			control.activity.playEffect("burst");
-			control.playerBursted = 0;
+			control.graphicsController.playerBursted = 0;
 		} else
 		{
 			Toast.makeText(control.context, "Cool Down", Toast.LENGTH_SHORT).show();
@@ -295,7 +295,7 @@ public final class Player extends Human
 	@Override
 	protected void getHit(double damage)
 	{
-		control.playerHit = 0;
+		control.graphicsController.playerHit = 0;
 			damage *= takenDmg;
 			super.getHit(damage);
 			sp -= sp*damage/1500*spLose;
