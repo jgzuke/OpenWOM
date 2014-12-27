@@ -53,7 +53,7 @@ public final class Proj_Tracker_Enemy extends Proj_Tracker
 		yDif = y - control.player.y;
 		double newRotation = Math.atan2(yDif, xDif) * r2d;
 		newRotation -= 180;
-		double rotChange = 4.5;
+		double rotChange = 2;
 		double fix = compareRot(newRotation/r2d);
 		if(fix>rotChange/2)
 		{

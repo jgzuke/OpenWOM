@@ -29,9 +29,9 @@ public class SoundController
 	private Activity activity;
 	public SoundController(Context contextSet, Activity activitySet)
 	{
-		setWindowAndAudio();
 		context = contextSet;
 		activity = activitySet;
+		setWindowAndAudio();
 		startMusic();
 	}
 	/**

@@ -294,10 +294,10 @@ public final class Player extends Human
 	protected void getHit(double damage)
 	{
 		control.graphicsController.playerHit = 0;
-			damage *= takenDmg;
-			super.getHit(damage);
-			sp -= sp*damage/1500*spLose;
-			if(deleted) control.die();
+		damage *= takenDmg;
+		super.getHit(damage);
+		sp -= sp*damage/1500*spLose;
+		if(deleted) control.die();
 	}
 	/**
 	 * gives player a benefit, ranging from health to transformation

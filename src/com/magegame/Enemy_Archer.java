@@ -54,7 +54,10 @@ public final class Enemy_Archer extends Enemy
 			}
 		} else
 		{
-			if(distanceFound < 160)
+			if(distanceFound < 50)
+			{
+				runAway();
+			} else if(distanceFound < 140)
 			{
 				action = "Shoot";
 				frame=frames[6][0];
@@ -80,7 +83,8 @@ public final class Enemy_Archer extends Enemy
 			control.spriteController.createProj_TrackerEnemy(rotation, Math.cos(rads) * v, Math.sin(rads) * v, 130, x, y);
 			control.soundController.playEffect("arrowrelease");
 			checkLOS((int)control.player.x, (int)control.player.y);
-			if(LOS&&hp>600) frame=25; // shoots again
+			double distance = checkDistance(x, y, control.player.x,  control.player.y);
+			if(LOS&&hp>600&&distance<160&&distance>50) frame=25; // shoots again
 		}
 	}
 	@Override

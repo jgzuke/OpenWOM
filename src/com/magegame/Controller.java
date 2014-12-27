@@ -98,12 +98,13 @@ public final class Controller
 		graphicsController = new GraphicsController(this, imageLibrary, spriteController, wallController, levelController, player, startSet, dimensions);
 		graphicsController.setOnTouchListener(detect);
 		detect.setDimensions();
-		
-		activity.saveGame();
 		frameCaller.run();
 	}
 	protected void die()
 	{
+		player.resetVariables();
+		levelController.loadLevel(1);
+		graphicsController.playerBursted=40;
 		//TODO
 	}
 	protected void pause()
