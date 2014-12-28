@@ -157,7 +157,7 @@ public final class GraphicsController extends View
 		paint.setAlpha(255);
 		paint.setStyle(Paint.Style.FILL);
 		paint.setColor(healthColor);
-		g.drawRect(14, 169, 14 + (62 * player.getHp() / player.hpMax), 181, paint);
+		g.drawRect(14, 169, 14 + (62 * player.hp / player.hpMax), 181, paint);
 		paint.setStyle(Paint.Style.FILL);
 		paint.setColor(cooldownColor);
 		g.drawRect(404, 94, 404 + (int)((63 * player.abilityTimer_burst) / 500), 104, paint);
@@ -227,9 +227,9 @@ public final class GraphicsController extends View
 		spriteController.drawSprites(g, paint, imageLibrary, aoeRect);
 		g.drawBitmap(imageLibrary.currentLevelTop, 0, 0, paint);
 
-		if(player.powerUpTimer > 0)
+		if(player.blessingTimer > 0)
 		{
-			drawBitmapLevel(imageLibrary.effects[player.powerID - 1], (int) player.x - 30, (int) player.y - 30, g);
+			drawBitmapLevel(imageLibrary.effects[player.blessing - 1], (int) player.x - 30, (int) player.y - 30, g);
 		}
 		spriteController.drawHealthBars(g, paint);
 		return drawTo;
@@ -287,9 +287,9 @@ public final class GraphicsController extends View
 		g.drawBitmap(background, 0, 0, paint);
 		drawContestantStats(g);
 		paint.setStyle(Paint.Style.STROKE);
-		if(player.powerUpTimer > 0)
+		if(player.blessingTimer > 0)
 		{
-			g.drawBitmap(imageLibrary.powerUpBigs[player.powerID - 1], 10, 25, paint);
+			g.drawBitmap(imageLibrary.powerUpBigs[player.blessing - 1], 10, 25, paint);
 		}
 	}
 	/**

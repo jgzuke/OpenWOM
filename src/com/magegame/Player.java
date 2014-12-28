@@ -12,13 +12,12 @@ public final class Player extends Human
 	protected int experience = 0;
 	protected int blessingTimer = 0;
 	protected int blessing = 0;
+	
 	protected double touchY;
 	protected boolean playing = false;
 	protected int rollTimer = 0;
 	private double xMoveRoll;
 	private double yMoveRoll;
-	protected double sp = 1;
-	protected double spMod = 1;
 	protected double abilityTimer_roll = 0;
 	protected double abilityTimer_burst = 0;
 	protected double abilityTimer_Proj_Tracker = 0;
@@ -27,9 +26,6 @@ public final class Player extends Human
 	protected boolean touchingShoot;
 	protected double touchShootX;
 	protected double touchShootY;
-	protected int powerUpTimer = 0;
-	protected int powerID = 0;
-	
 	Controller control;
 	/**
 	 * Sets all variables to start, sets image
@@ -42,41 +38,19 @@ public final class Player extends Human
 	 */
 	private int minimumShootTime = 4;	// time between shots
 	private int shotDmg = 130;			// damage of shot
-	private int burstDmg = 130;			// damage of burst
 	private double takenDmg = 0.7;		// part of damage player takes
 	private int hpStart = 7000;			// plaers base hp
 	private double rollCharge = 1;		// how fast roll charges
 	private double burstCharge = 1;		// how fast burst charges
-	private double shotCharge = 1.8;		// how fast shot charges
-	private double mySpeed = 4.2;		// players speed
+	private double shotCharge = 1.8;	// how fast shot charges
 	private double stunChance = 1;		// change to actully get stunned
-	private double shotSpeed = 7;		// speed of shots
-	private int shotHold = 91;			// ax shots stored
-	private int burstHold = 500;		// max burst stored
-	private int rollHold = 120;			// max roll stored
-	private double spDrain = 0.0001;	// sp drained every frame
-	private double maxSP = 1.5;			// maximum sp
-	private double minSP = 0.5;			// minimum sp
-	private int powerUpTime = 300;		// time cooldowns last for
-	protected double chargeSP = 1;		// how much doing damage charges sp
+	private int shotHold = 91;			// max shots stored
 	protected double chargeCooldown = 1;// how much doing damage charges cooldowns
 	protected double tracking = 6;		// how much tracking can turn fireballs
-	private double findChance = 1;		// chance of finding items
-	private double spLose = 1;			// sp lost on hit
 	public Player(Controller creator)
 	{
 		super(0, 0, 0, 0, true, false, null);
 		control = creator;
-		/*if(control.activity.useHestiasBlessing>0)
-		{
-			control.activity.useHestiasBlessing --;
-			damageMultiplier /= 2;
-		}
-		if(control.activity.useArtemisArrow>0)
-		{
-			control.activity.useArtemisArrow --;
-			projectileSpeed = 17;
-		}*/
 	}
 	/**
 	 * resets all variables to the start of a match or round
@@ -85,46 +59,36 @@ public final class Player extends Human
 	{
 		//control.imageLibrary.loadPlayerImage();
 		rollTimer = 0;
-		sp = 1;
 		abilityTimer_roll = 120;
 		abilityTimer_burst = 250;
 		abilityTimer_Proj_Tracker = 0;
 		touching = false;
 		deleted = false;
 		playing = false;
-		powerUpTimer=0;
+		blessingTimer=0;
+		blessing = 0;
 		setAttributes();
 		hp = hpStart;
-		setHpMax(hp);
+		hpMax = hp;
 	}
 	/**
 	 * 
 	 */
-	private void setAttributes()
+	protected void setAttributes()
 	{
-		minimumShootTime = 4;	// time between shots
-		shotDmg = 130;			// damage of shot
-		burstDmg = 130;			// damage of burst
-		takenDmg = 0.7;		// part of damage player takes
-		hpStart = 7000;			// plaers base hp
-		rollCharge = 1;		// how fast roll charges
-		burstCharge = 1;		// how fast burst charges
-		shotCharge = 3;		// how fast shot charges
-		mySpeed = 6;		// players speed
-		stunChance = 1;		// change to actully get stunned
-		shotSpeed = 15;		// speed of shots
-		shotHold = 91;			// ax shots stored
-		burstHold = 500;		// max burst stored
-		rollHold = 120;			// max roll stored
-		spDrain = 0.0001;	// sp drained every frame
-		maxSP = 1.5;			// maximum sp
-		minSP = 0.5;			// minimum sp
-		powerUpTime = 300;		// time cooldowns last for
-		chargeSP = 1;		// how much doing damage charges sp
-		chargeCooldown = 1;// how much doing damage charges cooldowns
-		tracking = 6;		// how much tracking can turn fireballs
-		findChance = 1;		// chance of finding items
-		spLose = 1;			// sp lost on hit
+		ItemController items = control.itemControl;
+		minimumShootTime = 5 - items.staff/3;						// time between shots
+		shotDmg = 130 + (items.staff*10);							// damage of shot
+		takenDmg = 1 - (double)(items.helm + items.shirt)/20;		// part of damage player takes
+		hpStart = 7000 + 500*level;									// plaers base hp
+		rollCharge = 1+(level*0.1);									// how fast roll charges
+		burstCharge = 1+(level*0.1);								// how fast burst charges
+		shotCharge = 3+(level*0.1);									// how fast shot charges
+		speedCur = 6+(level*0.2);									// players speed
+		stunChance = 1 - (double)(items.helm + items.shirt)/20;		// change to actully get stunned
+		shotHold = 91 + (items.staff*5);							// max shots stored
+		chargeCooldown = 1+(level*0.1);								// how much doing damage charges cooldowns
+		tracking = 4 + (items.staff/2);								// how much tracking can turn fireballs
 	}
 	/**
 	 * Counts timers and executes movement and predefined behaviors
@@ -134,18 +98,18 @@ public final class Player extends Human
 	protected void frameCall()
 	{
 		minimumShootTime--;
-		powerUpTimer--;
-		sp -= spDrain;
-		spMod = 1;
-		speedCur = mySpeed;
-		if(sp > maxSP) sp = maxSP;
-		if(sp < minSP) sp = minSP;
+		blessingTimer--;
+		if(blessingTimer == 0)
+		{
+			blessing = 0;
+			setAttributes();
+		}
 		abilityTimer_roll += rollCharge;
 		abilityTimer_burst += burstCharge;
 		abilityTimer_Proj_Tracker += shotCharge;
-		if(abilityTimer_burst >= burstHold) abilityTimer_burst = burstHold;
+		if(abilityTimer_burst >= 500) abilityTimer_burst = 500;
 		if(abilityTimer_Proj_Tracker >= shotHold) abilityTimer_Proj_Tracker = shotHold;
-		if(abilityTimer_roll >= rollHold) abilityTimer_roll = rollHold;
+		if(abilityTimer_roll >= 120) abilityTimer_roll = 120;
 		if(rollTimer > 0)
 		{
 			rollTimer--;
@@ -223,7 +187,7 @@ public final class Player extends Human
 			if(rollTimer < 1)
 			{
 				Log.e("mine", "ljh");
-				control.spriteController.createProj_TrackerPlayer(rads*r2d, shotSpeed, shotDmg, x, y);
+				control.spriteController.createProj_TrackerPlayer(rads*r2d, 10, shotDmg, x, y);
 				abilityTimer_Proj_Tracker -= 30;
 				control.soundController.playEffect("shoot");
 			}
@@ -261,7 +225,7 @@ public final class Player extends Human
 		{
 			for(int i = 0; i<6; i++)
 			{	
-				control.spriteController.createProj_TrackerPlayerAOE(x-20+control.getRandomInt(40), y-20+control.getRandomInt(40), burstDmg, true);
+				control.spriteController.createProj_TrackerPlayerAOE(x-20+control.getRandomInt(40), y-20+control.getRandomInt(40), shotDmg, true);
 			}
 			control.spriteController.createProj_TrackerPlayerBurst(x, y, 0);
 			abilityTimer_burst -= 300;
@@ -300,7 +264,6 @@ public final class Player extends Human
 		control.graphicsController.playerHit = 0;
 		damage *= takenDmg;
 		super.getHit(damage);
-		sp -= sp*damage/1500*spLose;
 		if(deleted) control.die();
 	}
 	/**
@@ -309,34 +272,16 @@ public final class Player extends Human
 	 */
 	protected void getPowerUp(int PowerID)
 	{
-		//if(PowerID<7||PowerID>10) control.activity.playEffect("powerup");
-		//if(PowerID>6&&PowerID<11) control.activity.playMoney();
 		switch(PowerID)
 		{
 		case 1:
 			hp += 2000;
-			if(hp>getHpMax()) hp=getHpMax();
+			if(hp>hpMax) hp=hpMax;
 			break;
 		case 2:
-			abilityTimer_roll = rollHold;
+			abilityTimer_roll = 500;
 			abilityTimer_Proj_Tracker = shotHold;
-			abilityTimer_burst = burstHold;
-			break;
-		case 3:
-			powerUpTimer=powerUpTime;
-			powerID=1;
-			break;
-		case 4:
-			powerUpTimer=powerUpTime;
-			powerID=2;
-			break;
-		case 5:
-			powerUpTimer=powerUpTime;
-			powerID=3;
-			break;
-		case 6:
-			powerUpTimer=powerUpTime;
-			powerID=4;
+			abilityTimer_burst = 120;
 			break;
 		}
 	}

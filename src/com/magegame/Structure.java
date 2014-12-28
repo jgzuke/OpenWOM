@@ -47,13 +47,11 @@ abstract public class Structure extends Sprite
 			control.player.abilityTimer_burst += damage/30;
 			control.player.abilityTimer_roll += damage/50;
 			control.player.abilityTimer_Proj_Tracker += damage/100;
-			control.player.sp += damage*0.00003;
 			hp -= damage;
 			if(hp < 1)
 			{
 				hp = 0;
 				deleted = true;
-				control.player.sp += 0.30;
 				control.spriteController.createProj_TrackerEnemyAOE(x, y, 180, false);
 				control.soundController.playEffect("burst");
 				control.spriteController.createConsumable(x, y, 0);

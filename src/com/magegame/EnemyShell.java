@@ -194,7 +194,6 @@ abstract public class EnemyShell extends Human
 			control.player.abilityTimer_burst += damage/30*control.player.chargeCooldown;
 			control.player.abilityTimer_roll += damage/50*control.player.chargeCooldown;
 			control.player.abilityTimer_Proj_Tracker += damage/100*control.player.chargeCooldown;
-			control.player.sp += damage*0.00003*control.player.chargeSP;
 			if(deleted)
 			{
 				dieDrops();
@@ -206,7 +205,6 @@ abstract public class EnemyShell extends Human
 	 */
 	protected void dieDrops()
 	{
-			control.player.sp += 0.15;
 			control.spriteController.createProj_TrackerEnemyAOE(x, y, 140, false);
 			control.soundController.playEffect("burst");
 			control.itemControl.favor+= (double)worth/10;
@@ -325,6 +323,6 @@ abstract public class EnemyShell extends Human
 	protected void baseHp(int setHP)
 	{
 		hp = setHP;
-		setHpMax(hp);
+		hpMax = hp;
 	}
 }

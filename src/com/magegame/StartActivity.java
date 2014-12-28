@@ -264,4 +264,34 @@ public class StartActivity extends Activity
 		control.paused = false;
 		control.frameCaller.run();
 	}
+	/**
+	 * Blessing game
+	 */
+	protected void blessing()
+	{
+		control.player.blessing = 1;
+		control.player.blessingTimer = 300;
+		control.player.setAttributes();
+	}
+	/**
+	 * Upgrades shirt
+	 */
+	protected void upgradeShirt()
+	{
+		if(control.itemControl.canCraftShirt()) control.itemControl.craftShirt();
+	}
+	/**
+	 * Upgrades shirt
+	 */
+	protected void upgradeHelm()
+	{
+		if(control.itemControl.canCraftHelm()) control.itemControl.craftHelm();
+	}
+	/** 
+	 * Upgrades shirt
+	 */
+	protected void upgradeStaff()
+	{
+		if(control.itemControl.canCraftStaff()) control.itemControl.craftStaff();
+	}
 }

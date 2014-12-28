@@ -204,7 +204,7 @@ public final class SpriteController extends SpriteDrawer
 					maxY = (int) enemies.get(i).y - 20;
 					paint.setColor(Color.RED);
 					paint.setStyle(Paint.Style.FILL);
-					g.drawRect(minX, minY, minX + (40 * enemies.get(i).getHp() / enemies.get(i).getHpMax()), maxY, paint);
+					g.drawRect(minX, minY, minX + (40 * enemies.get(i).hp / enemies.get(i).hpMax), maxY, paint);
 					paint.setColor(Color.BLACK);
 					paint.setStyle(Paint.Style.STROKE);
 					g.drawRect(minX, minY, maxX, maxY, paint);

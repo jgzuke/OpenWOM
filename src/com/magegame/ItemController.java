@@ -51,14 +51,10 @@ public class ItemController
 	}
 	protected byte craft(byte level, int arrayPosition)
 	{
-		if(canCraft(level, arrayPosition))
-		{
-			int type = (level/2);	// 0:cloth, 1:woolen, 2:silk, 3:posiedons
-			materials[arrayPosition+type]-=type*4+2;
-			if(type==3) materials[arrayPosition+3]-=8;
-			favor-=Math.pow(type+1, 3);
-			return (byte)((type*2)+2);
-		}
-		return level;
+		int type = (level/2);	// 0:cloth, 1:woolen, 2:silk, 3:posiedons
+		materials[arrayPosition+type]-=type*4+2;
+		if(type==3) materials[arrayPosition+3]-=8;
+		favor-=Math.pow(type+1, 3);
+		return (byte)((type*2)+2);
 	}
 }

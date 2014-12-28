@@ -40,13 +40,6 @@ abstract public class Human extends Sprite
 		}
 	}
 	/**
-	 * returns health
-	 * @return health
-	 */
-	protected int getHp() {
-		return hp;
-	}
-	/**
 	 * takes damage
 	 * @param damage amount of damage to take
 	 */
@@ -58,34 +51,6 @@ abstract public class Human extends Sprite
 			hp = 0;
 			deleted = true;
 		}
-	}
-	/**
-	 * returns max health
-	 * @return max health
-	 */
-	protected int getHpMax() {
-		return hpMax;
-	}
-	/**
-	 * sets speed
-	 * @param speedCur speed to set
-	 */
-	protected void setSpeedCur(double speedCur) {
-		this.speedCur = speedCur;
-	}
-	/**
-	 * sets max health
-	 * @param speedCur max health to set
-	 */
-	protected void setHpMax(int hpMax) {
-		this.hpMax = hpMax;
-	}
-	/**
-	 * sets health
-	 * @param speedCur health to set
-	 */
-	protected void setHp(int hp) {
-		this.hp = hp;
 	}
 	/**
 	 * returns whether this object is the player

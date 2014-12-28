@@ -2054,19 +2054,22 @@ containing a value of this type.
         public static final int menu_text300x340=0x7f0201cf;
         public static final int menu_text30x30=0x7f0201d0;
         public static final int menu_text_selected150x40=0x7f0201d1;
-        public static final int shootenemy0001=0x7f0201d2;
-        public static final int shootenemy0002=0x7f0201d3;
-        public static final int shootenemy0003=0x7f0201d4;
-        public static final int shootenemy0004=0x7f0201d5;
-        public static final int shootenemy0005=0x7f0201d6;
-        public static final int shootenemyaoe=0x7f0201d7;
-        public static final int shootplayer0001=0x7f0201d8;
-        public static final int shootplayer0002=0x7f0201d9;
-        public static final int shootplayer0003=0x7f0201da;
-        public static final int shootplayer0004=0x7f0201db;
-        public static final int shootplayer0005=0x7f0201dc;
-        public static final int shootplayeraoe=0x7f0201dd;
-        public static final int structure_spawn=0x7f0201de;
+        public static final int pause_options=0x7f0201d2;
+        public static final int pause_plus=0x7f0201d3;
+        public static final int pause_upgrade=0x7f0201d4;
+        public static final int shootenemy0001=0x7f0201d5;
+        public static final int shootenemy0002=0x7f0201d6;
+        public static final int shootenemy0003=0x7f0201d7;
+        public static final int shootenemy0004=0x7f0201d8;
+        public static final int shootenemy0005=0x7f0201d9;
+        public static final int shootenemyaoe=0x7f0201da;
+        public static final int shootplayer0001=0x7f0201db;
+        public static final int shootplayer0002=0x7f0201dc;
+        public static final int shootplayer0003=0x7f0201dd;
+        public static final int shootplayer0004=0x7f0201de;
+        public static final int shootplayer0005=0x7f0201df;
+        public static final int shootplayeraoe=0x7f0201e0;
+        public static final int structure_spawn=0x7f0201e1;
     }
     public static final class id {
         public static final int action_bar=0x7f0c0022;
