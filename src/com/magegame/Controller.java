@@ -102,6 +102,7 @@ public final class Controller
 	}
 	protected void die()
 	{
+		itemControl.favor -= player.level;
 		player.resetVariables();
 		levelController.loadLevel(1);
 		graphicsController.playerBursted=40;

@@ -8,6 +8,10 @@ import android.widget.Toast;
 
 public final class Player extends Human
 {
+	protected int level = 0;
+	protected int experience = 0;
+	protected int blessingTimer = 0;
+	protected int blessing = 0;
 	protected double touchY;
 	protected boolean playing = false;
 	protected int rollTimer = 0;

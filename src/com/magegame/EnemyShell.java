@@ -13,8 +13,8 @@ abstract public class EnemyShell extends Human
 {
 	protected int fromWall = 5;
 	protected int runTimer = 0;
-	protected int stunTimer = 0;
 	protected int worth = 3;
+	protected int stunTimer = 0;
 	protected double lastPlayerX;
 	protected double lastPlayerY;
 	protected boolean sick = false;
@@ -208,37 +208,15 @@ abstract public class EnemyShell extends Human
 	{
 			control.player.sp += 0.15;
 			control.spriteController.createProj_TrackerEnemyAOE(x, y, 140, false);
-			if(!sick)
-			{
-				if(keyHolder)
-				{
-					Toast.makeText(control.context, "Key Dropped!", Toast.LENGTH_LONG).show();
-					control.spriteController.createConsumable(x, y, 8);
-				} else
-				{
-					if(control.getRandomDouble()>0.7)
-					{
-						control.spriteController.createConsumable(x, y, 0);
-					}
-				}
-				for(int i = 0; i < worth; i ++)
-				{
-					double rads = control.getRandomDouble()*6.28;
-					if(worth-i>20)
-					{
-						control.spriteController.createConsumable(x+Math.cos(rads)*12, y+Math.sin(rads)*12, 10);
-						i+=19;
-					} else if(worth-i>5)
-					{
-						control.spriteController.createConsumable(x+Math.cos(rads)*12, y+Math.sin(rads)*12, 9);
-						i+=4;
-					} else
-					{
-						control.spriteController.createConsumable(x+Math.cos(rads)*12, y+Math.sin(rads)*12, 7);
-					}
-				}
-			}
 			control.soundController.playEffect("burst");
+			control.itemControl.favor+= (double)worth/10;
+			control.player.experience += worth;
+			if(control.player.blessingTimer>0) // if blessing active get more
+			{
+				control.itemControl.favor+= (double)worth/2;
+				control.player.blessingTimer += 20;
+			}
+			if(!sick) control.spriteController.createConsumable(x, y, 0);
 	}
 	/**
 	 * Checks whether object can 'see' player
