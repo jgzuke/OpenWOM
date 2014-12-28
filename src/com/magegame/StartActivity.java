@@ -32,7 +32,14 @@ public class StartActivity extends Activity
 		setWindow();
 		control = new Controller(this, this, getScreenDimensions());
 		setContentView(control.graphicsController);
-		readSavedData();
+		read();
+		if(savedData[0] == 0)
+		{
+			savedData[0] = 1;
+			setSaveData();
+			write();
+		}
+		readSaveData();
 	}
 	/**
 	 * sets screen variables as well as audio settings
@@ -51,20 +58,16 @@ public class StartActivity extends Activity
 		int dimension2 = getResources().getDisplayMetrics().widthPixels;
 		double screenWidthstart;
 		double screenHeightstart;
-		double ratio;
 		if(dimension1 > dimension2)
 		{
 			screenWidthstart = dimension1;
 			screenHeightstart = dimension2;
-		}
-		else
+		} else
 		{
 			screenWidthstart = dimension2;
 			screenHeightstart = dimension1;
 		}
-		ratio = (double)(screenWidthstart / screenHeightstart);
-		
-		if(ratio > 1.5)
+		if(screenWidthstart/screenHeightstart > 1.5)
 		{
 			double[] dims = {(screenWidthstart - (screenHeightstart * 1.5)) / 2, 0, ((screenHeightstart * 1.5) / 480)};
 			return dims;
@@ -168,17 +171,6 @@ public class StartActivity extends Activity
 		}
 		//savedData[58]=
 	}
-	private void readSavedData()
-	{
-		read();
-		if(savedData[0] == 0)
-		{
-			savedData[0] = 1;
-			setSaveData();
-			write();
-		}
-		readSaveData();
-	}
 	/**
 	 * read data once it has been put into savedData array
 	 */
@@ -208,7 +200,11 @@ public class StartActivity extends Activity
 	 */
 	private void read()
 	{
-		openRead();
+		try
+		{
+			fileRead = openFileInput("ProjectSaveData");
+		}
+		catch(FileNotFoundException e){}
 		try
 		{
 			fileRead.read(savedData, 0, savePoints);
@@ -217,78 +213,55 @@ public class StartActivity extends Activity
 		{
 			e.printStackTrace();
 		}
-		closeRead();
+		try
+		{
+			fileRead.close();
+		}
+		catch(IOException e){}
 	}
 	/**
 	 * saves data to file
 	 */
 	private void write()
 	{
-		openWrite();
-		try
-		{
-			fileWrite.write(savedData, 0, savePoints);
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-		closeWrite();
-	}
-	/**
-	 * opens the save file to be read from
-	 */
-	private void openRead()
-	{
-		try
-		{
-			fileRead = openFileInput("ProjectSaveData");
-		}
-		catch(FileNotFoundException e)
-		{
-			openWrite();
-			closeWrite();
-			openRead();
-		}
-	}
-	/**
-	 * opens the save file to be written to
-	 */
-	private void openWrite()
-	{
 		try
 		{
 			fileWrite = openFileOutput("ProjectSaveData", Context.MODE_PRIVATE);
 		}
-		catch(FileNotFoundException e)
-		{
-		}
-	}
-	/**
-	 * closes the save file from reading
-	 */
-	private void closeRead()
-	{
+		catch(FileNotFoundException e){}
 		try
 		{
-			fileRead.close();
+			fileWrite.write(savedData, 0, savePoints);
 		}
-		catch(IOException e)
-		{
-		}
-	}
-	/**
-	 * closes the save file from writing
-	 */
-	private void closeWrite()
-	{
+		catch(IOException e){}
 		try
 		{
 			fileWrite.close();
 		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
+		catch(IOException e){}
+	}
+	
+	
+	//					PAUSE SCREEN STUFF
+	
+	
+	
+	
+
+	/**
+	 * starts pause activity thing
+	 */
+	protected void pause()
+	{
+		setContentView(R.layout.paused);
+	}
+	/**
+	 * Unpauses game
+	 */
+	protected void unPause()
+	{
+		setContentView(control.graphicsController);
+		control.paused = false;
+		control.frameCaller.run();
 	}
 }

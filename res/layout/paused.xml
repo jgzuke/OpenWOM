@@ -10,6 +10,7 @@
 		android:layout_height="30dp"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"
+        android:onClick="unPause"
         android:background="@drawable/menu_text30x30"/>
     <Button
         android:id="@+id/resume"
@@ -21,7 +22,7 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/menu_text170x100"
         android:gravity="center"
-        android:onClick="resumeGame"
+        android:onClick="unPause"
         android:text="RESUME"
         android:textColor="#ffffff"
         android:textSize="25sp" />

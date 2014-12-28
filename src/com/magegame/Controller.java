@@ -110,6 +110,7 @@ public final class Controller
 	protected void pause()
 	{
 		paused = true;
+		activity.pause();
 		//TODO
 	}
 	/**
