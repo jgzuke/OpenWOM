@@ -49,24 +49,28 @@ public final class Proj_Tracker_Enemy extends Proj_Tracker
 	protected void frameCall()
 	{
 		super.frameCall();
-		xDif = x - control.player.x;
-		yDif = y - control.player.y;
+		xDif = control.player.x-x;
+		yDif = control.player.y-y;
 		double newRotation = Math.atan2(yDif, xDif) * r2d;
-		newRotation -= 180;
 		double rotChange = 2;
 		double fix = compareRot(newRotation/r2d);
-		if(fix>rotChange/2)
+		double needToChange = Math.abs(newRotation-rotation);
+		if(needToChange>90) needToChange = 360-needToChange;
+		if(needToChange<40)
 		{
-			rotation += rotChange;
-		} else if(fix<-rotChange/2)
-		{
-			rotation -= rotChange;
-		} else
-		{
-			rotation += fix;
+			if(fix>rotChange/2)
+			{
+				rotation += rotChange;
+			} else if(fix<-rotChange/2)
+			{
+				rotation -= rotChange;
+			} else
+			{
+				rotation += fix;
+			}
+			xForward = Math.cos(rotation/r2d) * 10;
+			yForward = Math.sin(rotation/r2d) * 10;
 		}
-		xForward = Math.cos(rotation/r2d) * 10;
-		yForward = Math.sin(rotation/r2d) * 10;
 	}
 	public double compareRot(double newRotation)
 	{

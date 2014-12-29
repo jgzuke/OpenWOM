@@ -163,7 +163,7 @@ public final class GraphicsController extends View
 		g.drawRect(404, 94, 404 + (int)((63 * player.abilityTimer_burst) / 500), 104, paint);
 		g.drawRect(404, 199, 404 + (int)((63 * player.abilityTimer_roll) / 120), 209, paint);
 		g.drawRect(404, 303, 404 + (int)((63 * player.abilityTimer_Proj_Tracker) / 91), 313, paint);
-		if(player.blessing!=0) g.drawRect(90, 290, 90 + player.blessing, 300, paint);
+		if(player.blessing!=0) g.drawRect(90, 290, 90 + player.blessingTimer, 300, paint);
 		paint.setStyle(Paint.Style.FILL);
 		paint.setColor(Color.BLACK);
 		paint.setAlpha(151);

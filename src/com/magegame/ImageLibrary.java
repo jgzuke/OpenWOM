@@ -38,37 +38,7 @@ public final class ImageLibrary extends ImageLoader
 	protected void loadPlayerImage()
 	{
 		player_Image = loadArray1D(32, "human_playerzack", 35, 40);
-		isPlayerWidth = 26;
-		/*switch(control.activity.currentSkin)
-		{
-			case 0: player_Image = loadArray1D(31, "human_playerzack", 35, 40);
-					isPlayerWidth = 26;
-				break;
-			case 1: player_Image = loadArray1D(31, "human_playergolden", 35, 40);
-					isPlayerWidth = 26;
-				break;
-			case 2: player_Image = loadArray1D(31, "human_playerleather", 35, 40);
-					isPlayerWidth = 26;
-				break;
-			case 3: player_Image = loadArray1D(31, "human_playerbarbarian", 35, 40);
-					isPlayerWidth = 26;
-				break;
-			case 4: player_Image = loadArray1D(31, "human_playercleric", 35, 40);
-					isPlayerWidth = 26;
-				break;
-			case 5: player_Image = loadArray1D(31, "human_playerent", 80, 76);
-					isPlayerWidth = 43;
-				break;
-			case 6: player_Image = loadArray1D(31, "human_playergargoyle", 60, 69);
-					isPlayerWidth = 38;
-				break;
-			case 7: player_Image = loadArray1D(31, "human_playerdragon", 35, 40);
-					isPlayerWidth = 26;
-				break;
-			default: player_Image = loadArray1D(31, "human_playerzack", 35, 40);
-					isPlayerWidth = 26;
-				break;
-		}*/
+		isPlayerWidth = 40;
 		isPlayer = loadImage("icon_isplayer", 2*isPlayerWidth, 2*isPlayerWidth);
 	}
 	/**

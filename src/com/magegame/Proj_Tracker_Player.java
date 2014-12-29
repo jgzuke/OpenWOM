@@ -58,10 +58,9 @@ public final class Proj_Tracker_Player extends Proj_Tracker
 		super.frameCall();
 		if(target != null)
 		{
-			xDif = x - target.x;
-			yDif = y - target.y;
+			xDif = target.x-x;
+			yDif = target.y-y;
 			double newRotation = Math.atan2(yDif, xDif) * r2d;
-			newRotation -= 180;
 			double fix = compareRot(newRotation/r2d);
 			if(fix>rotChange/2)
 			{
@@ -77,8 +76,23 @@ public final class Proj_Tracker_Player extends Proj_Tracker
 			yForward = Math.sin(rotation/r2d) * speed;
 			double needToTurn = Math.abs(rotation-newRotation);
 			if(needToTurn>180) needToTurn = Math.abs(needToTurn-360);
-			if(needToTurn>20) target = null;
-			if(target.deleted) target = null;
+			if(needToTurn>20||target.deleted) target = null;
+		} else
+		{
+			for(int i = 0; i < spriteController.enemies.size(); i++)
+			{
+				if(spriteController.enemies.get(i) != null && !deleted)
+				{
+					if(goodTarget(spriteController.enemies.get(i))) target = spriteController.enemies.get(i);
+				}
+			}
+			for(int i = 0; i < spriteController.structures.size(); i++)
+			{
+				if(spriteController.structures.get(i) != null && !deleted)
+				{
+					if(goodTarget(spriteController.structures.get(i))) target = spriteController.structures.get(i);
+				}
+			}
 		}
 		for(int i = 0; i < spriteController.enemies.size(); i++)
 		{
@@ -88,6 +102,16 @@ public final class Proj_Tracker_Player extends Proj_Tracker
 				spriteController.enemies.get(i).levelCurrentPosition++;
 			}
 		}
+	}
+	private boolean goodTarget(Sprite s)
+	{
+		xDif = s.x-x;
+		yDif = s.y-y;
+		double distance = Math.sqrt(Math.pow(xDif, 2)+Math.pow(yDif, 2));
+		double newRotation = Math.atan2(yDif, xDif) * r2d;
+		double needToTurn = Math.abs(rotation-newRotation);
+		if(needToTurn>180) needToTurn = 360-needToTurn;
+		return needToTurn<20&&distance<200;
 	}
 	public double compareRot(double newRotation)
 	{
