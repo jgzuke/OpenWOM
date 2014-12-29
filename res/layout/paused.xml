@@ -4,154 +4,116 @@
     android:layout_height="360dp"
     android:layout_gravity="center"
     android:background="@drawable/menu_back2" >
-	<Button
-        android:id="@+id/back"
-        android:layout_width="30dp"
-		android:layout_height="30dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:onClick="unPause"
-        android:background="@drawable/menu_text30x30"/>
-    <Button
-        android:id="@+id/resume"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/menu_text170x100"
-        android:gravity="center"
-        android:onClick="unPause"
-        android:text="RESUME"
-        android:textColor="#ffffff"
-        android:textSize="25sp" />
-	<Button
-	    android:id="@+id/options"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/menu_text170x100"
-        android:gravity="center"
-	    android:onClick="optionsClickHandler"
-        android:layout_below="@+id/resume"
-        android:text="OPTIONS"
-        android:textColor="#ffffff"
-        android:textSize="25sp" />
-	<Button
-	    android:id="@+id/menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/options"
-        android:onClick="endGame"
-        android:background="@drawable/menu_text170x100"
-        android:gravity="center"
-        android:text="MENU"
-        android:textColor="#ffffff"
-        android:textSize="25sp" />
 
-    <GridLayout
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="50dp"
+    <LinearLayout
+        android:id="@+id/topbar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:columnCount="3"
-        android:rowCount="2">
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true" >
+
         <Button
-       		android:id="@+id/u1"
-            android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-		    android:layout_row="0"
-		    android:layout_column="0"
-		    android:textSize="15sp"
-		    android:gravity="bottom|center"
-		    android:paddingBottom="5dp"
-	        android:text="EASY"
-	        android:textColor="#ffffff"
-	        android:onClick="useP1"
-	        android:background="@drawable/menu_powerup0001"
-	        android:layout_marginBottom="20dp"/>
+            android:id="@+id/back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/menu_text30x30"
+            android:onClick="unPause" />
         <Button
-       		android:id="@+id/u2"
-            android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-		    android:layout_row="0"
-		    android:layout_column="1"
-		    android:textSize="17sp"
-	        android:text="MEDIUM"
-	        android:gravity="bottom|center"
-		    android:paddingBottom="5dp"
-	        android:textColor="#ffffff"
-	        android:onClick="useP2"
-	        android:background="@drawable/menu_powerup0002"
-	        android:layout_marginBottom="20dp"
-	        android:layout_marginLeft="20dp"/>
-        <Button
-       		android:id="@+id/u3"
-            android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-		    android:layout_row="0"
-		    android:layout_column="2"
-		    android:textSize="17sp"
-	        android:text="HARD"
-	        android:gravity="bottom|center"
-		    android:paddingBottom="5dp"
-	        android:textColor="#ffffff"
-	        android:onClick="useP3"
-	        android:background="@drawable/menu_powerup0003"
-	        android:layout_marginBottom="20dp"
-	        android:layout_marginLeft="20dp"/>
-        <Button
-       		android:id="@+id/u4"
-            android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-		    android:layout_row="1"
-		    android:layout_column="0"
-		    android:textSize="17sp"
-	        android:text="SICK"
-	        android:gravity="bottom|center"
-		    android:paddingBottom="5dp"
-	        android:textColor="#ffffff"
-	        android:onClick="useP4"
-	        android:background="@drawable/menu_powerup0004"
-	        android:layout_marginBottom="20dp"/>
-        <Button
-       		android:id="@+id/u5"
-            android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-		    android:layout_row="1"
-		    android:layout_column="1"
-		    android:textSize="17sp"
-	        android:text="HURT"
-	        android:gravity="bottom|center"
-		    android:paddingBottom="5dp"
-	        android:textColor="#ffffff"
-	        android:onClick="useP5"
-	        android:background="@drawable/menu_powerup0005"
-	        android:layout_marginLeft="20dp"
-	        android:layout_marginBottom="20dp"/>
-        <Button
-       		android:id="@+id/u6"
+            android:id="@+id/options"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/menu_text30x30"
+            android:onClick="options" />
+        <TextView
+            android:id="@+id/favor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_column="2"
-            android:layout_row="1"
-            android:background="@drawable/menu_powerup0006"
-            android:gravity="bottom|center"
-		    android:paddingBottom="5dp"
-            android:text="LIMITED"
-            android:layout_marginLeft="20dp"
-            android:layout_marginBottom="20dp"
-            android:textColor="#ffffff"
-	        android:onClick="useP6"
-            android:textSize="17sp" />
-    </GridLayout>
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Request"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/blessings"
+        android:layout_width="wrap_content"
+        android:layout_height="310dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/topbar"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="110dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Request"
+            android:textSize="25sp" />
+
+        <Button 
+            android:id="@+id/attack"
+            android:layout_width="110dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+	        android:text="Attack" 
+            android:background="@drawable/menu_text30x30"
+            android:onClick="requestAttack" />
+        <Button 
+            android:id="@+id/protection"
+            android:layout_width="110dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+	        android:text="Protection" 
+            android:background="@drawable/menu_text30x30"
+            android:onClick="requestArmor" />
+        <Button 
+            android:id="@+id/speed"
+            android:layout_width="110dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+	        android:text="Speed" 
+            android:background="@drawable/menu_text30x30"
+            android:onClick="requestSpeed" />
+        <Button 
+            android:id="@+id/cooldown"
+            android:layout_width="110dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+	        android:text="Cooldown" 
+            android:background="@drawable/menu_text30x30"
+            android:onClick="requestCooldown" />
+        <Button 
+            android:id="@+id/cooldown2"
+            android:layout_width="110dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+	        android:text="Cooldown" 
+            android:background="@drawable/menu_text30x30"
+            android:onClick="requestCooldown" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/equips"
+        android:layout_width="wrap_content"
+        android:layout_height="310dp"
+        android:layout_below="@+id/topbar"
+        android:orientation="vertical" >
+        
+    </LinearLayout>
 
 </RelativeLayout>

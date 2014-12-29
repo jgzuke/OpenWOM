@@ -11,15 +11,12 @@ public final class ImageLibrary extends ImageLoader
 	protected Bitmap[] player_Image = new Bitmap[32]; //TODO make images smaller
 	protected Bitmap[][] enemyImages = new Bitmap[10][100]; //array holding videos for each enemy, null when uneeded
 	protected Bitmap structure_Spawn;
-	protected Bitmap[] effects = new Bitmap[4];
 	protected Bitmap isPlayer;
 	protected int isPlayerWidth;
 	protected Bitmap[] shotPlayer;
 	protected Bitmap shotAOEPlayer;
 	protected Bitmap[] shotEnemy;
 	protected Bitmap shotAOEEnemy;
-	protected Bitmap[] powerUps = new Bitmap[11];
-	protected Bitmap[] powerUpBigs = new Bitmap[4];
 	protected Bitmap[] coins = new Bitmap[2];
 	protected Bitmap currentLevel;
 	protected Bitmap currentLevelTop;
@@ -87,14 +84,11 @@ public final class ImageLibrary extends ImageLoader
 	protected void loadAllImages()
 	{
 		loadPlayerImage();
-		powerUps = loadArray1D(11, "icon_powerup", 30, 30);
-		powerUpBigs = loadArray1D(5, "icon_powerupbig", 70, 70);
 		coins = loadArray1D(2, "icon_menu_coin", 30, 30);
 		shotAOEEnemy = loadImage("shootenemyaoe", 80, 80);
 		shotEnemy = loadArray1D(5, "shootenemy", 35, 15);
 		shotAOEPlayer = loadImage("shootplayeraoe", 80, 80);
 		shotPlayer = loadArray1D(5, "shootplayer", 35, 15);
-		effects = loadArray1D(4, "effect", 60, 60);
 		isPlayer = loadImage("icon_isplayer", 40, 40);
 		backDrop = loadImage("leveltile1", 100, 100);
 	}
@@ -140,8 +134,5 @@ public final class ImageLibrary extends ImageLoader
 			currentLevelTop = null;
 		}
 		recycleArray(player_Image);
-		recycleArray(powerUpBigs);
-		recycleArray(powerUps);
-		recycleArray(effects);
 	}
 }

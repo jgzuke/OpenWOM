@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.view.Menu;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 public class StartActivity extends Activity
@@ -155,20 +156,10 @@ public class StartActivity extends Activity
 	{ //TODO change some
 		savedData[1] = (byte)((int) control.soundController.volumeMusic);		//1 volume music
 		savedData[2] = (byte)((int) control.soundController.volumeEffect);		//2 volume effect
-		for(int i = 0; i < 12; i++)						//3-14 worships
-		{
-			savedData[i+3]=control.worships[i];
-		}
-		savedData[15]=0;
-		for(int i = 0; i < 8; i++)						//15 skins as one byte
-		{
-			if(control.skins[i]) savedData[15]+=Math.pow(2, i);
-		}
-		savedData[16] = control.currentSkin;					//16 current skin
-		for(int i = 0; i < 40; i++)						//15 skins as one byte
-		{
-			savedData[i+17]=control.itemControl.materials[i];
-		}
+		savedData[15]=control.itemControl.helm;
+		savedData[16]=control.itemControl.shirt;
+		savedData[17]=control.itemControl.staff;
+		savedData[18]=(byte)control.itemControl.favor;
 		//savedData[58]=
 	}
 	/**
@@ -178,21 +169,10 @@ public class StartActivity extends Activity
 	{ //TODO change some
 		control.soundController.volumeMusic = savedData[1];
 		control.soundController.volumeEffect = savedData[2];
-		for(int i = 0; i < 12; i++)
-		{
-			control.worships[i]= savedData[i+3];
-		}
-		int temp = savedData[15];
-		for(int i = 0; i <7; i++)
-		{
-			control.skins[i]=(temp%2==1);
-			temp /=2;
-		}
-		control.currentSkin = savedData[16];
-		for(int i = 0; i < 40; i++)						//15 skins as one byte
-		{
-			control.itemControl.materials[i]=savedData[i+17];
-		}
+		control.itemControl.helm = savedData[15];
+		control.itemControl.shirt = savedData[16];
+		control.itemControl.staff = savedData[17];
+		control.itemControl.favor = savedData[18];
 		//savedData[58]=
 	}
 	/**
@@ -258,40 +238,57 @@ public class StartActivity extends Activity
 	/**
 	 * Unpauses game
 	 */
-	protected void unPause()
+	public void unPause(View v)
 	{
 		setContentView(control.graphicsController);
 		control.paused = false;
 		control.frameCaller.run();
 	}
+	
 	/**
 	 * Blessing game
 	 */
-	protected void blessing()
+	public void requestAttack(View v)
 	{
-		control.player.blessing = 1;
+		if(canBless()) blessed(1);
+	}
+	/**
+	 * Blessing game
+	 */
+	public void requestArmor(View v)
+	{
+		if(canBless()) blessed(2);
+	}
+	/**
+	 * Blessing game
+	 */
+	public void requestSpeed(View v)
+	{
+		if(canBless()) blessed(3);
+	}
+	/**
+	 * Blessing game
+	 */
+	public void requestCooldown(View v)
+	{
+		if(canBless()) blessed(4);
+	}
+	/**
+	 * starts a blessing
+	 */
+	private void blessed(int i)
+	{
+		control.player.blessing = i;
+		control.spriteController.playerBlessing = control.imageLibrary.loadImage("effect000"+Integer.toString(i), 80, 80);
 		control.player.blessingTimer = 300;
+		control.itemControl.favor -= 50;
 		control.player.setAttributes();
 	}
 	/**
-	 * Upgrades shirt
+	 * checks whether you can request a blessing
 	 */
-	protected void upgradeShirt()
+	private boolean canBless()
 	{
-		if(control.itemControl.canCraftShirt()) control.itemControl.craftShirt();
-	}
-	/**
-	 * Upgrades shirt
-	 */
-	protected void upgradeHelm()
-	{
-		if(control.itemControl.canCraftHelm()) control.itemControl.craftHelm();
-	}
-	/** 
-	 * Upgrades shirt
-	 */
-	protected void upgradeStaff()
-	{
-		if(control.itemControl.canCraftStaff()) control.itemControl.craftStaff();
+		return true;//control.itemControl.favor>50;
 	}
 }

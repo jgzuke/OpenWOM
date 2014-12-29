@@ -53,7 +53,7 @@ public final class LevelController
 	 */
 	protected void loadLevel(int toLoad)
 	{
-		control.wallController.clearWallArrays();
+		endFightSection();
 		levelNum = toLoad;
 		if(toLoad==1)
 		{
@@ -92,11 +92,7 @@ public final class LevelController
 	protected void loadLevelSection(int level)
 	{
 		control.wallController.clearWallArrays();
-		levelNum = level;
-		for(int i = 0; i < control.spriteController.powerUps.size(); i++)
-		{
-			if(control.spriteController.powerUps.get(i) != null) control.player.getPowerUp(control.spriteController.powerUps.get(i).ID);
-		}			 // READS IN AND CREATES ENEMIES IN NEW SECTION, SAVES ENEMIES IN OLD SECTION
+		levelNum = level;			 // READS IN AND CREATES ENEMIES IN NEW SECTION, SAVES ENEMIES IN OLD SECTION
 		ArrayList<int[]> tempSave = (ArrayList<int[]>)saveEnemyInformation.clone();
 		int j = 0;
 		for(int i = 0; i < saveEnemyInformation.size(); i++)

@@ -76,6 +76,12 @@ public final class Player extends Human
 	 */
 	protected void setAttributes()
 	{
+		/*		BLESSINGS
+		 * 1: attack
+		 * 2: armor
+		 * 3: speed
+		 * 4: cooldown
+		 */
 		ItemController items = control.itemControl;
 		minimumShootTime = 5 - items.staff/3;						// time between shots
 		shotDmg = 130 + (items.staff*10);							// damage of shot
@@ -89,6 +95,25 @@ public final class Player extends Human
 		shotHold = 91 + (items.staff*5);							// max shots stored
 		chargeCooldown = 1+(level*0.1);								// how much doing damage charges cooldowns
 		tracking = 4 + (items.staff/2);								// how much tracking can turn fireballs
+		switch(blessing)
+		{
+			case 1:
+				shotDmg *= 1.5;
+				break;
+			case 2:
+				takenDmg *= 0.8;
+				break;
+			case 3:
+				speedCur *= 1.3;
+				break;
+			case 4:
+				rollCharge *= 1.4;
+				burstCharge *= 1.4;
+				shotCharge *= 1.4;
+				chargeCooldown *= 1.4;
+				break;
+			default: break;
+		}
 	}
 	/**
 	 * Counts timers and executes movement and predefined behaviors
@@ -104,6 +129,7 @@ public final class Player extends Human
 			blessing = 0;
 			setAttributes();
 		}
+		if(blessingTimer > 300) blessingTimer = 300;
 		abilityTimer_roll += rollCharge;
 		abilityTimer_burst += burstCharge;
 		abilityTimer_Proj_Tracker += shotCharge;

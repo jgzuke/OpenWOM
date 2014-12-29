@@ -54,10 +54,6 @@ public final class Controller
 	protected SoundController soundController;
 	protected ItemController itemControl;
 	
-
-	protected byte currentSkin = 0;
-	protected byte [] worships = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // all the olympians
-	protected boolean [] skins = {false, false, false, false, false, false, false, false}; //skins
 	protected boolean paused = false;
 	protected Runnable frameCaller = new Runnable()
 	{

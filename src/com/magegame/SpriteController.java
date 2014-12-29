@@ -34,6 +34,7 @@
  */
 package com.magegame;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -46,9 +47,9 @@ public final class SpriteController extends SpriteDrawer
 	private Controller control;
 	protected ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	protected ArrayList<Structure> structures = new ArrayList<Structure>();
-	protected ArrayList<PowerUp> powerUps = new ArrayList<PowerUp>();
 	protected ArrayList<Proj_Tracker> proj_Trackers = new ArrayList<Proj_Tracker>();
 	protected ArrayList<Proj_Tracker_AOE> proj_Tracker_AOEs = new ArrayList<Proj_Tracker_AOE>();
+	protected Bitmap playerBlessing;
 	/**
 	 * Initializes all undecided variables, loads level, creates player and enemy objects, and starts frameCaller
 	 */
@@ -65,7 +66,6 @@ public final class SpriteController extends SpriteDrawer
 		control.levelController.saveEnemyInformation.clear();
 		enemies.clear();
 		structures.clear();
-		powerUps.clear();
 		proj_Trackers.clear();
 		proj_Tracker_AOEs.clear();
 	}
@@ -125,20 +125,6 @@ public final class SpriteController extends SpriteDrawer
 				else
 				{
 					proj_Tracker_AOEs.get(i).frameCall();
-				}
-			}
-		}
-		for(int i = 0; i < powerUps.size(); i++)
-		{
-			if(powerUps.get(i) != null)
-			{
-				if(powerUps.get(i).deleted)
-				{
-					powerUps.remove(i);
-				}
-				else
-				{
-					powerUps.get(i).frameCall();
 				}
 			}
 		}
@@ -236,11 +222,9 @@ public final class SpriteController extends SpriteDrawer
 	}
 	protected void drawSprites(Canvas g, Paint paint, ImageLibrary imageLibrary, Rect aoeRect)
 	{
-		if(control.player != null)
-		{
-			drawFlat(control.player, imageLibrary.isPlayer, g, paint);
-			draw(control.player, g, paint);
-		}
+		drawFlat(control.player, imageLibrary.isPlayer, g, paint);
+		draw(control.player, g, paint);
+		if(control.player.blessing!=0) g.drawBitmap(playerBlessing, (int)control.player.x-40, (int)control.player.y-40, paint);
 		for(int i = 0; i < enemies.size(); i++)
 		{
 			if(enemies.get(i) != null)
@@ -268,13 +252,6 @@ public final class SpriteController extends SpriteDrawer
 			}
 		}
 		paint.setAlpha(255);
-		for(int i = 0; i < powerUps.size(); i++)
-		{
-			if(powerUps.get(i) != null)
-			{
-				drawFlat(powerUps.get(i), g, paint);
-			}
-		}
 	}
 	/**
 	 * creates an enemy power ball
@@ -288,17 +265,6 @@ public final class SpriteController extends SpriteDrawer
 	protected void createProj_TrackerEnemy(double rotation, double xVel, double yVel, int power, double x, double y)
 	{
 		proj_Trackers.add(new Proj_Tracker_Enemy(control, (int) (x+xVel*2), (int) (y+yVel*2), power, xVel, yVel, rotation));
-	}
-	/**
-	 * creates a consumable the player can pick up
-	 * @param X x position
-	 * @param Y y position
-	 * @param ID 0:random power, 1-6:power, 7:coin1, 8:key, 9:coin5, 10:coin20
-	 */
-	protected void createConsumable(double X, double Y, int ID) // 0: random powerup or
-	{															// 1-6:powerups 7:coin1
-		powerUps.add(new PowerUp(control, X, Y, ID));				// 9: coin5, 10:coin20, 8:key 
-		Log.e("dropped", "dropped");
 	}
 	/**
 	 * creates a player power ball

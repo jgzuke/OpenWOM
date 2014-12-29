@@ -163,6 +163,7 @@ public final class GraphicsController extends View
 		g.drawRect(404, 94, 404 + (int)((63 * player.abilityTimer_burst) / 500), 104, paint);
 		g.drawRect(404, 199, 404 + (int)((63 * player.abilityTimer_roll) / 120), 209, paint);
 		g.drawRect(404, 303, 404 + (int)((63 * player.abilityTimer_Proj_Tracker) / 91), 313, paint);
+		if(player.blessing!=0) g.drawRect(90, 290, 90 + player.blessing, 300, paint);
 		paint.setStyle(Paint.Style.FILL);
 		paint.setColor(Color.BLACK);
 		paint.setAlpha(151);
@@ -226,11 +227,6 @@ public final class GraphicsController extends View
 		spriteController.drawStructures(g, paint, imageLibrary);
 		spriteController.drawSprites(g, paint, imageLibrary, aoeRect);
 		g.drawBitmap(imageLibrary.currentLevelTop, 0, 0, paint);
-
-		if(player.blessingTimer > 0)
-		{
-			drawBitmapLevel(imageLibrary.effects[player.blessing - 1], (int) player.x - 30, (int) player.y - 30, g);
-		}
 		spriteController.drawHealthBars(g, paint);
 		return drawTo;
 	}
@@ -287,10 +283,6 @@ public final class GraphicsController extends View
 		g.drawBitmap(background, 0, 0, paint);
 		drawContestantStats(g);
 		paint.setStyle(Paint.Style.STROKE);
-		if(player.blessingTimer > 0)
-		{
-			g.drawBitmap(imageLibrary.powerUpBigs[player.blessing - 1], 10, 25, paint);
-		}
 	}
 	/**
 	 * Starts warning label
