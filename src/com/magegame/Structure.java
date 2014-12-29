@@ -54,22 +54,12 @@ abstract public class Structure extends Sprite
 				deleted = true;
 				control.spriteController.createProj_TrackerEnemyAOE(x, y, 180, false);
 				control.soundController.playEffect("burst");
-				control.spriteController.createConsumable(x, y, 0);
-				for(int i = 0; i < worth; i ++)
+				control.itemControl.favor+= (double)worth/10;
+				control.player.experience += worth;
+				if(control.player.blessingTimer>0) // if blessing active get more
 				{
-					double rads = control.getRandomDouble()*6.28;
-					if(worth-i>20)
-					{
-						control.spriteController.createConsumable(x+Math.cos(rads)*12, y+Math.sin(rads)*12, 10);
-						i+=19;
-					} else if(worth-i>5)
-					{
-						control.spriteController.createConsumable(x+Math.cos(rads)*12, y+Math.sin(rads)*12, 9);
-						i+=4;
-					} else
-					{
-						control.spriteController.createConsumable(x+Math.cos(rads)*12, y+Math.sin(rads)*12, 7);
-					}
+					control.itemControl.favor+= (double)worth/2;
+					control.player.blessingTimer += 20;
 				}
 			}
 		}

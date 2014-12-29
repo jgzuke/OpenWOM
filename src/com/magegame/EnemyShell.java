@@ -214,7 +214,6 @@ abstract public class EnemyShell extends Human
 				control.itemControl.favor+= (double)worth/2;
 				control.player.blessingTimer += 20;
 			}
-			if(!sick) control.spriteController.createConsumable(x, y, 0);
 	}
 	/**
 	 * Checks whether object can 'see' player
