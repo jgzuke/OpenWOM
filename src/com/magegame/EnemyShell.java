@@ -13,6 +13,7 @@ abstract public class EnemyShell extends Human
 {
 	protected int fromWall = 5;
 	protected int runTimer = 0;
+	protected int rollTimer = 0;
 	protected int worth = 3;
 	protected int stunTimer = 0;
 	protected double lastPlayerX;
@@ -21,19 +22,13 @@ abstract public class EnemyShell extends Human
 	protected boolean checkedPlayerLast = true;
 	protected Bitmap [] myImage;
 	protected int imageIndex;
-	protected double danger[][] = new double[4][30];
-	private double levelX[] = new double[30];
-	private double levelY[] = new double[30];
-	private double levelXForward[] = new double[30];
-	private double levelYForward[] = new double[30];
-	protected int levelCurrentPosition = 0;
-	protected int pathedToHitLength = 0;
+	protected int inDanger = 0;
+	protected double[] closestDanger = new double[2];
 	protected boolean HasLocation = false;
 	protected boolean LOS = false;
 	protected double distanceFound;
 	private int dangerCheckCounter;
 	protected boolean keyHolder = false;
-	private double pathedToHit[] = new double[30];
 	protected int radius = 20;
 	protected double pXVelocity=0;
 	protected double pYVelocity=0;
@@ -53,10 +48,6 @@ abstract public class EnemyShell extends Human
 	{
 		super(X, Y, 0, 0, true, false, creator.imageLibrary.enemyImages[ImageIndex][0]);
 		control = creator;
-		danger[0] = levelX;
-		danger[1] = levelY;
-		danger[2] = levelXForward;
-		danger[3] = levelYForward;
 		x = X;
 		y = Y;
 		width = 30;
@@ -67,18 +58,6 @@ abstract public class EnemyShell extends Human
 		imageIndex = ImageIndex;
 		myImage = creator.imageLibrary.enemyImages[ImageIndex];
 		image = myImage[frame];
-	}
-	/**
-	 * clears desired array
-	 * @param array array to clear
-	 * @param length length of array to clear
-	 */
-	protected void clearArray(double[] array, int length)
-	{
-		for(int i = 0; i < length; i++)
-		{
-			array[i] = -11111;
-		}
 	}
 	/**
 	 * Clears danger arrays, sets current dimensions, and counts timers
@@ -101,6 +80,7 @@ abstract public class EnemyShell extends Human
 			}
 		}
 		image = myImage[frame];
+		rollTimer --;
 		hadLOSLastTime--;
 		if(sick)
 		{
@@ -113,11 +93,6 @@ abstract public class EnemyShell extends Human
 		pYSpot = control.player.y;
 		hp += 4;
 		super.frameCall();
-		clearArray(levelX, 30);
-		clearArray(levelY, 30);
-		clearArray(levelXForward, 30);
-		clearArray(levelYForward, 30);
-		clearArray(pathedToHit, 30);
 		sizeImage();
 		pushOtherPeople();
 	}
@@ -271,22 +246,30 @@ abstract public class EnemyShell extends Human
 	 * Checks whether any Proj_Trackers are headed for object
 	 */
 	protected void checkDanger()
-	{           
-		dangerCheckCounter = 0;
-		while(dangerCheckCounter < levelCurrentPosition)
+	{   
+		inDanger = 0;
+		for(int i = 0; i < control.spriteController.proj_TrackerP_AOEs.size(); i++)
 		{
-			distanceFound = checkDistance(danger[0][dangerCheckCounter], danger[1][dangerCheckCounter], x, y);
-			distanceFound = checkDistance((int) Math.abs(danger[0][dangerCheckCounter] + (danger[2][dangerCheckCounter] / 10 * distanceFound)), (int) Math.abs(danger[1][dangerCheckCounter] + (danger[3][dangerCheckCounter] / 10 * distanceFound)), x, y);
-			if(distanceFound < 20)
+			Proj_Tracker_AOE_Player AOE = control.spriteController.proj_TrackerP_AOEs.get(i);
+			if(AOE.timeToDeath>7 && Math.pow(x-AOE.x, 2)+Math.pow(y-AOE.y, 2)<Math.pow(AOE.widthDone+25, 2))
 			{
-				if(!control.wallController.checkObstructionsPoint((float)danger[0][dangerCheckCounter], (float)danger[1][dangerCheckCounter], (float)x, (float)y, false, fromWall))
-				{
-					pathedToHit[pathedToHitLength] = dangerCheckCounter;
-					pathedToHitLength++;         
-				}
+				closestDanger[0]+=AOE.x;
+				closestDanger[1]+=AOE.y;
+				inDanger++;
 			}
-			dangerCheckCounter++;
 		}
+		for(int i = 0; i < control.spriteController.proj_TrackerPs.size(); i++)
+		{
+			Proj_Tracker_Player shot = control.spriteController.proj_TrackerPs.get(i);
+			if(shot.goodTarget(this, 100))
+			{
+				closestDanger[0]+=shot.x*2;
+				closestDanger[1]+=shot.y*2;
+				inDanger+=2;
+			}
+		}
+		closestDanger[0]/=inDanger;
+		closestDanger[1]/=inDanger;
 	}
 	/**
 	 * Checks distance between two points
@@ -304,20 +287,6 @@ abstract public class EnemyShell extends Human
 	{
 		action ="Stun";
 		stunTimer=time;
-	}
-	/**
-	 * sets a certain index in danger arrays
-	 * @param i index to set
-	 * @param levelX x position of danger
-	 * @param levelY y position of danger
-	 * @param levelXForward x velocity of danger
-	 * @param levelYForward y velocity of danger
-	 */
-	protected void setLevels(int i, double levelX, double levelY, double levelXForward, double levelYForward) {
-		this.levelX[i] = levelX;
-		this.levelY[i] = levelY;
-		this.levelXForward[i] = levelXForward;
-		this.levelYForward[i] = levelYForward;
 	}
 	protected void baseHp(int setHP)
 	{

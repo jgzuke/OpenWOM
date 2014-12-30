@@ -27,13 +27,14 @@ public final class Enemy_Sheild extends Enemy
 	{
 		//				 move	  roll	  stun	 melee		sheild	  hide	 shoot
 		int[] e = {0, 0};
-		int[][] temp = {{0, 19}, e, e, {20, 45}, {46, 55}, e, e};
+		int[][] temp = {{0, 19}, e, e, {20, 45, 27, 36}, {46, 55}, e, e};
 		return temp;
 	}
 	protected void frameNoLOS()
 	{
-		if(pathedToHitLength>1 && checkDistance(danger[0][0], danger[1][0], x, y)<100)
+		if(inDanger>0)
 		{
+			turnToward(closestDanger[0], closestDanger[1]);
 			action = "Sheild";
 			frame=frames[4][0];
 		} else
@@ -50,20 +51,25 @@ public final class Enemy_Sheild extends Enemy
 		{
 			action = "Melee";
 			frame=frames[3][0];
+		} else if(inDanger>1)
+		{
+			turnToward(closestDanger[0], closestDanger[1]);
+			action = "Sheild";
+			frame=frames[4][0];
 		} else if(hp<800)
 		{
-				runAway();
+			runAway();
 		} else
 		{
-			runTowardsPoint(control.player.x, control.player.y);
+			runTowards(control.player.x, control.player.y);
 		}
 	}
 	@Override
 	protected void attacking()
 	{
-		for(int i = 0; i < frames[4].length; i++)
+		for(int i = 2; i < frames[3].length; i++)
 		{
-			if(frame==frames[4][i])
+			if(frame==frames[3][i])
 			{
 				meleeAttack(200, 25, 20);
 			}

@@ -47,8 +47,10 @@ public final class SpriteController extends SpriteDrawer
 	private Controller control;
 	protected ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	protected ArrayList<Structure> structures = new ArrayList<Structure>();
-	protected ArrayList<Proj_Tracker> proj_Trackers = new ArrayList<Proj_Tracker>();
-	protected ArrayList<Proj_Tracker_AOE> proj_Tracker_AOEs = new ArrayList<Proj_Tracker_AOE>();
+	protected ArrayList<Proj_Tracker_Enemy> proj_TrackerEs = new ArrayList<Proj_Tracker_Enemy>();
+	protected ArrayList<Proj_Tracker_Player> proj_TrackerPs = new ArrayList<Proj_Tracker_Player>();
+	protected ArrayList<Proj_Tracker_AOE_Player> proj_TrackerP_AOEs = new ArrayList<Proj_Tracker_AOE_Player>();
+	protected ArrayList<Proj_Tracker_AOE_Enemy> proj_TrackerE_AOEs = new ArrayList<Proj_Tracker_AOE_Enemy>();
 	protected Bitmap playerBlessing;
 	/**
 	 * Initializes all undecided variables, loads level, creates player and enemy objects, and starts frameCaller
@@ -66,8 +68,10 @@ public final class SpriteController extends SpriteDrawer
 		control.levelController.saveEnemyInformation.clear();
 		enemies.clear();
 		structures.clear();
-		proj_Trackers.clear();
-		proj_Tracker_AOEs.clear();
+		proj_TrackerEs.clear();
+		proj_TrackerPs.clear();
+		proj_TrackerP_AOEs.clear();
+		proj_TrackerE_AOEs.clear();
 	}
 	/**
 	 * creates an enemy based off of saved info
@@ -100,31 +104,59 @@ public final class SpriteController extends SpriteDrawer
 	 */
 	protected void frameCall()
 	{
-		for(int i = 0; i < proj_Trackers.size(); i++)
+		for(int i = 0; i < proj_TrackerEs.size(); i++)
 		{
-			if(proj_Trackers.get(i) != null)
+			if(proj_TrackerEs.get(i) != null)
 			{
-				if(proj_Trackers.get(i).deleted)
+				if(proj_TrackerEs.get(i).deleted)
 				{
-					proj_Trackers.remove(i);
+					proj_TrackerEs.remove(i);
 				}
 				else
 				{
-					proj_Trackers.get(i).frameCall();
+					proj_TrackerEs.get(i).frameCall();
 				}
 			}
 		}
-		for(int i = 0; i < proj_Tracker_AOEs.size(); i++)
+		for(int i = 0; i < proj_TrackerPs.size(); i++)
 		{
-			if(proj_Tracker_AOEs.get(i) != null)
+			if(proj_TrackerPs.get(i) != null)
 			{
-				if(proj_Tracker_AOEs.get(i).deleted)
+				if(proj_TrackerPs.get(i).deleted)
 				{
-					proj_Tracker_AOEs.remove(i);
+					proj_TrackerPs.remove(i);
 				}
 				else
 				{
-					proj_Tracker_AOEs.get(i).frameCall();
+					proj_TrackerPs.get(i).frameCall();
+				}
+			}
+		}
+		for(int i = 0; i < proj_TrackerE_AOEs.size(); i++)
+		{
+			if(proj_TrackerE_AOEs.get(i) != null)
+			{
+				if(proj_TrackerE_AOEs.get(i).deleted)
+				{
+					proj_TrackerE_AOEs.remove(i);
+				}
+				else
+				{
+					proj_TrackerE_AOEs.get(i).frameCall();
+				}
+			}
+		}
+		for(int i = 0; i < proj_TrackerP_AOEs.size(); i++)
+		{
+			if(proj_TrackerP_AOEs.get(i) != null)
+			{
+				if(proj_TrackerP_AOEs.get(i).deleted)
+				{
+					proj_TrackerP_AOEs.remove(i);
+				}
+				else
+				{
+					proj_TrackerP_AOEs.get(i).frameCall();
 				}
 			}
 		}
@@ -138,8 +170,6 @@ public final class SpriteController extends SpriteDrawer
 				}
 				else
 				{
-					enemies.get(i).levelCurrentPosition = 0;
-					enemies.get(i).pathedToHitLength = 0;
 					if(true)//control.enemyInView(enemies.get(i).x, enemies.get(i).y))
 					{
 						enemies.get(i).frameCall();
@@ -232,23 +262,42 @@ public final class SpriteController extends SpriteDrawer
 				draw(enemies.get(i), g, paint);
 			}
 		}
-		for(int i = 0; i < proj_Trackers.size(); i++)
+		for(int i = 0; i < proj_TrackerPs.size(); i++)
 		{
-			if(proj_Trackers.get(i) != null)
+			if(proj_TrackerPs.get(i) != null)
 			{
-				draw(proj_Trackers.get(i), g, paint);
+				draw(proj_TrackerPs.get(i), g, paint);
 			}
 		}
-		for(int i = 0; i < proj_Tracker_AOEs.size(); i++)
+		for(int i = 0; i < proj_TrackerEs.size(); i++)
 		{
-			if(proj_Tracker_AOEs.get(i) != null)
+			if(proj_TrackerEs.get(i) != null)
 			{
-				aoeRect.top = (int)(proj_Tracker_AOEs.get(i).y - (proj_Tracker_AOEs.get(i).getHeight() / 2.5));
-				aoeRect.bottom = (int)(proj_Tracker_AOEs.get(i).y + (proj_Tracker_AOEs.get(i).getHeight() / 2.5));
-				aoeRect.left = (int)(proj_Tracker_AOEs.get(i).x - (proj_Tracker_AOEs.get(i).getWidth() / 2.5));
-				aoeRect.right = (int)(proj_Tracker_AOEs.get(i).x + (proj_Tracker_AOEs.get(i).getWidth() / 2.5));
-				paint.setAlpha(proj_Tracker_AOEs.get(i).getAlpha());
-				drawRect(proj_Tracker_AOEs.get(i).image, aoeRect, g, paint);
+				draw(proj_TrackerEs.get(i), g, paint);
+			}
+		}
+		for(int i = 0; i < proj_TrackerE_AOEs.size(); i++)
+		{
+			if(proj_TrackerE_AOEs.get(i) != null)
+			{
+				aoeRect.top = (int)(proj_TrackerE_AOEs.get(i).y - (proj_TrackerE_AOEs.get(i).getHeight() / 2.5));
+				aoeRect.bottom = (int)(proj_TrackerE_AOEs.get(i).y + (proj_TrackerE_AOEs.get(i).getHeight() / 2.5));
+				aoeRect.left = (int)(proj_TrackerE_AOEs.get(i).x - (proj_TrackerE_AOEs.get(i).getWidth() / 2.5));
+				aoeRect.right = (int)(proj_TrackerE_AOEs.get(i).x + (proj_TrackerE_AOEs.get(i).getWidth() / 2.5));
+				paint.setAlpha(proj_TrackerE_AOEs.get(i).getAlpha());
+				drawRect(proj_TrackerE_AOEs.get(i).image, aoeRect, g, paint);
+			}
+		}
+		for(int i = 0; i < proj_TrackerP_AOEs.size(); i++)
+		{
+			if(proj_TrackerP_AOEs.get(i) != null)
+			{
+				aoeRect.top = (int)(proj_TrackerP_AOEs.get(i).y - (proj_TrackerP_AOEs.get(i).getHeight() / 2.5));
+				aoeRect.bottom = (int)(proj_TrackerP_AOEs.get(i).y + (proj_TrackerP_AOEs.get(i).getHeight() / 2.5));
+				aoeRect.left = (int)(proj_TrackerP_AOEs.get(i).x - (proj_TrackerP_AOEs.get(i).getWidth() / 2.5));
+				aoeRect.right = (int)(proj_TrackerP_AOEs.get(i).x + (proj_TrackerP_AOEs.get(i).getWidth() / 2.5));
+				paint.setAlpha(proj_TrackerP_AOEs.get(i).getAlpha());
+				drawRect(proj_TrackerP_AOEs.get(i).image, aoeRect, g, paint);
 			}
 		}
 		paint.setAlpha(255);
@@ -264,7 +313,7 @@ public final class SpriteController extends SpriteDrawer
 	 */
 	protected void createProj_TrackerEnemy(double rotation, double xVel, double yVel, int power, double x, double y)
 	{
-		proj_Trackers.add(new Proj_Tracker_Enemy(control, (int) (x+xVel*2), (int) (y+yVel*2), power, xVel, yVel, rotation));
+		proj_TrackerEs.add(new Proj_Tracker_Enemy(control, (int) (x+xVel*2), (int) (y+yVel*2), power, xVel, yVel, rotation));
 	}
 	/**
 	 * creates a player power ball
@@ -277,8 +326,7 @@ public final class SpriteController extends SpriteDrawer
 	 */
 	protected void createProj_TrackerPlayer(double rotation, double Vel, int power, double x, double y)
 	{
-		Log.e("mine", "sadgsadg");
-		proj_Trackers.add(new Proj_Tracker_Player(control, (int)x, (int)y, power, Vel, rotation, this));
+		proj_TrackerPs.add(new Proj_Tracker_Player(control, (int)x, (int)y, power, Vel, rotation, this));
 	}
 	/**
 	 * creates an emeny AOE explosion
@@ -289,9 +337,8 @@ public final class SpriteController extends SpriteDrawer
 	 */
 	protected void createProj_TrackerEnemyAOE(double x, double y, double power, boolean damaging)
 	{
-		Log.e("mine", "sadgsadg");
-		proj_Tracker_AOEs.add(new Proj_Tracker_AOE_Enemy(control, (int) x, (int) y, power, true, this));
-		if(!damaging) proj_Tracker_AOEs.get(proj_Tracker_AOEs.size()-1).damaging = false;
+		proj_TrackerE_AOEs.add(new Proj_Tracker_AOE_Enemy(control, (int) x, (int) y, power, true, this));
+		if(!damaging) proj_TrackerE_AOEs.get(proj_TrackerE_AOEs.size()-1).damaging = false;
 	}
 	/**
 	 * creates a player AOE explosion
@@ -301,8 +348,8 @@ public final class SpriteController extends SpriteDrawer
 	 */
 	protected void createProj_TrackerPlayerAOE(double x, double y, double power, boolean damaging)
 	{
-		proj_Tracker_AOEs.add(new Proj_Tracker_AOE_Player(control, (int) x, (int) y, power, true, this));
-		if(!damaging) proj_Tracker_AOEs.get(proj_Tracker_AOEs.size()-1).damaging = false;
+		proj_TrackerP_AOEs.add(new Proj_Tracker_AOE_Player(control, (int) x, (int) y, power, true, this));
+		if(!damaging) proj_TrackerP_AOEs.get(proj_TrackerP_AOEs.size()-1).damaging = false;
 	}
 	/**
 	 * creates an enemy burst
@@ -312,7 +359,7 @@ public final class SpriteController extends SpriteDrawer
 	 */
 	protected void createProj_TrackerEnemyBurst(double x, double y, double power)
 	{
-		proj_Tracker_AOEs.add(new Proj_Tracker_AOE_Enemy(control, (int) x, (int) y, power, false, this));
+		proj_TrackerE_AOEs.add(new Proj_Tracker_AOE_Enemy(control, (int) x, (int) y, power, false, this));
 	}
 	/**
 	 * creates a player burst
@@ -322,7 +369,7 @@ public final class SpriteController extends SpriteDrawer
 	 */
 	protected void createProj_TrackerPlayerBurst(double x, double y, double power)
 	{
-		proj_Tracker_AOEs.add(new Proj_Tracker_AOE_Player(control, (int) x, (int) y, power, false, this));
+		proj_TrackerP_AOEs.add(new Proj_Tracker_AOE_Player(control, (int) x, (int) y, power, false, this));
 	}
 	@Override
 	protected boolean onScreen(double x, double y, int width, int height) {

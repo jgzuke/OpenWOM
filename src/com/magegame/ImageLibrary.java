@@ -38,7 +38,7 @@ public final class ImageLibrary extends ImageLoader
 	protected void loadPlayerImage()
 	{
 		player_Image = loadArray1D(32, "human_playerzack", 35, 40);
-		isPlayerWidth = 40;
+		isPlayerWidth = 30;
 		isPlayer = loadImage("icon_isplayer", 2*isPlayerWidth, 2*isPlayerWidth);
 	}
 	/**
@@ -59,7 +59,6 @@ public final class ImageLibrary extends ImageLoader
 		shotEnemy = loadArray1D(5, "shootenemy", 35, 15);
 		shotAOEPlayer = loadImage("shootplayeraoe", 80, 80);
 		shotPlayer = loadArray1D(5, "shootplayer", 35, 15);
-		isPlayer = loadImage("icon_isplayer", 40, 40);
 		backDrop = loadImage("leveltile1", 100, 100);
 	}
 	/**

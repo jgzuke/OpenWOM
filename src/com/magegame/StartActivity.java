@@ -11,6 +11,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -117,11 +118,13 @@ public class StartActivity extends Activity
 		setSaveData();
 		write();
 		control.soundController.stopMusic();
+		Log.e("mine", "onPau");
 		control.paused = true;
 	}
 	@ Override
 	public void onStop()
 	{
+		Log.e("mine", "onStop");
 		control.paused = true;
 		super.onStop();
 	}

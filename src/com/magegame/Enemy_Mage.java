@@ -43,9 +43,15 @@ public final class Enemy_Mage extends Enemy
 	}
 	protected void frameNoLOS()
 	{
-		if(pathedToHitLength>1 && checkDistance(danger[0][0], danger[1][0], x, y)<100)
+		if(inDanger>0)
 		{
-			rollSideways();
+			if(rollTimer<0)
+			{
+				rollSideways(closestDanger[0], closestDanger[1]);
+			} else
+			{
+				runSideways(closestDanger[0], closestDanger[1]);
+			}
 		} else
 		{
 			searchOrWander();
@@ -56,10 +62,10 @@ public final class Enemy_Mage extends Enemy
 		distanceFound = checkDistance(x, y, control.player.x,  control.player.y);
 		if(distanceFound<60)		// MAGES ALWAYS MOVING, DONT STOP TO SHOOT
 		{
-			rollAway();
-		} else if(pathedToHitLength>1 && checkDistance(danger[0][0], danger[1][0], x, y)<100)
+			rollAway(control.player.x, control.player.y);
+		} else if(inDanger>0)
 		{
-			rollSideways();
+			rollSideways(closestDanger[0], closestDanger[1]);
 		} else if(hp<400 && distanceFound < 140)
 		{
 			runAway();

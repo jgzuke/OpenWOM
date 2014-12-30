@@ -107,7 +107,7 @@ abstract public class Enemy extends EnemyShell
 			}
 		} else if(action.equals("Move")||action.equals("Wander"))
 		{
-			if(pathedToHitLength > 0 || LOS)
+			if(inDanger > 0 || LOS)
 			{
 				 action = "Nothing";
 				 frame = 0;
@@ -197,11 +197,15 @@ abstract public class Enemy extends EnemyShell
 	 */
 	protected void roll()
 	{
-		frame = frames[1][0];
-		action = "Roll";
-		rotation = rads * r2d;
-		xMove = Math.cos(rads) * 8;
-		yMove = Math.sin(rads) * 8;
+		if(rollTimer<0)
+		{
+			rollTimer = 20;
+			frame = frames[1][0];
+			action = "Roll";
+			rotation = rads * r2d;
+			xMove = Math.cos(rads) * 8;
+			yMove = Math.sin(rads) * 8;
+		}
 	}
 	/**
 	 * rolls sideways for 11 frames
@@ -248,10 +252,9 @@ abstract public class Enemy extends EnemyShell
 	/**
 	 * rolls sideways for 11 frames
 	 */
-	protected void rollSideways()
+	protected void rollSideways(double oX, double oY)
 	{
-		rads = Math.atan2((control.player.y - y), (control.player.x - x));
-		rotation = rads * r2d;
+		turnToward(oX, oY);
 		boolean right = !checkObstructions(x, y, (rotation + 90) / r2d, 42, true, fromWall);
 		boolean left = !checkObstructions(x, y, (rotation - 90) / r2d, 42, true, fromWall);
 		if(left||right)
@@ -267,14 +270,45 @@ abstract public class Enemy extends EnemyShell
 			roll();
 		} else
 		{
-			rollAway();
+			rollAway(oX, oY);
 		}
+	}
+	/**
+	 * rolls sideways for 11 frames
+	 */
+	protected void runSideways(double oX, double oY)
+	{
+		turnToward(oX, oY);
+		boolean right = !checkObstructions(x, y, (rotation + 90) / r2d, 30, true, fromWall);
+		boolean left = !checkObstructions(x, y, (rotation - 90) / r2d, 30, true, fromWall);
+		if(left||right)
+		{
+			if(left) rotation -= 90;
+			if(right) rotation += 90;
+			if(left && right)
+			{
+				rotation -= 90;
+				if(Math.random() > 0.5) rotation += 180;
+			}
+			rads = rotation / r2d;
+			run(4);
+		} else
+		{
+			runAway();
+		}
+	}
+	protected void turnAround()
+	{
+		rotation += 180;
+		rads = rotation / r2d;
 	}
 	/**
 	 * Rolls away from player
 	 */
-	protected void rollAway()
+	protected void rollAway(double oX, double oY)
 	{
+		turnToward(oX, oY);
+		turnAround();
 		rads = Math.atan2(-(control.player.y - y), -(control.player.x - x));
 		rotation = rads * r2d;
 		if(!checkObstructions(x, y, rads, 42, true, fromWall))
@@ -310,9 +344,9 @@ abstract public class Enemy extends EnemyShell
 	/**
 	 * rolls towards player for 11 frames
 	 */
-	protected void rollTowards()
+	protected void rollTowards(double oX, double oY)
 	{
-		rads = Math.atan2((control.player.y - y), (control.player.x - x));
+		turnToward(oX, oY);
 		roll();
 	}
 	/**
@@ -338,7 +372,7 @@ abstract public class Enemy extends EnemyShell
 	/**
 	 * Runs towards player, if you cant, run randomly
 	 */
-	protected void runTowardsPoint(double fx, double fy)
+	protected void runTowards(double fx, double fy)
 	{
 		if(checkObstructionsPoint((int)fx, (int)fy, (int)x, (int)y, true, fromWall))
 		{
@@ -509,7 +543,7 @@ abstract public class Enemy extends EnemyShell
 			checkLOS((int)lastPlayerX, (int)lastPlayerY);
 			if(LOS)
 			{
-				runTowardsPoint(lastPlayerX, lastPlayerY);
+				runTowards(lastPlayerX, lastPlayerY);
 				action = "Move";
 			} else
 			{

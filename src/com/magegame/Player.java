@@ -46,7 +46,7 @@ public final class Player extends Human
 	private double stunChance = 1;		// change to actully get stunned
 	private int shotHold = 91;			// max shots stored
 	protected double chargeCooldown = 1;// how much doing damage charges cooldowns
-	protected double tracking = 6;		// how much tracking can turn fireballs
+	protected double tracking = 1;		// how much tracking can turn fireballs
 	public Player(Controller creator)
 	{
 		super(0, 0, 0, 0, true, false, null);
@@ -94,7 +94,7 @@ public final class Player extends Human
 		stunChance = 1 - (double)(items.helm + items.shirt)/20;		// change to actully get stunned
 		shotHold = 91 + (items.staff*5);							// max shots stored
 		chargeCooldown = 1+(level*0.1);								// how much doing damage charges cooldowns
-		tracking = 4 + (items.staff/2);								// how much tracking can turn fireballs
+		tracking = 2 + (items.staff/2);								// how much tracking can turn fireballs
 		switch(blessing)
 		{
 			case 1:
@@ -206,13 +206,10 @@ public final class Player extends Human
 	 */
 	protected void releaseProj_Tracker()
 	{
-		Log.e("mine", "sdg");
 		if(abilityTimer_Proj_Tracker > 30)
 		{
-			Log.e("mine", "dsfh");
 			if(rollTimer < 1)
 			{
-				Log.e("mine", "ljh");
 				control.spriteController.createProj_TrackerPlayer(rads*r2d, 10, shotDmg, x, y);
 				abilityTimer_Proj_Tracker -= 30;
 				control.soundController.playEffect("shoot");

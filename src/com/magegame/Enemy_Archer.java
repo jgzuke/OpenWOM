@@ -63,7 +63,7 @@ public final class Enemy_Archer extends Enemy
 				frame=frames[6][0];
 			} else
 			{
-				runTowardsPoint(control.player.x, control.player.y);
+				runTowards(control.player.x, control.player.y);
 			}
 		}
 	}

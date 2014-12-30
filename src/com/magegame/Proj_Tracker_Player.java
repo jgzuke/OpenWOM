@@ -83,27 +83,19 @@ public final class Proj_Tracker_Player extends Proj_Tracker
 			{
 				if(spriteController.enemies.get(i) != null && !deleted)
 				{
-					if(goodTarget(spriteController.enemies.get(i))) target = spriteController.enemies.get(i);
+					if(goodTarget(spriteController.enemies.get(i), 200)) target = spriteController.enemies.get(i);
 				}
 			}
 			for(int i = 0; i < spriteController.structures.size(); i++)
 			{
 				if(spriteController.structures.get(i) != null && !deleted)
 				{
-					if(goodTarget(spriteController.structures.get(i))) target = spriteController.structures.get(i);
+					if(goodTarget(spriteController.structures.get(i), 200)) target = spriteController.structures.get(i);
 				}
 			}
 		}
-		for(int i = 0; i < spriteController.enemies.size(); i++)
-		{
-			if(spriteController.enemies.get(i) != null && !deleted && spriteController.enemies.get(i).action.equals("Nothing"))
-			{
-				spriteController.enemies.get(i).setLevels(spriteController.enemies.get(i).levelCurrentPosition, x, y, xForward, yForward);
-				spriteController.enemies.get(i).levelCurrentPosition++;
-			}
-		}
 	}
-	private boolean goodTarget(Sprite s)
+	protected boolean goodTarget(Sprite s, int d)
 	{
 		xDif = s.x-x;
 		yDif = s.y-y;
@@ -111,7 +103,7 @@ public final class Proj_Tracker_Player extends Proj_Tracker
 		double newRotation = Math.atan2(yDif, xDif) * r2d;
 		double needToTurn = Math.abs(rotation-newRotation);
 		if(needToTurn>180) needToTurn = 360-needToTurn;
-		return needToTurn<20&&distance<200;
+		return needToTurn<20&&distance<d;
 	}
 	public double compareRot(double newRotation)
 	{
