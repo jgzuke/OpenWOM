@@ -97,11 +97,12 @@ public final class LevelController
 		{
 			if(!enemies.get(i).deleted)
 			{
-				int[] enemy = new int[4];
+				int[] enemy = new int[5];
 				enemy[0] = enemies.get(i).enemyType;
 				enemy[1] = (int) enemies.get(i).x;
 				enemy[2] = (int) enemies.get(i).y;
-				enemy[3] = enemies.get(i).hp;
+				enemy[3] = (int) enemies.get(i).rotation;
+				enemy[4] = enemies.get(i).hp;
 				newSave.add(enemy);
 			}
 		}
@@ -137,9 +138,9 @@ public final class LevelController
 		switch(toLoad)
 		{
 		case 1:
-			control.spriteController.makeEnemy(0, 269, 86); //type, x, y
-			control.spriteController.makeEnemy(1, 358, 140);
-			control.spriteController.makeEnemy(2, 458, 140);
+			control.spriteController.makeEnemy(0, 269, 86, 0); //type, x, y
+			control.spriteController.makeEnemy(1, 358, 140, 0);
+			control.spriteController.makeEnemy(2, 458, 140, 0);
 			break;
 		}
 	}

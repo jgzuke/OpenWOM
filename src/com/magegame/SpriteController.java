@@ -80,13 +80,13 @@ public final class SpriteController extends SpriteDrawer
 	 */
 	void createEnemy(int[] info)
 	{
-		makeEnemy(info[0], info[1], info[2]);
-		if(info[3] != 0) // if enemy has set health change it, otherwise leave as starting health
+		makeEnemy(info[0], info[1], info[2], info[3]);
+		if(info[4] != 0) // if enemy has set health change it, otherwise leave as starting health
 		{
-			enemies.get(enemies.size()-1).hp = info[3];
+			enemies.get(enemies.size()-1).hp = info[4];
 		}
 	}
-	protected void makeEnemy(int type, int x, int y)
+	protected void makeEnemy(int type, int x, int y, int rotation)
 	{
 		if(type==0)
 		{
