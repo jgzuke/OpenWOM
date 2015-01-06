@@ -35,10 +35,12 @@
 package com.magegame;
 import java.util.ArrayList;
 import java.util.List;
+
+import android.util.Log;
 public final class LevelController
 {
 	private Controller control;
-	protected int levelNum = 1;
+	protected int levelNum = -1;
 	protected int levelWidth = 300;
 	protected int levelHeight = 300;
 	protected ArrayList<ArrayList<int[]>> saveEnemyInformation = new ArrayList<ArrayList<int[]>>();
@@ -51,6 +53,48 @@ public final class LevelController
 		control = Control;
 	}
 	/**
+	 * changes the level when you reach a portal type thing
+	 */
+	protected void checkChangeLevel()
+	{
+		switch(levelNum)
+		{
+		case 1:
+			if(inBounds(0, 442, 26, 110))
+			{
+				loadLevel(2);
+			}
+			if(inBounds(644, 902, 31, 33))
+			{
+				loadLevel(3);
+				control.player.x = 237;
+				control.player.y = 74;
+			}
+			break;
+		case 2:
+			if(inBounds(0, 442, 26, 110))
+			{
+				loadLevel(2);
+			}
+			break;
+		case 3:
+			if(inBounds(222, 35, 31, 33))
+			{
+				loadLevel(1);
+				control.player.x = 659;
+				control.player.y = 895;
+			}
+			break;
+		}
+	}
+	/**
+	 * checks whether player is in bounds of rectangle
+	 */
+	protected boolean inBounds(int x, int y, int w, int h)
+	{
+		return (control.player.x>x && control.player.x<x+w&&control.player.y>y && control.player.y<y+h);
+	}
+	/**
 	 * loads a new level, creates walls enemies etc.
 	 */
 	protected void loadLevel(int toLoad)
@@ -58,15 +102,12 @@ public final class LevelController
 		saveEnemies(levelNum);
 		endFightSection();
 		levelNum = toLoad;
-		makeEnemies(toLoad);
-		if(toLoad==1)
+		switch(levelNum)
 		{
+		case 1:
 			//LEVEL
 			levelWidth = 1000; // height of level
 			levelHeight = 1000; // width of level
-			//PLAYER
-			control.player.x = 30; // player start x
-			control.player.y = 30; // control.player start y
 			//ENEMIES
 			control.imageLibrary.loadEnemy(55, "goblin_swordsman", 110, 70, 0); // length, name,width, height, index
 			control.imageLibrary.loadEnemy(49, "goblin_archer", 80, 50, 1);
@@ -83,17 +124,18 @@ public final class LevelController
 			control.wallController.makeWall_Rectangle(217, -15, 109, 81, true, false);
 			control.wallController.makeWall_Rectangle(179, -32, 38, 63, true, true);
 			control.wallController.makeWall_Rectangle(318, -41, 66, 63, true, true);*/
+			break;
+			
+			
 		}
+		makeEnemies(levelNum);
 		control.imageLibrary.loadLevel(toLoad, levelWidth, levelHeight);
 	}
 	protected void saveEnemies(int levelToSave)
 	{
-		//protected ArrayList<ArrayList<int[]>> saveEnemyInformation = new ArrayList<ArrayList<int[]>>();
-		//protected List<Integer> savedInformationLevels = new ArrayList<>();
-		
 		ArrayList<int[]> newSave = new ArrayList<int[]>();
 		ArrayList<Enemy> enemies = control.spriteController.enemies;
-		for(int i = 0; i < saveEnemyInformation.size(); i++)
+		for(int i = 0; i < enemies.size(); i++)
 		{
 			if(!enemies.get(i).deleted)
 			{
@@ -108,39 +150,46 @@ public final class LevelController
 		}
 		saveEnemyInformation.add(newSave);
 		savedInformationLevels.add(levelToSave);
+		Log.e("mine", Integer.toString(saveEnemyInformation.size()));
+		Log.e("mine", Integer.toString(savedInformationLevels.size()));
 	}
 	protected void makeEnemies(int toLoad)
 	{
 		boolean haveSavedEnemies = false;
 		int saveIndex = 0;
-		for(int i = 0; i < savedInformationLevels.size(); i++)
+		for(int i = 0; i < saveEnemyInformation.size(); i++)
 		{
 			if(savedInformationLevels.get(i)==toLoad)
 			{
 				haveSavedEnemies = true;
-				saveIndex = i;
+				for(int j = 0; j < saveEnemyInformation.get(i).size(); j++)
+				{
+					control.spriteController.createEnemy(saveEnemyInformation.get(saveIndex).get(i)); // CREATES SAVED ENEMIES
+				}
+				Log.e("mine", Integer.toString(i));
 				break;
 			}
 		}
-		if(haveSavedEnemies)
-		{
-			for(int i = 0; i < saveEnemyInformation.get(saveIndex).size(); i++)
-			{
-				control.spriteController.createEnemy(saveEnemyInformation.get(saveIndex).get(i)); // CREATES SAVED ENEMIES
-			}
-		} else
+		if(!haveSavedEnemies)
 		{
 			makeNewEnemies(toLoad);
 		}
 	}
 	protected void makeNewEnemies(int toLoad)
 	{
+		SpriteController spriteController = control.spriteController;
 		switch(toLoad)
 		{
 		case 1:
-			control.spriteController.makeEnemy(0, 269, 86, 0); //type, x, y
-			control.spriteController.makeEnemy(1, 358, 140, 0);
-			control.spriteController.makeEnemy(2, 458, 140, 0);
+			spriteController.makeEnemy(0, 604, 877, -120);
+			spriteController.makeEnemy(1, 778, 718, 180);
+			spriteController.makeEnemy(2, 830, 751, -165);
+			spriteController.makeEnemy(0, 707, 823, -135);
+			spriteController.makeEnemy(1, 824, 817, 180);
+			spriteController.makeEnemy(0, 922, 229, 120);
+			spriteController.makeEnemy(0, 817, 53, 150);
+			spriteController.makeEnemy(0, 940, 81, 150);
+			spriteController.makeEnemy(2, 723, 871, -165);
 			break;
 		}
 	}

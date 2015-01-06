@@ -177,7 +177,7 @@ abstract public class Enemy extends EnemyShell
 	protected void aimAheadOfPlayer(double projectileVelocity)
 	{
 			double timeToHit = (checkDistance(x, y, control.player.x, control.player.y))/projectileVelocity;
-			timeToHit *= (control.getRandomDouble()*0.7)+0.4;
+			timeToHit *= (control.getRandomDouble()*0.7)+0.6;
 			double newPX = control.player.x+(pXVelocity*timeToHit);
 			double newPY = control.player.y+(pYVelocity*timeToHit);
 			double xDif = newPX-x;

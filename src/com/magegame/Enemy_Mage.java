@@ -66,15 +66,18 @@ public final class Enemy_Mage extends Enemy
 		} else if(inDanger>0)
 		{
 			rollSideways();
-		} else if(hp<400 && distanceFound < 140)
+		} else if(distanceFound<100)
 		{
 			runAway();
-		} else
+		} else if(distanceFound < 160)
 		{
 			runAround(120, (int)distanceFound);
+		} else
+		{
+			runTowards();
 		}
 		
-		if(shoot>3&&energy>14)
+		if(shoot>3&&energy>14&& distanceFound < 160)
 		{
 			shoot();
 		}

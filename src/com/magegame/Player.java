@@ -51,6 +51,8 @@ public final class Player extends Human
 	{
 		super(0, 0, 0, 0, true, false, null);
 		control = creator;
+		x = 30;
+		y = 30;
 	}
 	/**
 	 * resets all variables to the start of a match or round

@@ -15,6 +15,8 @@ public final class Proj_Tracker_Enemy extends Proj_Tracker
 	 * @param Rotation bolts direction of travel
 	 */
 	private double r2d = 180/Math.PI;
+	private double lastx = 0;
+	private double lasty = 0;
 	public Proj_Tracker_Enemy(Controller creator, int X, int Y, int Power, double Xforward, double Yforward, double Rotation)
 	{
 		super(X, Y, Rotation, creator.imageLibrary.shotEnemy[0]);
@@ -49,8 +51,18 @@ public final class Proj_Tracker_Enemy extends Proj_Tracker
 	protected void frameCall()
 	{
 		super.frameCall();
-		xDif = control.player.x-x;
-		yDif = control.player.y-y;
+		double vX = 0;
+		double vY = 0;
+		if(lastx != 0)
+		{
+			vX = control.player.x - lastx;
+			vY = control.player.y - lasty;
+		}
+		lastx = control.player.x;
+		lasty = control.player.y;
+		double time = Math.sqrt(Math.pow(control.player.x-x, 2)+(Math.pow(control.player.y-y, 2)))/7;
+		xDif = (control.player.x+time*vX)-x;
+		yDif = (control.player.y+time*vY)-y;
 		double newRotation = Math.atan2(yDif, xDif) * r2d;
 		double rotChange = 2;
 		double fix = compareRot(newRotation/r2d);
