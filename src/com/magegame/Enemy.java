@@ -133,14 +133,18 @@ abstract public class Enemy extends EnemyShell
 			}
 		}
 	}
+	protected void runAway()
+	{
+		runAway(control.player.x, control.player.y);
+	}
 	/**
 	 * Rotates to run away from player 
 	 */
-	protected void runAway()
+	protected void runAway(double px, double py)
 	{
-		rads = Math.atan2(-(control.player.y - y), -(control.player.x - x));
+		rads = Math.atan2(-(py - y), -(px - x));
 		rotation = rads * r2d;
-		int distance = (int)checkDistance(x, y, control.player.x,  control.player.y);
+		int distance = (int)checkDistance(x, y, px,  py);
 		if(checkObstructions(x, y, rads, distance, true, fromWall))
 		{
 			int runPathChooseCounter = 0;
@@ -207,6 +211,15 @@ abstract public class Enemy extends EnemyShell
 			yMove = Math.sin(rads) * 8;
 		}
 	}
+	protected void turnToward()
+	{
+		turnToward(control.player.x, control.player.y);
+	}
+	protected void turnToward(double px, double py)
+	{
+		rads = Math.atan2((py - y), (px - x));
+		rotation = rads * r2d;
+	}
 	/**
 	 * rolls sideways for 11 frames
 	 */
@@ -249,12 +262,17 @@ abstract public class Enemy extends EnemyShell
 			runAway();
 		}
 	}
+	protected void rollSideways()
+	{
+		rollSideways(control.player.x, control.player.y);
+	}
 	/**
 	 * rolls sideways for 11 frames
 	 */
 	protected void rollSideways(double oX, double oY)
 	{
 		turnToward(oX, oY);
+		turnAround();
 		boolean right = !checkObstructions(x, y, (rotation + 90) / r2d, 42, true, fromWall);
 		boolean left = !checkObstructions(x, y, (rotation - 90) / r2d, 42, true, fromWall);
 		if(left||right)
@@ -267,11 +285,12 @@ abstract public class Enemy extends EnemyShell
 				if(Math.random() > 0.5) rotation += 180;
 			}
 			rads = rotation / r2d;
-			roll();
-		} else
-		{
-			rollAway(oX, oY);
 		}
+		roll();
+	}
+	protected void runSideways()
+	{
+		runSideways(control.player.x, control.player.y);
 	}
 	/**
 	 * rolls sideways for 11 frames
@@ -279,6 +298,7 @@ abstract public class Enemy extends EnemyShell
 	protected void runSideways(double oX, double oY)
 	{
 		turnToward(oX, oY);
+		turnAround();
 		boolean right = !checkObstructions(x, y, (rotation + 90) / r2d, 30, true, fromWall);
 		boolean left = !checkObstructions(x, y, (rotation - 90) / r2d, 30, true, fromWall);
 		if(left||right)
@@ -291,16 +311,17 @@ abstract public class Enemy extends EnemyShell
 				if(Math.random() > 0.5) rotation += 180;
 			}
 			rads = rotation / r2d;
-			run(4);
-		} else
-		{
-			runAway();
 		}
+		run(4);
 	}
 	protected void turnAround()
 	{
 		rotation += 180;
 		rads = rotation / r2d;
+	}
+	protected void rollAway()
+	{
+		rollAway(control.player.x, control.player.y);
 	}
 	/**
 	 * Rolls away from player
@@ -341,6 +362,10 @@ abstract public class Enemy extends EnemyShell
 			}
 		}
 	}
+	protected void rollTowards()
+	{
+		rollTowards(control.player.x, control.player.y);
+	}
 	/**
 	 * rolls towards player for 11 frames
 	 */
@@ -368,6 +393,10 @@ abstract public class Enemy extends EnemyShell
 		{
 			control.soundController.playEffect("swordmiss");
 		}
+	}
+	protected void runTowards()
+	{
+		runTowards(control.player.x, control.player.y);
 	}
 	/**
 	 * Runs towards player, if you cant, run randomly

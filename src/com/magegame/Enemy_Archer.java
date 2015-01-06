@@ -36,35 +36,18 @@ public final class Enemy_Archer extends Enemy
 	}
 	protected void frameLOS()
 	{
-		rads = Math.atan2(( control.player.y - y), (control.player.x - x));
-		rotation = rads * r2d;
-		distanceFound = checkDistance(x, y, control.player.x,  control.player.y);
-		if(hp<600)
+		distanceFound = distanceToPlayer();
+		if(distanceFound < 50 || hp<600 && distanceFound<100)
 		{
-			if(distanceFound < 140)
-			{
-				if(distanceFound<100)
-				{
-					runAway();
-				} else
-				{
-					action = "Shoot";
-					frame=frames[6][0];
-				}
-			}
+			runAway();
+		} else if(distanceFound<140)
+		{
+			turnToward();
+			action = "Shoot";
+			frame=frames[6][0];
 		} else
 		{
-			if(distanceFound < 50)
-			{
-				runAway();
-			} else if(distanceFound < 140)
-			{
-				action = "Shoot";
-				frame=frames[6][0];
-			} else
-			{
-				runTowards(control.player.x, control.player.y);
-			}
+			runTowards();
 		}
 	}
 	@Override

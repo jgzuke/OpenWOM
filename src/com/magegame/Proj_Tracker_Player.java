@@ -139,7 +139,7 @@ public final class Proj_Tracker_Player extends Proj_Tracker
 	{
 		for(int i = 0; i < spriteController.enemies.size(); i++)
 		{
-			if(spriteController.enemies.get(i) != null && !deleted && !spriteController.enemies.get(i).action.equals("Roll"))
+			if(spriteController.enemies.get(i) != null && !deleted)
 			{
 				xDif = x - spriteController.enemies.get(i).x;
 				yDif = y - spriteController.enemies.get(i).y;

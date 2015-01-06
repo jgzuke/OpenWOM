@@ -146,13 +146,6 @@ abstract public class EnemyShell extends Human
 			}
 		}
 	}
-	protected void turnToward(double nx, double ny)
-	{
-		LOS=true;
-		hadLOSLastTime = 5;
-		//rads = Math.atan2((ny - y), (nx - x));
-		//rotation = rads*r2d;
-	}
 	/**
 	 * Takes a sent amount of damage, modifies based on shields etc.
 	 * if health below 0 kills enemy
@@ -160,9 +153,9 @@ abstract public class EnemyShell extends Human
 	 */
 	protected void getHit(double damage)
 	{
-		turnToward(control.player.x, control.player.y);
 		if(!deleted)
 		{
+			getPlayerLocation();
 			if(action.equals("Hide")) action = "Nothing";
 			damage /= 1.2;
 			super.getHit(damage);
@@ -225,14 +218,34 @@ abstract public class EnemyShell extends Human
 		HasLocation = hadLOSLastTime>0;
 		if(HasLocation)	//tell others where player is
 		{
-			for(int i = 0; i < control.spriteController.enemies.size(); i++)
+			callPlayerLocation();
+		}
+	}
+	/**
+	 * tells other enemies where player is
+	 */
+	protected void callPlayerLocation()
+	{
+		for(int i = 0; i < control.spriteController.enemies.size(); i++)
+		{
+			Enemy enemy = control.spriteController.enemies.get(i);
+			if(!enemy.HasLocation&&checkDistance(x, y, enemy.x, enemy.y)<200)
 			{
-				Enemy enemy = control.spriteController.enemies.get(i);
-				if(!enemy.HasLocation&&checkDistance(x, y, enemy.x, enemy.y)<200)
-				{
-					enemy.turnToward(px, py);
-				}
+				enemy.getPlayerLocation();
 			}
+		}
+	}
+	/**
+	 * hears where player is
+	 */
+	protected void getPlayerLocation()
+	{
+		lastPlayerX = control.player.x;
+		lastPlayerY = control.player.y;
+		if(!LOS)
+		{
+			rads = Math.atan2((control.player.y - y), (control.player.x - x));
+			rotation = rads * r2d;
 		}
 	}
 	/**
@@ -248,6 +261,8 @@ abstract public class EnemyShell extends Human
 	protected void checkDanger()
 	{   
 		inDanger = 0;
+		closestDanger[0] = 0;
+		closestDanger[1] = 0;
 		for(int i = 0; i < control.spriteController.proj_TrackerP_AOEs.size(); i++)
 		{
 			Proj_Tracker_AOE_Player AOE = control.spriteController.proj_TrackerP_AOEs.get(i);
@@ -261,7 +276,7 @@ abstract public class EnemyShell extends Human
 		for(int i = 0; i < control.spriteController.proj_TrackerPs.size(); i++)
 		{
 			Proj_Tracker_Player shot = control.spriteController.proj_TrackerPs.get(i);
-			if(shot.goodTarget(this, 100))
+			if(shot.goodTarget(this, 60))
 			{
 				closestDanger[0]+=shot.x*2;
 				closestDanger[1]+=shot.y*2;
@@ -270,6 +285,14 @@ abstract public class EnemyShell extends Human
 		}
 		closestDanger[0]/=inDanger;
 		closestDanger[1]/=inDanger;
+	}
+	/**
+	 * Checks distance to player
+	 * @return Returns distance
+	 */
+	protected double distanceToPlayer()
+	{
+		return checkDistance(x, y, control.player.x, control.player.y);
 	}
 	/**
 	 * Checks distance between two points

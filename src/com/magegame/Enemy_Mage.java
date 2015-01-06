@@ -47,10 +47,10 @@ public final class Enemy_Mage extends Enemy
 		{
 			if(rollTimer<0)
 			{
-				rollSideways(closestDanger[0], closestDanger[1]);
+				rollSideways();
 			} else
 			{
-				runSideways(closestDanger[0], closestDanger[1]);
+				runSideways();
 			}
 		} else
 		{
@@ -59,13 +59,13 @@ public final class Enemy_Mage extends Enemy
 	}
 	protected void frameLOS()
 	{
-		distanceFound = checkDistance(x, y, control.player.x,  control.player.y);
+		distanceFound = distanceToPlayer();
 		if(distanceFound<60)		// MAGES ALWAYS MOVING, DONT STOP TO SHOOT
 		{
-			rollAway(control.player.x, control.player.y);
+			rollAway();
 		} else if(inDanger>0)
 		{
-			rollSideways(closestDanger[0], closestDanger[1]);
+			rollSideways();
 		} else if(hp<400 && distanceFound < 140)
 		{
 			runAway();
@@ -73,11 +73,11 @@ public final class Enemy_Mage extends Enemy
 		{
 			runAround(120, (int)distanceFound);
 		}
+		
 		if(shoot>3&&energy>14)
 		{
 			shoot();
 		}
-		rotation = rads * r2d;
 	}
 	@Override
 	protected void attacking() {}

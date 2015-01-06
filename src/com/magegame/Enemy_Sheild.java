@@ -34,7 +34,7 @@ public final class Enemy_Sheild extends Enemy
 	{
 		if(inDanger>0)
 		{
-			turnToward(closestDanger[0], closestDanger[1]);
+			//turnToward(closestDanger[0], closestDanger[1]);
 			action = "Sheild";
 			frame=frames[4][0];
 		} else
@@ -44,16 +44,15 @@ public final class Enemy_Sheild extends Enemy
 	}
 	protected void frameLOS()
 	{
-		rads = Math.atan2(( control.player.y - y), (control.player.x - x));
-		rotation = rads * r2d;
-		distanceFound = checkDistance(x, y, control.player.x,  control.player.y);
+		distanceFound = distanceToPlayer();
 		if(distanceFound < 30)
 		{
+			turnToward();
 			action = "Melee";
 			frame=frames[3][0];
 		} else if(inDanger>1)
 		{
-			turnToward(closestDanger[0], closestDanger[1]);
+			turnToward();
 			action = "Sheild";
 			frame=frames[4][0];
 		} else if(hp<800)
@@ -61,7 +60,7 @@ public final class Enemy_Sheild extends Enemy
 			runAway();
 		} else
 		{
-			runTowards(control.player.x, control.player.y);
+			runTowards();
 		}
 	}
 	@Override
