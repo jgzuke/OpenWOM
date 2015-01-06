@@ -98,12 +98,13 @@ public final class Enemy_Mage extends Enemy
 		shoot-=4;
 		energy -= 15;
 		int v = 10;		//projectile velocity
-		double saveRads = rads;
+		double saveRads = rotation/r2d;
 		aimAheadOfPlayer(v*2);	// aim closer to player
 		rads+=0.1;
 		rads-=control.getRandomDouble()*0.2;	// add random factor to shot
 		control.spriteController.createProj_TrackerEnemy(rads * r2d, Math.cos(rads) * v, Math.sin(rads) * v, 130, x, y);
 		control.soundController.playEffect("arrowrelease");
 		rads = saveRads;
+		rotation = rads*r2d;
 	}
 }

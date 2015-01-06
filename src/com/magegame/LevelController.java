@@ -34,13 +34,15 @@
  */
 package com.magegame;
 import java.util.ArrayList;
+import java.util.List;
 public final class LevelController
 {
 	private Controller control;
 	protected int levelNum = 1;
 	protected int levelWidth = 300;
 	protected int levelHeight = 300;
-	protected ArrayList<int[]> saveEnemyInformation = new ArrayList<int[]>();
+	protected ArrayList<ArrayList<int[]>> saveEnemyInformation = new ArrayList<ArrayList<int[]>>();
+	protected List<Integer> savedInformationLevels = new ArrayList<>();
 	/** 
 	 * Initializes all undecided variables, loads level, creates player and enemy objects, and starts frameCaller
 	 */
@@ -53,8 +55,10 @@ public final class LevelController
 	 */
 	protected void loadLevel(int toLoad)
 	{
+		saveEnemies(levelNum);
 		endFightSection();
 		levelNum = toLoad;
+		makeEnemies(toLoad);
 		if(toLoad==1)
 		{
 			//LEVEL
@@ -67,9 +71,6 @@ public final class LevelController
 			control.imageLibrary.loadEnemy(55, "goblin_swordsman", 110, 70, 0); // length, name,width, height, index
 			control.imageLibrary.loadEnemy(49, "goblin_archer", 80, 50, 1);
 			control.imageLibrary.loadEnemy(31, "goblin_mage", 30, 34, 2);
-			control.spriteController.makeEnemy(0, 269, 86); //type, x, y
-			control.spriteController.makeEnemy(1, 358, 140);
-			control.spriteController.makeEnemy(2, 458, 140);
 			//WALLS
 			/*control.wallController.makeWall_Rectangle(78, 122, 41, 24, true, false);
 			control.wallController.makeWall_Rectangle(63, -20, 31, 142, true, true);
@@ -85,70 +86,61 @@ public final class LevelController
 		}
 		control.imageLibrary.loadLevel(toLoad, levelWidth, levelHeight);
 	}
-	/**
-	 * loads a new section of the current level
-	 * @param level id of new section to load
-	 */
-	protected void loadLevelSection(int level)
+	protected void saveEnemies(int levelToSave)
 	{
-		control.wallController.clearWallArrays();
-		levelNum = level;			 // READS IN AND CREATES ENEMIES IN NEW SECTION, SAVES ENEMIES IN OLD SECTION
-		ArrayList<int[]> tempSave = (ArrayList<int[]>)saveEnemyInformation.clone();
-		int j = 0;
+		//protected ArrayList<ArrayList<int[]>> saveEnemyInformation = new ArrayList<ArrayList<int[]>>();
+		//protected List<Integer> savedInformationLevels = new ArrayList<>();
+		
+		ArrayList<int[]> newSave = new ArrayList<int[]>();
+		ArrayList<Enemy> enemies = control.spriteController.enemies;
 		for(int i = 0; i < saveEnemyInformation.size(); i++)
 		{
-			ArrayList<Enemy> enemies = control.spriteController.enemies;
 			if(!enemies.get(i).deleted)
 			{
-				saveEnemyInformation.get(j)[0] = enemies.get(i).enemyType;
-				saveEnemyInformation.get(j)[1] = (int) enemies.get(i).x;
-				saveEnemyInformation.get(j)[2] = (int) enemies.get(i).y;
-				saveEnemyInformation.get(j)[3] = enemies.get(i).hp;
-				j++;
+				int[] enemy = new int[4];
+				enemy[0] = enemies.get(i).enemyType;
+				enemy[1] = (int) enemies.get(i).x;
+				enemy[2] = (int) enemies.get(i).y;
+				enemy[3] = enemies.get(i).hp;
+				newSave.add(enemy);
 			}
 		}
-		endFightSection(tempSave);
-		if(levelNum == 21)
-		{
-			//LEVEL
-			levelWidth = 450; // height of level
-			levelHeight = 300; // width of level
-			//PLAYER
-			control.player.x = 30; // control.player start x
-			control.player.y = 30; // player start y
-			//ENEMIES
-			control.imageLibrary.loadEnemy(95, "human_enemy", 100, 70, 1); // length, name,width, height, index
-			control.spriteController.makeEnemy(1, 269, 86); //type, x, y
-			control.spriteController.makeEnemy(1, 358, 140);
-			control.spriteController.makeEnemy(1, 365, 204);
-			control.spriteController.makeEnemy(2, 146, 61);
-			control.spriteController.makeEnemy(2, 327, 231);
-			//WALLS
-			control.wallController.makeWall_Rectangle(78, 122, 41, 24, true, false);
-			control.wallController.makeWall_Rectangle(63, -20, 31, 142, true, true);
-			control.wallController.makeWall_Rectangle(73, 238, 47, 62, true, true);
-			control.wallController.makeWall_Rectangle(94, -19, 25, 152, true, false);
-			control.wallController.makeWall_Rectangle(252, 269, 234, 62, true, true);
-			control.wallController.makeWall_Rectangle(412, 82, 74, 250, true, true);
-			control.wallController.makeWall_Rectangle(382, 133, 30, 83, true, false);
-			control.wallController.makeWall_Circle(330, 297, 47, 1, false);
-			control.wallController.makeWall_Rectangle(217, -15, 109, 81, true, false);
-			control.wallController.makeWall_Rectangle(179, -32, 38, 63, true, true);
-			control.wallController.makeWall_Rectangle(318, -41, 66, 63, true, true);
-		}
-		control.imageLibrary.loadLevel(levelNum, levelWidth, levelHeight);
+		saveEnemyInformation.add(newSave);
+		savedInformationLevels.add(levelToSave);
 	}
-	/**
-	 * end a section of a fight, stored enemies in current states
-	 * @param enemyData enemies to create
-	 * @param tempEnemies number of enemies to create
-	 */
-	private void endFightSection(ArrayList<int[]> enemyData)
+	protected void makeEnemies(int toLoad)
 	{
-		endFightSection();
-		for(int i = 0; i < enemyData.size(); i++)
+		boolean haveSavedEnemies = false;
+		int saveIndex = 0;
+		for(int i = 0; i < savedInformationLevels.size(); i++)
 		{
-			control.spriteController.createEnemy(enemyData.get(i)); // CREATES SAVED ENEMIES
+			if(savedInformationLevels.get(i)==toLoad)
+			{
+				haveSavedEnemies = true;
+				saveIndex = i;
+				break;
+			}
+		}
+		if(haveSavedEnemies)
+		{
+			for(int i = 0; i < saveEnemyInformation.get(saveIndex).size(); i++)
+			{
+				control.spriteController.createEnemy(saveEnemyInformation.get(saveIndex).get(i)); // CREATES SAVED ENEMIES
+			}
+		} else
+		{
+			makeNewEnemies(toLoad);
+		}
+	}
+	protected void makeNewEnemies(int toLoad)
+	{
+		switch(toLoad)
+		{
+		case 1:
+			control.spriteController.makeEnemy(0, 269, 86); //type, x, y
+			control.spriteController.makeEnemy(1, 358, 140);
+			control.spriteController.makeEnemy(2, 458, 140);
+			break;
 		}
 	}
 	/**
