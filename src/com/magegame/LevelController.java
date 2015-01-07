@@ -35,15 +35,13 @@
 package com.magegame;
 import java.util.ArrayList;
 import java.util.List;
-
-import android.util.Log;
 public final class LevelController
 {
 	private Controller control;
 	protected int levelNum = -1;
 	protected int levelWidth = 300;
 	protected int levelHeight = 300;
-	protected ArrayList<ArrayList<int[]>> saveEnemyInformation = new ArrayList<ArrayList<int[]>>();
+	protected List<ArrayList<int[]>> saveEnemyInformation = new ArrayList<ArrayList<int[]>>();
 	protected List<Integer> savedInformationLevels = new ArrayList<>();
 	/** 
 	 * Initializes all undecided variables, loads level, creates player and enemy objects, and starts frameCaller
@@ -99,15 +97,23 @@ public final class LevelController
 	 */
 	protected void loadLevel(int toLoad)
 	{
-		saveEnemies(levelNum);
-		endFightSection();
+		if(levelNum != -1)
+		{
+			saveEnemies(levelNum);
+			endFightSection();
+		}
 		levelNum = toLoad;
+		control.imageLibrary.recycleEnemies();
 		switch(levelNum)
 		{
 		case 1:
 			//LEVEL
 			levelWidth = 1000; // height of level
 			levelHeight = 1000; // width of level
+			if(control.graphicsController != null)
+			{
+				control.graphicsController.playScreenSize = 450;
+			}
 			//ENEMIES
 			control.imageLibrary.loadEnemy(55, "goblin_swordsman", 110, 70, 0); // length, name,width, height, index
 			control.imageLibrary.loadEnemy(49, "goblin_archer", 80, 50, 1);
@@ -125,7 +131,28 @@ public final class LevelController
 			control.wallController.makeWall_Rectangle(179, -32, 38, 63, true, true);
 			control.wallController.makeWall_Rectangle(318, -41, 66, 63, true, true);*/
 			break;
-			
+		case 3:
+			//LEVEL
+			levelWidth = 350; // height of level
+			levelHeight = 300; // width of level
+			control.graphicsController.playScreenSize = 300;
+			//ENEMIES
+			control.imageLibrary.loadEnemy(55, "goblin_swordsman", 110, 70, 0); // length, name,width, height, index
+			control.imageLibrary.loadEnemy(49, "goblin_archer", 80, 50, 1);
+			control.imageLibrary.loadEnemy(31, "goblin_mage", 30, 34, 2);
+			//WALLS
+			/*control.wallController.makeWall_Rectangle(78, 122, 41, 24, true, false);
+			control.wallController.makeWall_Rectangle(63, -20, 31, 142, true, true);
+			control.wallController.makeWall_Rectangle(73, 238, 47, 62, true, true);
+			control.wallController.makeWall_Rectangle(94, -19, 25, 152, true, false);
+			control.wallController.makeWall_Rectangle(252, 269, 234, 62, true, true);
+			control.wallController.makeWall_Rectangle(412, 82, 74, 250, true, true);
+			control.wallController.makeWall_Rectangle(382, 133, 30, 83, true, false);
+			control.wallController.makeWall_Circle(330, 297, 47, 1, false);
+			control.wallController.makeWall_Rectangle(217, -15, 109, 81, true, false);
+			control.wallController.makeWall_Rectangle(179, -32, 38, 63, true, true);
+			control.wallController.makeWall_Rectangle(318, -41, 66, 63, true, true);*/
+			break;
 			
 		}
 		makeEnemies(levelNum);
@@ -148,25 +175,29 @@ public final class LevelController
 				newSave.add(enemy);
 			}
 		}
+		for(int i = 0; i < savedInformationLevels.size(); i++) // if feild already saved delete old data
+		{
+			if(savedInformationLevels.get(i)==levelToSave)
+			{
+				saveEnemyInformation.remove(i);
+				savedInformationLevels.remove(i);
+			}
+		}
 		saveEnemyInformation.add(newSave);
 		savedInformationLevels.add(levelToSave);
-		Log.e("mine", Integer.toString(saveEnemyInformation.size()));
-		Log.e("mine", Integer.toString(savedInformationLevels.size()));
 	}
 	protected void makeEnemies(int toLoad)
 	{
 		boolean haveSavedEnemies = false;
-		int saveIndex = 0;
-		for(int i = 0; i < saveEnemyInformation.size(); i++)
+		for(int i = 0; i < savedInformationLevels.size(); i++)
 		{
 			if(savedInformationLevels.get(i)==toLoad)
 			{
 				haveSavedEnemies = true;
 				for(int j = 0; j < saveEnemyInformation.get(i).size(); j++)
 				{
-					control.spriteController.createEnemy(saveEnemyInformation.get(saveIndex).get(i)); // CREATES SAVED ENEMIES
+					control.spriteController.createEnemy(saveEnemyInformation.get(i).get(j)); // CREATES SAVED ENEMIES
 				}
-				Log.e("mine", Integer.toString(i));
 				break;
 			}
 		}

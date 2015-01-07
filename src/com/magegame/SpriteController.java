@@ -65,7 +65,6 @@ public final class SpriteController extends SpriteDrawer
 	 */
 	void clearObjectArrays()
 	{
-		control.levelController.saveEnemyInformation.clear();
 		enemies.clear();
 		structures.clear();
 		proj_TrackerEs.clear();

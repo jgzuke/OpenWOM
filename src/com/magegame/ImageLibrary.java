@@ -83,9 +83,26 @@ public final class ImageLibrary extends ImageLoader
 		{
 			backDrop.recycle();
 		}
+		switch(levelNum)
+		{
+		case 1:
+			backDrop = loadImage("leveltile1", 100, 100);
+			break;
+			
+		default:
+			backDrop = loadImage("leveltile1", 100, 100);
+			break;
+		}
 		backDrop = loadImage("leveltile1", 100, 100);
 		currentLevel = loadImage("level"+Integer.toString(levelNum), width, height);
 		currentLevelTop = loadImage("leveltop"+Integer.toString(levelNum), width, height);
+	}
+	protected void recycleEnemies()
+	{
+		for(int i = 0; i < enemyImages.length; i++)
+		{
+			recycleArray(enemyImages[i]);
+		}
 	}
 	/**
 	 * recycles images to save memory
@@ -103,5 +120,6 @@ public final class ImageLibrary extends ImageLoader
 			currentLevelTop = null;
 		}
 		recycleArray(player_Image);
+		recycleEnemies();
 	}
 }

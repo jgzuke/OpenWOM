@@ -33,7 +33,6 @@
  * @param frameCaller Calls objects and controllers frameCalls
  */
 package com.magegame;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -44,17 +43,11 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Rect;
-import android.graphics.Typeface;
-import android.os.Handler;
 import android.view.View;
-
-import java.util.ArrayList;
-import java.util.Random;
-
 import com.spritelib.Sprite;
 public final class GraphicsController extends View
 {
-	private int playScreenSize = 400;
+	protected int playScreenSize = 450;
 	protected int screenMinX;
 	protected int screenMinY;
 	protected int curXShift;
@@ -69,11 +62,8 @@ public final class GraphicsController extends View
 	protected Sprite shootStick;
 	protected int playerHit=0;
 	protected int playerBursted = 0;
-	private Typeface magicMedieval; 
-	private Controller control;
 	private ImageLibrary imageLibrary;
 	private SpriteController spriteController;
-	private WallController wallController;
 	private LevelController levelController;
 	private Player player;
 	private Context context;
@@ -83,10 +73,8 @@ public final class GraphicsController extends View
 	public GraphicsController(Controller c, ImageLibrary i, SpriteController s, WallController w, LevelController l, Player p, Context co, double [] dims)
 	{
 		super(co);
-		control = c;
 		imageLibrary = i;
 		spriteController = s;
-		wallController = w;
 		levelController = l;
 		player = p;
 		context = co;
@@ -108,7 +96,8 @@ public final class GraphicsController extends View
 	protected void frameCall()
 	{
 		playerHit++;
-		playerBursted++;invalidate();
+		playerBursted++;
+		invalidate();
 	}
 	/**
 	 * fixes hp bar so it is on screen

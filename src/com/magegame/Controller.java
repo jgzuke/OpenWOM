@@ -122,6 +122,7 @@ public final class Controller
 		spriteController.frameCall();
 		player.frameCall();
 		wallController.frameCall();
+		levelController.checkChangeLevel();
 	}
 	/**
 	 * returns random integer between 0 and i-1
