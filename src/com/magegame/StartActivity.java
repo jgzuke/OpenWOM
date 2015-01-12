@@ -119,7 +119,7 @@ public class StartActivity extends Activity
 		write();
 		control.soundController.stopMusic();
 		Log.e("mine", "onPau");
-		control.paused = true;
+		//control.paused = true;
 	}
 	@ Override
 	public void onStop()

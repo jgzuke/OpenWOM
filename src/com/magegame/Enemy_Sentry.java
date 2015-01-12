@@ -26,17 +26,16 @@ public final class Enemy_Sentry extends Enemy
 	{
 		//				 move	  roll	  stun	 melee		sheild	  hide	 shoot
 		int[] e = {0, 0};
-		int[][] temp = {{0, 19}, e, e, e, e, e, {20, 49}};
+		int[][] temp = {e, e, e, e, e, e, {20, 49}};
 		return temp;
 	}
 	protected void frameNoLOS()
 	{
-		searchOrWander();
 	}
 	protected void frameLOS()
 	{
 		distanceFound = distanceToPlayer();
-		if(distanceFound<240)
+		if(distanceFound<240 )
 		{
 			turnToward();
 			action = "Shoot";
@@ -66,9 +65,5 @@ public final class Enemy_Sentry extends Enemy
 	@Override
 	protected void finishWandering()
 	{
-		if(control.getRandomInt(20) != 0) // we probably just keep wandering
-		{
-			runRandom();
-		}
 	}
 }

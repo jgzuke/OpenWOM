@@ -88,7 +88,7 @@ public final class Controller
 		
 		imageLibrary.loadAllImages();
 		player = new Player(this); // creates player object
-		levelController.loadLevel(1);
+		levelController.loadLevel(2);
 		
 		player.resetVariables();
 		detect = new PlayerGestureDetector(this); // creates gesture detector object
