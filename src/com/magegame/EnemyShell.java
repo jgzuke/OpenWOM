@@ -44,7 +44,7 @@ abstract public class EnemyShell extends Human
 	 * sets danger arrays, speed and control object
 	 * @param creator control object
 	 */
-	public EnemyShell(Controller creator, double X, double Y, int HP, int ImageIndex)
+	public EnemyShell(Controller creator, double X, double Y, double R, int HP, int ImageIndex)
 	{
 		super(X, Y, 0, 0, true, false, creator.imageLibrary.enemyImages[ImageIndex][0]);
 		control = creator;
@@ -56,6 +56,7 @@ abstract public class EnemyShell extends Human
 		lastPlayerY = y;
 		action = "Nothing";
 		imageIndex = ImageIndex;
+		enemyType = ImageIndex;
 		myImage = creator.imageLibrary.enemyImages[ImageIndex];
 		image = myImage[frame];
 	}

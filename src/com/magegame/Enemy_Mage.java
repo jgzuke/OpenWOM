@@ -8,10 +8,9 @@ public final class Enemy_Mage extends Enemy
 {
 	int shoot = 4;
 	int energy = 90;
-	public Enemy_Mage(Controller creator, double X, double Y, int HP, int ImageIndex)
+	public Enemy_Mage(Controller creator, double X, double Y, double R, int HP, int ImageIndex)
 	{
-		super(creator, X, Y, HP, ImageIndex);
-		enemyType = 0;
+		super(creator, X, Y, R, HP, ImageIndex);
 		speedCur = 3.5;
 		frame=0;
 		baseHp(HP);

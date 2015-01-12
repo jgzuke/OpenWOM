@@ -29,9 +29,9 @@ abstract public class Enemy extends EnemyShell
 	 * sets danger arrays, speed and control object
 	 * @param creator control object
 	 */
-	public Enemy(Controller creator, double X, double Y, int HP, int ImageIndex)
+	public Enemy(Controller creator, double X, double Y, double R, int HP, int ImageIndex)
 	{
-		super(creator, X, Y, HP, ImageIndex);
+		super(creator, X, Y, R, HP, ImageIndex);
 	}
 	@ Override
 	protected void otherActions()

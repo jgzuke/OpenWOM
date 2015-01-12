@@ -6,10 +6,9 @@ package com.magegame;
 
 public final class Enemy_Sheild extends Enemy
 {
-	public Enemy_Sheild(Controller creator, double X, double Y, int HP, int ImageIndex)
+	public Enemy_Sheild(Controller creator, double X, double Y, double R, int HP, int ImageIndex)
 	{
-		super(creator, X, Y, HP, ImageIndex);
-		enemyType = 0;
+		super(creator, X, Y, R, HP, ImageIndex);
 		speedCur = 3.8;
 		frame=0;
 		baseHp(HP);
@@ -34,7 +33,7 @@ public final class Enemy_Sheild extends Enemy
 	{
 		if(inDanger>0)
 		{
-			//turnToward(closestDanger[0], closestDanger[1]);
+			turnToward();
 			action = "Sheild";
 			frame=frames[4][0];
 		} else
@@ -55,9 +54,6 @@ public final class Enemy_Sheild extends Enemy
 			turnToward();
 			action = "Sheild";
 			frame=frames[4][0];
-		} else if(hp<800)
-		{
-			runAway();
 		} else
 		{
 			runTowards();

@@ -85,17 +85,23 @@ public final class SpriteController extends SpriteDrawer
 			enemies.get(enemies.size()-1).hp = info[4];
 		}
 	}
-	protected void makeEnemy(int type, int x, int y, int rotation)
+	protected void makeEnemy(int type, int x, int y, int r)
 	{
 		if(type==0)
 		{
-			enemies.add(new Enemy_Sheild(control, x, y, 2000, type)); //x, y, hp, sick, type is ImageIndex
+			enemies.add(new Enemy_Sheild(control, x, y, r, 2000, type)); //x, y, hp, sick, type is ImageIndex
 		} else if(type==1)
 		{
-			enemies.add(new Enemy_Archer(control, x, y, 1100, type));
+			enemies.add(new Enemy_Archer(control, x, y, r, 1100, type));
 		} else if(type==2)
 		{
-			enemies.add(new Enemy_Mage(control, x, y, 700, type));
+			enemies.add(new Enemy_Mage(control, x, y, r, 700, type));
+		} else if(type==3)
+		{
+			enemies.add(new Enemy_Sentry(control, x, y, r, 700, type));
+		} else if(type==4)
+		{
+			enemies.add(new Enemy_Rogue(control, x, y, r, 700, type));
 		}
 	}
 	/**
@@ -166,8 +172,7 @@ public final class SpriteController extends SpriteDrawer
 				if(enemies.get(i).deleted)
 				{
 					enemies.remove(i);
-				}
-				else
+				} else
 				{
 					if(true)//control.enemyInView(enemies.get(i).x, enemies.get(i).y))
 					{
