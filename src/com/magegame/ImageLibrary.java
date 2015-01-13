@@ -93,7 +93,6 @@ public final class ImageLibrary extends ImageLoader
 			backDrop = loadImage("leveltile2", 100, 100);
 			break;
 		}
-		backDrop = loadImage("leveltile1", 100, 100);
 		currentLevel = loadImage("level"+Integer.toString(levelNum), width, height);
 		currentLevelTop = loadImage("leveltop"+Integer.toString(levelNum), width, height);
 	}

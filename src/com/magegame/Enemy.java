@@ -84,8 +84,11 @@ abstract public class Enemy extends EnemyShell
 			}
 		} else if(action.equals("Hide"))
 		{
-			if(frame < frames[5][1]) frame++;
 			hiding();
+			if(frame < frames[5][1]-1)
+			{
+				frame++;
+			}
 		} else if(action.equals("Shoot"))
 		{
 			frame++;

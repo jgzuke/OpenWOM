@@ -89,6 +89,7 @@ public final class Enemy_Rogue extends Enemy
 	@Override
 	protected void hiding()
 	{
+		distanceFound = distanceToPlayer();
 		action = "Nothing";
 		if(distanceFound < 30)
 		{
@@ -98,12 +99,9 @@ public final class Enemy_Rogue extends Enemy
 		} else if(inDanger>1)
 		{
 			rollSideways();
-		} else if(distanceFound < 70)
-		{
-			rollTowards();
 		} else
 		{
-			action = "Hiding";
+			action = "Hide";
 		}
 	}
 	@Override
@@ -125,10 +123,12 @@ public final class Enemy_Rogue extends Enemy
 		if(op100 != -1)
 		{
 			rotation += op100*60;
+			rads = rotation/r2d;
 			run(4);
 		} else if(op200 != -1)
 		{
 			rotation += op200*60;
+			rads = rotation/r2d;
 			run(4);
 		} else
 		{

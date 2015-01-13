@@ -85,14 +85,11 @@ public final class Enemy_Sheild extends Enemy
 	@Override
 	protected void blocking()
 	{
-		if(frame<53 && frame> 50)
+		turnToward();
+		if(frame<55 && frame> 47)
 		{
 			checkDanger();
-			if(inDanger>0)
-			{
-				turnToward();
-				frame = 51;
-			}
+			if(inDanger>0) frame = 50;
 		}
 	}
 }

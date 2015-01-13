@@ -106,7 +106,7 @@ public final class LevelController
 			{
 				loadLevel(1);
 				control.player.x = 559;
-				control.player.y = 795;
+				control.player.y = 595;
 			}
 			break;
 		case 5:
@@ -169,6 +169,7 @@ public final class LevelController
 			//LEVEL
 			levelWidth = 800; // height of level
 			levelHeight = 800; // width of level
+			
 			if(control.graphicsController != null)
 			{
 				control.graphicsController.playScreenSize = 450;
@@ -216,6 +217,7 @@ public final class LevelController
 		case 2:
 			levelWidth = 800; // height of level
 			levelHeight = 800; // width of level
+			control.imageLibrary.loadEnemy(65, "goblin_rogue", 60, 40, 4); 
 			if(control.graphicsController != null)
 			{
 				control.graphicsController.playScreenSize = 650;
@@ -380,7 +382,10 @@ public final class LevelController
 			s.makeEnemy(3, 724, 617, 180);
 			s.makeEnemy(2, 623, 671, -165);
 			break;
-			
+		
+		case 2:
+			s.makeEnemy(4, 400, 400, 0);
+			break;
 			
 		case 3:
 			s.makeEnemy(3, 153, 96, 90);

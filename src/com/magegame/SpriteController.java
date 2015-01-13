@@ -177,6 +177,7 @@ public final class SpriteController extends SpriteDrawer
 				if(enemies.get(i).deleted)
 				{
 					enemies.remove(i);
+					i--;
 				} else
 				{
 					enemies.get(i).frameCall();

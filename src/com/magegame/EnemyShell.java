@@ -39,7 +39,7 @@ abstract public class EnemyShell extends Human
 	protected int enemyType;
 	protected int hadLOSLastTime=-1;
 	int [][] frames;
-	protected String action; //"Nothing", "Move", "Alert", "Shoot", "Melee", "Roll", "Hide", "Sheild", "Stun"
+	protected String action = "Nothing"; //"Nothing", "Move", "Alert", "Shoot", "Melee", "Roll", "Hide", "Sheild", "Stun"
 	/**
 	 * sets danger arrays, speed and control object
 	 * @param creator control object
@@ -54,7 +54,6 @@ abstract public class EnemyShell extends Human
 		height = 30;
 		lastPlayerX = x;
 		lastPlayerY = y;
-		action = "Nothing";
 		imageIndex = ImageIndex;
 		enemyType = ImageIndex;
 		myImage = creator.imageLibrary.enemyImages[ImageIndex];
@@ -275,7 +274,7 @@ abstract public class EnemyShell extends Human
 		for(int i = 0; i < control.spriteController.proj_TrackerPs.size(); i++)
 		{
 			Proj_Tracker_Player shot = control.spriteController.proj_TrackerPs.get(i);
-			if(shot.goodTarget(this, 60))
+			if(shot.goodTarget(this, 110))
 			{
 				closestDanger[0]+=shot.x*2;
 				closestDanger[1]+=shot.y*2;
