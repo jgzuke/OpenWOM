@@ -82,4 +82,6 @@ public final class Enemy_Rogue extends Enemy
 			runRandom();
 		}
 	}
+	@Override
+	protected void blocking() {}
 }

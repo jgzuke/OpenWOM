@@ -58,12 +58,12 @@ public final class Enemy_Sentry extends Enemy
 			control.spriteController.createProj_TrackerEnemy(rotation, Math.cos(rads) * v, Math.sin(rads) * v, 130, x, y);
 			control.soundController.playEffect("arrowrelease");
 			checkLOS();
-			double distance = checkDistance(x, y, control.player.x,  control.player.y);
+			double distance = distanceToPlayer();
 			if(LOS&&hp>600&&distance<160&&distance>50) frame=25; // shoots again
 		}
 	}
 	@Override
-	protected void finishWandering()
-	{
-	}
+	protected void finishWandering(){}
+	@Override
+	protected void blocking() {}
 }

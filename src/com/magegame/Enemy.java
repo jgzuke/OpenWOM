@@ -76,6 +76,7 @@ abstract public class Enemy extends EnemyShell
 		} else if(action.equals("Sheild"))
 		{
 			frame++;
+			blocking();
 			if(frame==frames[4][1])
 			{
 				action = "Nothing";	//block done
@@ -107,6 +108,8 @@ abstract public class Enemy extends EnemyShell
 			}
 		} else if(action.equals("Move")||action.equals("Wander"))
 		{
+			checkLOS();
+			checkDanger();
 			if(inDanger > 0 || LOS)
 			{
 				 action = "Nothing";

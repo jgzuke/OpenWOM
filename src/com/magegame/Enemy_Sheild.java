@@ -82,4 +82,20 @@ public final class Enemy_Sheild extends Enemy
 			runRandom();
 		}
 	}
+	@Override
+	protected void blocking()
+	{
+		if(frame<53 && frame> 50)
+		{
+			checkDanger();
+			if(inDanger>0)
+			{
+				turnToward();
+				playing = false;
+			} else
+			{
+				playing = true;
+			}
+		}
+	}
 }

@@ -109,4 +109,6 @@ public final class Enemy_Mage extends Enemy
 		rads = saveRads;
 		rotation = rads*r2d;
 	}
+	@Override
+	protected void blocking() {}
 }

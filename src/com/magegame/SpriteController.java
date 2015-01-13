@@ -179,16 +179,13 @@ public final class SpriteController extends SpriteDrawer
 					enemies.remove(i);
 				} else
 				{
-					if(true)//control.enemyInView(enemies.get(i).x, enemies.get(i).y))
+					enemies.get(i).frameCall();
+					if(enemies.get(i) != null)
 					{
-						enemies.get(i).frameCall();
-						if(enemies.get(i) != null)
-						{
-							if(enemies.get(i).x < 10) enemies.get(i).x = 10;
-							if(enemies.get(i).x > control.levelController.levelWidth - 10) enemies.get(i).x = (control.levelController.levelWidth - 10);
-							if(enemies.get(i).y < 10) enemies.get(i).y = 10;
-							if(enemies.get(i).y > control.levelController.levelHeight - 10) enemies.get(i).y = (control.levelController.levelHeight - 10);
-						}
+						if(enemies.get(i).x < 10) enemies.get(i).x = 10;
+						if(enemies.get(i).x > control.levelController.levelWidth - 10) enemies.get(i).x = (control.levelController.levelWidth - 10);
+						if(enemies.get(i).y < 10) enemies.get(i).y = 10;
+						if(enemies.get(i).y > control.levelController.levelHeight - 10) enemies.get(i).y = (control.levelController.levelHeight - 10);
 					}
 				}
 			}

@@ -61,8 +61,7 @@ public final class LevelController
 			if(inBounds(0, 342, 26, 110))
 			{
 				loadLevel(2);
-				control.player.x = 970;
-				control.player.y += 100;
+				control.player.x = 770;
 			}
 			if(inBounds(544, 702, 31, 33))
 			{
@@ -72,11 +71,10 @@ public final class LevelController
 			}
 			break;
 		case 2:
-			if(inBounds(974, 442, 1000, 110))
+			if(inBounds(774, 342, 26, 110))
 			{
 				loadLevel(1);
 				control.player.x = 30;
-				control.player.y -= 100;
 			}
 			if(inBounds(103, 80, 54, 31))
 			{

@@ -54,35 +54,19 @@ public final class Enemy_Cleric extends Enemy
 			}
 		} else
 		{
+			getTarget();
 			if(target == null)
 			{
-				for(int i = 0; i < control.spriteController.enemies.size(); i++)
-				{
-					Enemy enemy = control.spriteController.enemies.get(i);
-					if(enemy.hp < enemy.hpMax && distanceTo(enemy.x, enemy.y)<200 && checkLOS((int)enemy.x, (int)enemy.y))
-					{
-						target = enemy;
-						i = 999;
-					}
-				}
+				searchOrWander();
+			} else
+			{
+				healTarget();
 			}
-			searchOrWander();
 		}
 	}
 	protected void frameLOS()
 	{
-		if(target == null)
-		{
-			for(int i = 0; i < control.spriteController.enemies.size(); i++)
-			{
-				Enemy enemy = control.spriteController.enemies.get(i);
-				if(enemy.hp < enemy.hpMax && distanceTo(enemy.x, enemy.y)<200 && checkLOS((int)enemy.x, (int)enemy.y))
-				{
-					target = enemy;
-					i = 999;
-				}
-			}
-		}
+		getTarget();
 		distanceFound = distanceToPlayer();
 		if(distanceFound<80)		// MAGES ALWAYS MOVING, DONT STOP TO SHOOT
 		{
@@ -142,6 +126,21 @@ public final class Enemy_Cleric extends Enemy
 		rads = saveRads;
 		rotation = rads*r2d;
 	}
+	private void getTarget()
+	{
+		if(target == null)
+		{
+			for(int i = 0; i < control.spriteController.enemies.size(); i++)
+			{
+				Enemy enemy = control.spriteController.enemies.get(i);
+				if(enemy.hp < enemy.hpMax && distanceTo(enemy.x, enemy.y)<200 && checkLOS((int)enemy.x, (int)enemy.y))
+				{
+					target = enemy;
+					i = 999;
+				}
+			}
+		}
+	}
 	private void healTarget()
 	{
 		turnToward(target.x, target.y);
@@ -154,4 +153,6 @@ public final class Enemy_Cleric extends Enemy
 			target = null;
 		}
 	}
+	@Override
+	protected void blocking() {}
 }

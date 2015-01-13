@@ -67,11 +67,11 @@ abstract public class EnemyShell extends Human
 	Override
 	protected void frameCall()
 	{
-		checkLOS();
-		checkDanger();
 		otherActions();
 		if(action.equals("Nothing"))
 		{
+			checkLOS();
+			checkDanger();
 			if(LOS)
 			{
 				frameLOS();
@@ -100,6 +100,7 @@ abstract public class EnemyShell extends Human
 	abstract protected void attacking();
 	abstract protected void hiding();
 	abstract protected void shooting();
+	abstract protected void blocking();
 	abstract protected void finishWandering();
 	abstract protected void frameLOS();
 	abstract protected void frameNoLOS();
@@ -156,6 +157,7 @@ abstract public class EnemyShell extends Human
 	{
 		if(!deleted)
 		{
+			if(action.equals("Sheild")) damage /= 9;
 			getPlayerLocation();
 			if(action.equals("Hide")) action = "Nothing";
 			damage /= 1.2;

@@ -77,4 +77,6 @@ public final class Enemy_Archer extends Enemy
 			runRandom();
 		}
 	}
+	@Override
+	protected void blocking() {}
 }
