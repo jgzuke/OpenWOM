@@ -4,14 +4,15 @@
 package com.magegame;
 
 
-public final class Enemy_Mage extends Enemy
+public final class Enemy_Cleric extends Enemy
 {
 	int shoot = 4;
 	int energy = 90;
-	public Enemy_Mage(Controller creator, double X, double Y, double R, int HP, int ImageIndex)
+	Enemy target;
+	public Enemy_Cleric(Controller creator, double X, double Y, double R, int HP, int ImageIndex)
 	{
 		super(creator, X, Y, R, HP, ImageIndex);
-		speedCur = 3.5;
+		speedCur = 3;
 		frame=0;
 		baseHp(HP);
 		worth = 5;
@@ -28,7 +29,7 @@ public final class Enemy_Mage extends Enemy
 	protected void frameCall()
 	{
 		shoot++;
-		if(shoot>4) shoot = 4;
+		if(shoot>6) shoot = 6;
 		energy++;
 		if (energy>45) energy=45;
 		super.frameCall();
@@ -53,32 +54,64 @@ public final class Enemy_Mage extends Enemy
 			}
 		} else
 		{
+			if(target == null)
+			{
+				for(int i = 0; i < control.spriteController.enemies.size(); i++)
+				{
+					Enemy enemy = control.spriteController.enemies.get(i);
+					if(enemy.hp < enemy.hpMax && distanceTo(enemy.x, enemy.y)<200 && checkLOS((int)enemy.x, (int)enemy.y))
+					{
+						target = enemy;
+						i = 999;
+					}
+				}
+			}
 			searchOrWander();
 		}
 	}
 	protected void frameLOS()
 	{
+		if(target == null)
+		{
+			for(int i = 0; i < control.spriteController.enemies.size(); i++)
+			{
+				Enemy enemy = control.spriteController.enemies.get(i);
+				if(enemy.hp < enemy.hpMax && distanceTo(enemy.x, enemy.y)<200 && checkLOS((int)enemy.x, (int)enemy.y))
+				{
+					target = enemy;
+					i = 999;
+				}
+			}
+		}
 		distanceFound = distanceToPlayer();
-		if(distanceFound<60)		// MAGES ALWAYS MOVING, DONT STOP TO SHOOT
+		if(distanceFound<80)		// MAGES ALWAYS MOVING, DONT STOP TO SHOOT
 		{
 			rollAway();
 		} else if(inDanger>0)
 		{
 			rollSideways();
-		} else if(distanceFound<100)
-		{
-			runAway();
-		} else if(distanceFound < 160)
-		{
-			runAround(120, (int)distanceFound);
 		} else
 		{
-			runTowards();
-		}
-		
-		if(shoot>3&&energy>14&& distanceFound < 160)
-		{
-			shoot();
+			if(target == null)
+			{
+				if(distanceFound<120)
+				{
+					runAway();
+				} else if(distanceFound < 180)
+				{
+					runAround(150, (int)distanceFound);
+				} else
+				{
+					runTowards();
+				}
+				if(shoot>5&&energy>21&& distanceFound < 180)
+				{
+					shoot();
+				}
+			} else
+			{
+				healTarget();
+			}
 		}
 	}
 	@Override
@@ -97,8 +130,8 @@ public final class Enemy_Mage extends Enemy
 	}
 	private void shoot()
 	{
-		shoot-=4;
-		energy -= 15;
+		shoot-=6;
+		energy -= 22;
 		int v = 10;		//projectile velocity
 		double saveRads = rotation/r2d;
 		aimAheadOfPlayer(v*2);	// aim closer to player
@@ -108,5 +141,17 @@ public final class Enemy_Mage extends Enemy
 		control.soundController.playEffect("arrowrelease");
 		rads = saveRads;
 		rotation = rads*r2d;
+	}
+	private void healTarget()
+	{
+		turnToward(target.x, target.y);
+		target.hp += 20;
+		frame = 5;
+		playing = false;
+		if(target.hp > target.hpMax)
+		{
+			target.hp = target.hpMax;
+			target = null;
+		}
 	}
 }

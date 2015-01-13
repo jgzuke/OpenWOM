@@ -67,7 +67,7 @@ abstract public class EnemyShell extends Human
 	Override
 	protected void frameCall()
 	{
-		checkLOS((int)control.player.x, (int)control.player.y);
+		checkLOS();
 		checkDanger();
 		otherActions();
 		if(action.equals("Nothing"))
@@ -184,36 +184,32 @@ abstract public class EnemyShell extends Human
 				control.player.blessingTimer += 20;
 			}
 	}
+	protected boolean checkLOS(int px, int py)
+	{
+		return !control.wallController.checkObstructionsPoint((float)x, (float)y, px, py, false, fromWall);
+	}
 	/**
 	 * Checks whether object can 'see' player
 	 */
-	protected void checkLOS(int px, int py)
+	protected void checkLOS()
 	{
-		double rads2 = Math.atan2((py - y), (px - x));
+		int px = (int)control.player.x;
+		int py = (int)control.player.y;
 		if(control.player.rollTimer>0 && hadLOSLastTime<1)
 		{
 			LOS = false;
 		} else
 		{
-			double rot2 = rads2*r2d;
-			double difference = Math.abs(rotation-rot2);
-			if(difference>180) difference = 360-difference;
-			if(false)//difference>110&&checkDistance(x, y, px, py)>50)
+			if(!control.wallController.checkObstructionsPoint((float)x, (float)y, (float)px, (float)py, false, fromWall))
 			{
-				LOS = false;
+				LOS = true;
+				hadLOSLastTime = 25;
+				lastPlayerX = px;
+				lastPlayerY = py;
+				checkedPlayerLast = false;
 			} else
 			{
-				if(!control.wallController.checkObstructionsPoint((float)x, (float)y, (float)px, (float)py, false, fromWall))
-				{
-					LOS = true;
-					hadLOSLastTime = 25;
-					lastPlayerX = px;
-					lastPlayerY = py;
-					checkedPlayerLast = false;
-				} else
-				{
-					LOS = false;
-				}
+				LOS = false;
 			}
 		}
 		HasLocation = hadLOSLastTime>0;
@@ -294,6 +290,14 @@ abstract public class EnemyShell extends Human
 	protected double distanceToPlayer()
 	{
 		return checkDistance(x, y, control.player.x, control.player.y);
+	}
+	/**
+	 * Checks distance between two points
+	 * @return Returns distance
+	 */
+	protected double distanceTo(double toX, double toY)
+	{
+		return checkDistance(x, y, toX, toY);
 	}
 	/**
 	 * Checks distance between two points

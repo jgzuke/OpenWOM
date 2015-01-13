@@ -568,9 +568,7 @@ abstract public class Enemy extends EnemyShell
 			checkedPlayerLast = true; // has checked where player was last seen
 		} else
 		{
-			boolean temp = LOS;
-			checkLOS((int)lastPlayerX, (int)lastPlayerY);
-			if(LOS)
+			if(checkLOS((int)lastPlayerX, (int)lastPlayerY))
 			{
 				runTowards(lastPlayerX, lastPlayerY);
 				action = "Move";
@@ -578,7 +576,6 @@ abstract public class Enemy extends EnemyShell
 			{
 				checkedPlayerLast = true;
 			}
-			LOS = temp;
 		}
 	}
 	private boolean checkHitBack(double X, double Y, boolean objectOnGround)

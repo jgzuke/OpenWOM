@@ -47,7 +47,7 @@ import android.view.View;
 import com.spritelib.Sprite;
 public final class GraphicsController extends View
 {
-	protected int playScreenSize = 450;
+	protected int playScreenSize = 650;
 	protected int screenMinX;
 	protected int screenMinY;
 	protected int curXShift;

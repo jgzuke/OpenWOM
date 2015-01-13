@@ -17,7 +17,6 @@ public final class ImageLibrary extends ImageLoader
 	protected Bitmap shotAOEPlayer;
 	protected Bitmap[] shotEnemy;
 	protected Bitmap shotAOEEnemy;
-	protected Bitmap[] coins = new Bitmap[2];
 	protected Bitmap currentLevel;
 	protected Bitmap currentLevelTop;
 	protected Bitmap backDrop;
@@ -54,7 +53,6 @@ public final class ImageLibrary extends ImageLoader
 	protected void loadAllImages()
 	{
 		loadPlayerImage();
-		coins = loadArray1D(2, "icon_menu_coin", 30, 30);
 		shotAOEEnemy = loadImage("shootenemyaoe", 80, 80);
 		shotEnemy = loadArray1D(5, "shootenemy", 35, 15);
 		shotAOEPlayer = loadImage("shootplayeraoe", 80, 80);
