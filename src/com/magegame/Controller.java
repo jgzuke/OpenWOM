@@ -102,7 +102,7 @@ public final class Controller
 	{
 		itemControl.favor -= player.level;
 		player.resetVariables();
-		levelController.loadLevel(1);
+		levelController.loadLevel(2);
 		graphicsController.playerBursted=40;
 		//TODO
 	}

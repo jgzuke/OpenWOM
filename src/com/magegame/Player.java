@@ -71,6 +71,8 @@ public final class Player extends Human
 		blessing = 0;
 		setAttributes();
 		hp = hpStart;
+		x = 500;
+		y = 500;
 		hpMax = hp;
 	}
 	/**

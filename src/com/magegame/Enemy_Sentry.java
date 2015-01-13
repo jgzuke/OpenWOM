@@ -52,7 +52,7 @@ public final class Enemy_Sentry extends Enemy
 		int v = 10; //projectile velocity
 		if(frame<34) //geting weapon ready+aiming
 		{
-			aimAheadOfPlayer(v); //TODO add extra frames for when you aim
+			aimAheadOfPlayer(v*2); //TODO add extra frames for when you aim
 		} else if(frame==36) // shoots
 		{
 			control.spriteController.createProj_TrackerEnemy(rotation, Math.cos(rads) * v, Math.sin(rads) * v, 130, x, y);
