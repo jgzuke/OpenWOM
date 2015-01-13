@@ -6,6 +6,7 @@ package com.magegame;
 
 public final class Enemy_Rogue extends Enemy
 {
+	private boolean firstHit = true;
 	public Enemy_Rogue(Controller creator, double X, double Y, double R, int HP, int ImageIndex)
 	{
 		super(creator, X, Y, R, HP, ImageIndex);
@@ -20,7 +21,8 @@ public final class Enemy_Rogue extends Enemy
 		rotation = control.getRandomInt(360);
 		rads = rotation/r2d;
 		frames = makeFrames();
-		
+		action = "Hide";
+		frame = frames[5][0];
 	}
 	private int[][] makeFrames()
 	{
@@ -33,12 +35,21 @@ public final class Enemy_Rogue extends Enemy
 	{
 		if(inDanger>0)
 		{
-			turnToward();
-			action = "Sheild";
-			frame=frames[4][0];
+			if(rollTimer<0)
+			{
+				rollSideways();
+			} else
+			{
+				runSideways();
+			}
 		} else
 		{
-			searchOrWander();
+			if(findWall())
+			{
+				action = "Hide";
+				frame = frames[5][0];
+				firstHit = true;
+			}
 		}
 	}
 	protected void frameLOS()
@@ -51,9 +62,7 @@ public final class Enemy_Rogue extends Enemy
 			frame=frames[3][0];
 		} else if(inDanger>1)
 		{
-			turnToward();
-			action = "Sheild";
-			frame=frames[4][0];
+			rollSideways();
 		} else
 		{
 			runTowards();
@@ -66,22 +75,65 @@ public final class Enemy_Rogue extends Enemy
 		{
 			if(frame==frames[3][i])
 			{
-				meleeAttack(200, 25, 20);
+				if(firstHit)
+				{
+					meleeAttack(120, 25, 20);
+					firstHit = false;
+				} else
+				{
+					meleeAttack(600, 25, 20);
+				}
 			}
 		}
 	}
 	@Override
-	protected void hiding() {}
-	@Override
-	protected void shooting() {}
-	@Override
-	protected void finishWandering()
+	protected void hiding()
 	{
-		if(control.getRandomInt(20) != 0) // we probably just keep wandering
+		action = "Nothing";
+		if(distanceFound < 30)
 		{
-			runRandom();
+			turnToward();
+			action = "Melee";
+			frame=frames[3][0];
+		} else if(inDanger>1)
+		{
+			rollSideways();
+		} else if(distanceFound < 70)
+		{
+			rollTowards();
+		} else
+		{
+			action = "Hiding";
 		}
 	}
 	@Override
+	protected void shooting() {}
+	@Override
+	protected void finishWandering(){}
+	@Override
 	protected void blocking() {}
+	protected boolean findWall()
+	{
+		int op200 = -1;
+		int op100 = -1;
+		for(int i = 0; i < 6; i++)
+		{
+			if(checkObstructions(x, y, rotation + (i*60) / r2d, 10, true, fromWall)) return true;
+			else if(checkObstructions(x, y, rotation + (i*60) / r2d, 100, true, fromWall)) op200 = i;
+			else if(checkObstructions(x, y, rotation + (i*60) / r2d, 200, true, fromWall)) op100 = i;
+		}
+		if(op100 != -1)
+		{
+			rotation += op100*60;
+			run(4);
+		} else if(op200 != -1)
+		{
+			rotation += op200*60;
+			run(4);
+		} else
+		{
+			runRandom();
+		}
+		return false;
+	}
 }

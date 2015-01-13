@@ -84,11 +84,13 @@ public final class ImageLibrary extends ImageLoader
 		switch(levelNum)
 		{
 		case 1:
+			backDrop = loadImage("leveltile3", 100, 100);
+			break;
+		case 2:
 			backDrop = loadImage("leveltile1", 100, 100);
 			break;
-			
 		default:
-			backDrop = loadImage("leveltile1", 100, 100);
+			backDrop = loadImage("leveltile2", 100, 100);
 			break;
 		}
 		backDrop = loadImage("leveltile1", 100, 100);

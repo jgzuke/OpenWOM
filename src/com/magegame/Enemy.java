@@ -84,7 +84,7 @@ abstract public class Enemy extends EnemyShell
 			}
 		} else if(action.equals("Hide"))
 		{
-			frame = frames[5][0];
+			if(frame < frames[5][1]) frame++;
 			hiding();
 		} else if(action.equals("Shoot"))
 		{
@@ -589,7 +589,7 @@ abstract public class Enemy extends EnemyShell
 	{
 		return control.wallController.checkObstructionsPoint(x1, y1, x2, y2, objectOnGround, expand);
 	}
-	private boolean checkObstructions(double x1, double y1, double rads, int distance, boolean objectOnGround, int offset)
+	protected boolean checkObstructions(double x1, double y1, double rads, int distance, boolean objectOnGround, int offset)
 	{
 		return control.wallController.checkObstructions(x1, y1, rads, distance, objectOnGround, offset);
 	}

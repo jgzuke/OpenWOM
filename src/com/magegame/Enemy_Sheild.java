@@ -91,10 +91,7 @@ public final class Enemy_Sheild extends Enemy
 			if(inDanger>0)
 			{
 				turnToward();
-				playing = false;
-			} else
-			{
-				playing = true;
+				frame = 51;
 			}
 		}
 	}
