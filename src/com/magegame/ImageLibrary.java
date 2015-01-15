@@ -84,13 +84,18 @@ public final class ImageLibrary extends ImageLoader
 		switch(levelNum)
 		{
 		case 1:
-			backDrop = loadImage("leveltile3", 100, 100);
-			break;
 		case 2:
+		case 3:
 			backDrop = loadImage("leveltile1", 100, 100);
 			break;
-		default:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
 			backDrop = loadImage("leveltile2", 100, 100);
+			break;
+		default:
+			backDrop = loadImage("leveltile1", 100, 100);
 			break;
 		}
 		currentLevel = loadImage("level"+Integer.toString(levelNum), width, height);

@@ -348,7 +348,10 @@ public final class WallController
 						double dist = Math.pow(X - values[0], 2) + Math.pow((Y - values[1]), 2);
 						if(dist < Math.pow(values[3], 2) && dist > Math.pow(values[2], 2))
 						{
-							hitBack = !checkHitBackPass(X, Y, objectOnGround);
+							if(!checkHitBackPass(X, Y, objectOnGround))
+							{
+								hitBack = true;
+							}
 						}
 					}
 				}
@@ -369,7 +372,7 @@ public final class WallController
 		{
 			if(hitBack == false)
 			{
-				int [] values = wallRingValues.get(i); // valeus[4] is true when passage is for lower and upper area
+				int [] values = wallPassageValues.get(i); // valeus[4] is true when passage is for lower and upper area
 				if(values[4]==1||!objectOnGround) // OBJECT IS TALL
 				{
 					if(X > values[0] && X < values[1])

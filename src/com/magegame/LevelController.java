@@ -39,8 +39,8 @@ public final class LevelController
 {
 	private Controller control;
 	protected int levelNum = -1;
-	protected int levelWidth = 300;
-	protected int levelHeight = 300;
+	protected int levelWidth = 800;
+	protected int levelHeight = 800;
 	protected List<ArrayList<int[]>> saveEnemyInformation = new ArrayList<ArrayList<int[]>>();
 	protected List<Integer> savedInformationLevels = new ArrayList<>();
 	/** 
@@ -69,12 +69,21 @@ public final class LevelController
 				control.player.x = 237;
 				control.player.y = 74;
 			}
+			if(inBounds(671, 671, 22, 39))
+			{
+				loadLevel(4);
+				control.player.x = 28;
+				control.player.y = 288;
+			}
 			break;
 		case 2:
 			if(inBounds(774, 342, 26, 110))
 			{
-				loadLevel(1);
-				control.player.x = 30;
+				//loadLevel(1);
+				//control.player.x = 30;
+				loadLevel(4);
+				control.player.x = 42;
+				control.player.y = 514;
 			}
 			if(inBounds(103, 80, 54, 31))
 			{
@@ -107,6 +116,14 @@ public final class LevelController
 				loadLevel(1);
 				control.player.x = 559;
 				control.player.y = 595;
+			}
+			break;
+		case 4:
+			if(inBounds(0, 492, 34, 50))
+			{
+				loadLevel(1);
+				control.player.x = 664;
+				control.player.y = 690;
 			}
 			break;
 		case 5:
@@ -217,7 +234,6 @@ public final class LevelController
 		case 2:
 			levelWidth = 800; // height of level
 			levelHeight = 800; // width of level
-			control.imageLibrary.loadEnemy(65, "goblin_rogue", 60, 40, 4); 
 			if(control.graphicsController != null)
 			{
 				control.graphicsController.playScreenSize = 650;
@@ -246,6 +262,36 @@ public final class LevelController
 			w.makeWall_Rectangle(633, 681, 20, 179, true, true);
 			w.makeWall_Rectangle(-64, 731, 194, 210, true, true);
 			w.makeWall_Rectangle(158, -104, 27, 223, true, true);
+			break;
+		case 4:
+			levelWidth = 930; // height of level
+			levelHeight = 780; // width of level
+			control.graphicsController.playScreenSize = 300;
+			w.makeWall_Ring(319, 507, 253, 253, true);
+			
+			w.makeWall_Circle(28, 413, 81, 1, true);
+			w.makeWall_Ring(343, 137, 88, 98, true);
+			w.makeWall_Ring(319, 507, 186, 196, true);
+			w.makeWall_Ring(709, 218, 186, 196, true);
+			w.makeWall_Pass(34, 398, 80, 171, true);
+			w.makeWall_Pass(382, 106, 204, 31, true);
+			w.makeWall_Pass(530, 497, 159, 31, true);
+			w.makeWall_Pass(657, 338, 32, 174, true);
+			w.makeWall_Pass(294, 654, 32, 67, true);
+			w.makeWall_Pass(350, 164, 34, 111, true);
+			w.makeWall_Rectangle(436, 137, 92, 24, true, true);
+			w.makeWall_Rectangle(327, 224, 23, 37, true, true);
+			w.makeWall_Rectangle(429, 82, 117, 24, true, true);
+			w.makeWall_Rectangle(386, 216, 53, 51, true, true);
+			w.makeWall_Rectangle(560, 473, 87, 24, true, true);
+			w.makeWall_Rectangle(558, 528, 145, 24, true, true);
+			w.makeWall_Rectangle(635, 397, 23, 84, true, true);
+			w.makeWall_Rectangle(691, 406, 23, 134, true, true);
+			w.makeWall_Rectangle(-8, 542, 143, 27, true, true);
+			w.makeWall_Rectangle(265, 682, 29, 133, true, true);
+			w.makeWall_Rectangle(326, 686, 29, 30, true, true);
+			
+			
 			break;
 		case 3:
 			//LEVEL
@@ -384,17 +430,19 @@ public final class LevelController
 			break;
 		
 		case 2:
-			s.makeEnemy(4, 400, 400, 0);
 			break;
 			
 		case 3:
-			s.makeEnemy(3, 153, 96, 90);
 			s.makeEnemy(4, 208, 181, 0);
-			s.makeEnemy(4, 264, 124, -120);
 			s.makeEnemy(4, 145, 135, -21);
 			s.makeEnemy(3, 50, 108, 60);
 			break;
 		}
+	}
+	protected void discardSavedEnemies()
+	{
+		saveEnemyInformation = new ArrayList<ArrayList<int[]>>();
+		savedInformationLevels = new ArrayList<>();
 	}
 	/**
 	 * ends a fight section with no saved enemies

@@ -180,14 +180,11 @@ public final class SpriteController extends SpriteDrawer
 					i--;
 				} else
 				{
+					if(enemies.get(i).x < 10) enemies.get(i).x = 10;
+					if(enemies.get(i).x > control.levelController.levelWidth - 10) enemies.get(i).x = (control.levelController.levelWidth - 10);
+					if(enemies.get(i).y < 10) enemies.get(i).y = 10;
+					if(enemies.get(i).y > control.levelController.levelHeight - 10) enemies.get(i).y = (control.levelController.levelHeight - 10);
 					enemies.get(i).frameCall();
-					if(enemies.get(i) != null)
-					{
-						if(enemies.get(i).x < 10) enemies.get(i).x = 10;
-						if(enemies.get(i).x > control.levelController.levelWidth - 10) enemies.get(i).x = (control.levelController.levelWidth - 10);
-						if(enemies.get(i).y < 10) enemies.get(i).y = 10;
-						if(enemies.get(i).y > control.levelController.levelHeight - 10) enemies.get(i).y = (control.levelController.levelHeight - 10);
-					}
 				}
 			}
 		}

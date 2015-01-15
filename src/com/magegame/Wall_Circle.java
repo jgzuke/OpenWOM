@@ -64,11 +64,8 @@ public class Wall_Circle extends Wall
 				rads = Math.atan2(ydif, xdif);
 				if(Math.pow(xdif, 2) + Math.pow(ydif/oCRatio, 2) < oCRS)
 				{
-					if(!control.wallController.checkHitBackPass(enemies.get(i).x, enemies.get(i).y, true))
-					{
 						enemies.get(i).x = oCX - (Math.cos(rads) * oCR);
 						enemies.get(i).y = oCY - (Math.sin(rads) * oCR);
-					}
 				}
 			}
 		}

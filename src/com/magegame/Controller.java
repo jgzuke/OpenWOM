@@ -104,6 +104,7 @@ public final class Controller
 		player.resetVariables();
 		levelController.loadLevel(2);
 		graphicsController.playerBursted=40;
+		levelController.discardSavedEnemies();
 		//TODO
 	}
 	protected void pause()

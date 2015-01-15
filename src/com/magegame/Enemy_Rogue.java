@@ -28,7 +28,7 @@ public final class Enemy_Rogue extends Enemy
 	{
 		//				 move	  roll	  stun	 melee		sheild	  hide	 shoot
 		int[] e = {0, 0};
-		int[][] temp = {{0, 19}, {54, 65}, e, {20, 45, 28, 36}, e, {46, 53}, e};
+		int[][] temp = {{0, 19}, {54, 65}, e, {20, 45, 28, 36}, e, {46, 52}, e};
 		return temp;
 	}
 	protected void frameNoLOS()
@@ -77,11 +77,11 @@ public final class Enemy_Rogue extends Enemy
 			{
 				if(firstHit)
 				{
-					meleeAttack(120, 25, 20);
+					meleeAttack(600, 25, 20);
 					firstHit = false;
 				} else
 				{
-					meleeAttack(600, 25, 20);
+					meleeAttack(120, 25, 20);
 				}
 			}
 		}
