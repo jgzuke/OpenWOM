@@ -39,13 +39,6 @@ public class Wall_Rectangle extends Wall
 		x = (oRX1 + oRX2) / 2;
 		y = (oRY1 + oRY2) / 2;
 		control = creator;
-		if(tall)
-		{
-			control.wallController.setORect(oRX1, oRX2, oRY1, oRY2, 1);
-		} else
-		{
-			control.wallController.setORect(oRX1, oRX2, oRY1, oRY2, 0);
-		}
 		oRX1Player = oRX1-humanWidth;
 		oRX2Player = oRX2+humanWidth;
 		oRY1Player = oRY1-humanWidth;

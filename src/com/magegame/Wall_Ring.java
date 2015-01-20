@@ -32,13 +32,6 @@ public class Wall_Ring extends Wall
 		oCRIn = OCRIn;
 		oCROut = OCROut;
 		control = creator;
-		if(tall)
-		{
-			control.wallController.setORing(OCX, OCY, oCRIn, oCROut, 1);
-		} else
-		{
-			control.wallController.setORing(OCX, OCY, oCRIn, oCROut, 0);
-		}
 		oCRIn -= humanWidth;
 		oCROut += humanWidth;
 		oCRSIn = Math.pow(oCRIn, 2);

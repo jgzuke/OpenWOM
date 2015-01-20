@@ -23,13 +23,6 @@ public class Wall_Pass extends Wall
 		oRY1 = ORY;
 		oRX2 = ORX+wallWidth;
 		oRY2 = ORY+wallHeight;
-		if(fullPass)
-		{
-			creator.wallController.setOPassage(oRX1, oRX2, oRY1, oRY2, 1);
-		} else
-		{
-			creator.wallController.setOPassage(oRX1, oRX2, oRY1, oRY2, 0);
-		}
 	}
 	@Override
 	protected void frameCall() {

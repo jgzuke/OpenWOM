@@ -194,6 +194,8 @@ public final class LevelController
 			control.imageLibrary.loadEnemy(31, "goblin_mage", 30, 34, 2);
 			control.imageLibrary.loadEnemy(31, "goblin_cleric", 30, 34, 5);
 			//WALLS
+			w.makeWall_Ring(400, 400, 0, 100, true);
+			//w.makeWall_Circle(400, 400, 100, 1, false);
 			w.makeWall_Rectangle(-85, -182, 111, 528, true, true);
 			w.makeWall_Rectangle(-85, 455, 111, 528, true, true);
 			w.makeWall_Rectangle(-142, 241, 192, 105, true, true);
@@ -268,12 +270,14 @@ public final class LevelController
 			control.imageLibrary.loadEnemy(49, "goblin_archer", 80, 50, 1);
 			control.imageLibrary.loadEnemy(31, "goblin_mage", 30, 34, 2);
 			control.imageLibrary.loadEnemy(31, "goblin_cleric", 30, 34, 5);
-			w.makeWall_Ring(319, 507, 253, 253, true);
+			w.makeWall_Ring(319, 507, 253, 273, true);
+			w.makeWall_Ring(343, 137, 78, 98, true);
+			w.makeWall_Ring(319, 507, 176, 196, true);
+			w.makeWall_Ring(709, 218, 176, 196, true);
+			
 			
 			w.makeWall_Circle(28, 413, 81, 1, true);
-			w.makeWall_Ring(343, 137, 88, 98, true);
-			w.makeWall_Ring(319, 507, 186, 196, true);
-			w.makeWall_Ring(709, 218, 186, 196, true);
+			
 			w.makeWall_Pass(34, 398, 80, 171, true);
 			w.makeWall_Pass(382, 106, 204, 31, true);
 			w.makeWall_Pass(530, 497, 159, 31, true);

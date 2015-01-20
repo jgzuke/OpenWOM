@@ -52,7 +52,7 @@ public final class WallController
 	private ArrayList<int[]> wallRingValues = new ArrayList<int[]>(); // int[] is x, y, radiusInner, radiusOuter, tall or not
 	private ArrayList<int[]> wallRectValues = new ArrayList<int[]>(); // int[] is x1, x2, y1, y2, tall or not
 	private ArrayList<int[]> wallCircleValues = new ArrayList<int[]>(); // int[] is x, y, radius, tall or not
-	private int wallExtraWidth = 3;
+	private int extraWidth = 3;
 	/**
 	 * Initializes all undecided variables, loads level, creates player and enemy objects, and starts frameCaller
 	 */
@@ -89,7 +89,9 @@ public final class WallController
 	 */
 	protected void makeWall_Rectangle(int x, int y, int width, int height, boolean HitPlayer, boolean tall)
 	{
-		wallRects.add(new Wall_Rectangle(control, x - wallExtraWidth, y - wallExtraWidth, width + (2*wallExtraWidth), height + (2*wallExtraWidth), HitPlayer, tall));
+		wallRects.add(new Wall_Rectangle(control, x-extraWidth, y-extraWidth, width+(2*extraWidth), height+(2*extraWidth), HitPlayer, tall));
+		if(tall)setOPassage(x, x+width, y, y+width, 1);
+		else setOPassage(x, x+width, y, y+width, 0);
 	}
 	/**
 	 * creates a ring wall object
@@ -101,7 +103,9 @@ public final class WallController
 	 */
 	protected void makeWall_Ring(int x, int y, int radIn, int radOut, boolean tall)
 	{
-		wallRings.add(new Wall_Ring(control, x, y, radIn - wallExtraWidth, radOut + wallExtraWidth, tall));
+		wallRings.add(new Wall_Ring(control, x, y, radIn-extraWidth, radOut+extraWidth, tall));
+		if(tall)setORing(x, y, radIn, radOut, 1);
+		else setORing(x, y, radIn, radOut, 0);
 	}
 	/**
 	 * creates a passage through a ring
@@ -110,9 +114,11 @@ public final class WallController
 	 * @param width passage width
 	 * @param height passage height
 	 */
-	protected void makeWall_Pass(int x, int y, int width, int height, boolean fullPass)
+	protected void makeWall_Pass(int x, int y, int width, int height, boolean tall)
 	{
-		new Wall_Pass(control, x - wallExtraWidth, y - wallExtraWidth, width + (2*wallExtraWidth), height + (2*wallExtraWidth), fullPass);
+		new Wall_Pass(control, x-extraWidth, y-extraWidth, width+(2*extraWidth), height+(2*extraWidth), tall);
+		if(tall)setOPassage(x, x+width, y, y+width, 1);
+		else setOPassage(x, x+width, y, y+width, 0);
 	}
 	/**
 	 * creates circular wall object
@@ -123,9 +129,11 @@ public final class WallController
 	 * @param tall whether object is tall enough to block projectiles
 	 * @return wall object
 	 */
-	protected void makeWall_Circle(int x, int y, int rad, double ratio, boolean tall)
+	protected void makeWall_Circle(int x, int y, int rad, int ratio, boolean tall)
 	{
-		wallCircles.add(new Wall_Circle(control, x, y, rad + wallExtraWidth, ratio, tall));
+		wallCircles.add(new Wall_Circle(control, x, y, rad + extraWidth, tall));
+		if(tall) setOCirc(x, y, rad, 1);
+		else setOCirc(x, y, rad, 0);
 	}
 	/**
 	 * checks whether a projectile could travel between two points
@@ -156,7 +164,7 @@ public final class WallController
 			int [] values = wallCircleValues.get(i).clone();
 			if(values[3]==1||objectOnGround) // OBJECT IS TALL OR OBJECT ON GROUND
 			{
-				values[2]+=expand;
+					values[2]+=expand;
 					circM = -(1 / m1);
 					circB = values[1] - (circM * values[0]);
 					tempX = (circB - b1) / (m1 - circM);
@@ -309,7 +317,8 @@ public final class WallController
 				int [] values = wallCircleValues.get(i);
 				if(values[3]==1||objectOnGround) // OBJECT IS TALL
 				{
-					if(Math.pow(X - values[0], 2) + Math.pow((Y - values[1]), 2) < Math.pow(values[2], 2))
+					double dist = Math.pow(X - values[0], 2) + Math.pow((Y - values[1]), 2);
+					if(dist < Math.pow(values[2], 2))
 					{
 						return true;
 					}
