@@ -2071,19 +2071,20 @@ containing a value of this type.
         public static final int leveltop7=0x7f0201e0;
         public static final int leveltop8=0x7f0201e1;
         public static final int menu_screen=0x7f0201e2;
-        public static final int shootenemy0001=0x7f0201e3;
-        public static final int shootenemy0002=0x7f0201e4;
-        public static final int shootenemy0003=0x7f0201e5;
-        public static final int shootenemy0004=0x7f0201e6;
-        public static final int shootenemy0005=0x7f0201e7;
-        public static final int shootenemyaoe=0x7f0201e8;
-        public static final int shootplayer0001=0x7f0201e9;
-        public static final int shootplayer0002=0x7f0201ea;
-        public static final int shootplayer0003=0x7f0201eb;
-        public static final int shootplayer0004=0x7f0201ec;
-        public static final int shootplayer0005=0x7f0201ed;
-        public static final int shootplayeraoe=0x7f0201ee;
-        public static final int structure_spawn=0x7f0201ef;
+        public static final int menu_screenbehind=0x7f0201e3;
+        public static final int shootenemy0001=0x7f0201e4;
+        public static final int shootenemy0002=0x7f0201e5;
+        public static final int shootenemy0003=0x7f0201e6;
+        public static final int shootenemy0004=0x7f0201e7;
+        public static final int shootenemy0005=0x7f0201e8;
+        public static final int shootenemyaoe=0x7f0201e9;
+        public static final int shootplayer0001=0x7f0201ea;
+        public static final int shootplayer0002=0x7f0201eb;
+        public static final int shootplayer0003=0x7f0201ec;
+        public static final int shootplayer0004=0x7f0201ed;
+        public static final int shootplayer0005=0x7f0201ee;
+        public static final int shootplayeraoe=0x7f0201ef;
+        public static final int structure_spawn=0x7f0201f0;
     }
     public static final class id {
         public static final int action_bar=0x7f0c0022;

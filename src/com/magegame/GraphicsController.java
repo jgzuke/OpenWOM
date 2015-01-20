@@ -57,8 +57,9 @@ public final class GraphicsController extends View
 	protected Matrix rotateImages = new Matrix();
 	private Rect aoeRect = new Rect();
 	private Bitmap background;
-	private int healthColor = Color.rgb(150, 0, 0);
-	private int cooldownColor = Color.rgb(190, 190, 0);
+	private Bitmap backgroundbot;
+	private int healthColor = Color.rgb(170, 0, 0);
+	private int cooldownColor = Color.rgb(0, 0, 170);
 	protected Sprite shootStick;
 	protected int playerHit=0;
 	protected int playerBursted = 0;
@@ -92,6 +93,7 @@ public final class GraphicsController extends View
 		paint.setDither(true);
 		paint.setFilterBitmap(true);
 		background = drawStart(); // redraws play screen
+		backgroundbot = imageLibrary.loadImage("menu_screenbehind", 480, 320);
 	}
 	protected void frameCall()
 	{
@@ -149,9 +151,8 @@ public final class GraphicsController extends View
 		g.drawRect(14, 169, 14 + (62 * player.hp / player.hpMax), 181, paint);
 		paint.setStyle(Paint.Style.FILL);
 		paint.setColor(cooldownColor);
-		g.drawRect(404, 94, 404 + (int)((63 * player.abilityTimer_burst) / 500), 104, paint);
-		g.drawRect(404, 199, 404 + (int)((63 * player.abilityTimer_roll) / 120), 209, paint);
-		g.drawRect(404, 303, 404 + (int)((63 * player.abilityTimer_Proj_Tracker) / 91), 313, paint);
+		g.drawRect(404, 94, 404 + (int)((62 * player.abilityTimer_burst) / 500), 104, paint);
+		g.drawRect(404, 199, 404 + (int)((62 * player.abilityTimer_roll) / 120), 209, paint);
 		if(player.blessing!=0) g.drawRect(90, 290, 90 + player.blessingTimer, 300, paint);
 		paint.setStyle(Paint.Style.FILL);
 		paint.setColor(Color.BLACK);
@@ -269,6 +270,10 @@ public final class GraphicsController extends View
 		paint.setAlpha(255);
 		paint.setColor(Color.GREEN);
 		paint.setAlpha(255);
+		g.drawBitmap(backgroundbot, 0, 0, paint);
+		paint.setStyle(Paint.Style.FILL);
+		paint.setColor(cooldownColor);
+		g.drawRect(385, 315 - (int)((89 * player.abilityTimer_Proj_Tracker) / 91), 480, 315, paint);
 		g.drawBitmap(background, 0, 0, paint);
 		drawContestantStats(g);
 		paint.setStyle(Paint.Style.STROKE);

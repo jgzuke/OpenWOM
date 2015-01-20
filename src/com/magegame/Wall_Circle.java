@@ -48,11 +48,8 @@ public class Wall_Circle extends Wall
 			rads = Math.atan2(ydif, xdif);
 			if(Math.pow(xdif, 2) + Math.pow(ydif/oCRatio, 2) < oCRS)
 			{
-				if(!control.wallController.checkHitBackPass(control.player.x, control.player.y, true))
-				{
 					control.player.x = oCX - (Math.cos(rads) * oCR);
 					control.player.y = oCY - (Math.sin(rads) * oCR);
-				}
 			}
 			ArrayList<Enemy> enemies = control.spriteController.enemies;
 		for(int i = 0; i < enemies.size(); i++)

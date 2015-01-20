@@ -445,46 +445,35 @@ abstract public class Enemy extends EnemyShell
 	private int iterateSearch(ArrayList<int[]> points, boolean[][] checked, int eX, int eY)
 	{
 		int numPoints = points.size();
+		boolean [][][] paths = control.wallController.pathing;
 		for(int i = 0; i < numPoints; i++) // for every endpoint we have, expand
 		{
 			int x = points.get(i)[0];
 			int y = points.get(i)[1];
-			if(!checkObstructionsPoint(x*20, y*20, eX, eY, true, fromWall)) return i;
-			if(x>0)
-			{	//if were not on the edge, we havent checked it, and its free
-				if(!checked[x-1][y]&&!checkHitBack((x-1)*20, y*20, true))
-				{
-					int[] newPoint = {x-1, y, x, y}; // its a new endpoint
-					points.add(newPoint);
-					checked[x-1][y]=true;			//weve checked this square
-				}
+			if(!checkObstructionsPoint(x*20, y*20, eX, eY, true, fromWall)) return i; // if you see
+			if(x<checked.length-2 && paths[x][y][1] && !checked[x+1][y])
+			{	
+				int[] newPoint = {x+1, y, x, y}; // its a new endpoint
+				points.add(newPoint);
+				checked[x+1][y]=true;			//weve checked this square
 			}
-			if(x<checked.length-1)
+			if(x>1&&paths[x][y][2] && !checked[x-1][y])
 			{
-				if(!checked[x+1][y]&&!checkHitBack((x+1)*20, y*20, true))
-				{
-					int[] newPoint = {x+1, y, x, y};
-					points.add(newPoint);
-					checked[x+1][y]=true;
-				}
+				int[] newPoint = {x-1, y, x, y};
+				points.add(newPoint);
+				checked[x-1][y]=true;
 			}
-			if(y>0)
+			if(x<checked[0].length-2&&paths[x][y][3] && !checked[x][y+1])
 			{
-				if(!checked[x][y-1]&&!checkHitBack(x*20, (y-1)*20, true))
-				{
-					int[] newPoint = {x, y-1, x, y};
-					points.add(newPoint);
-					checked[x][y-1]=true;
-				}
+				int[] newPoint = {x, y+1, x, y};
+				points.add(newPoint);
+				checked[x][y+1]=true;
 			}
-			if(y<checked[0].length-1)
+			if(y>1&&paths[x][y][4] && !checked[x][y-1])
 			{
-				if(!checked[x][y+1]&&!checkHitBack(x*20, (y+1)*20, true))
-				{
-					int[] newPoint = {x, y+1, x, y};
-					points.add(newPoint);
-					checked[x][y+1]=true;
-				}
+				int[] newPoint = {x, y-1, x, y};
+				points.add(newPoint);
+				checked[x][y-1]=true;
 			}
 		}
 		for(int i = 0; i < numPoints; i++) // remove all the old points

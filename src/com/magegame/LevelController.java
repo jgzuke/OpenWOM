@@ -72,18 +72,15 @@ public final class LevelController
 			if(inBounds(671, 671, 22, 39))
 			{
 				loadLevel(4);
-				control.player.x = 28;
-				control.player.y = 288;
+				control.player.x = 42;
+				control.player.y = 514;
 			}
 			break;
 		case 2:
 			if(inBounds(774, 342, 26, 110))
 			{
-				//loadLevel(1);
-				//control.player.x = 30;
-				loadLevel(4);
-				control.player.x = 42;
-				control.player.y = 514;
+				loadLevel(1);
+				control.player.x = 30;
 			}
 			if(inBounds(103, 80, 54, 31))
 			{
@@ -267,6 +264,10 @@ public final class LevelController
 			levelWidth = 930; // height of level
 			levelHeight = 780; // width of level
 			control.graphicsController.playScreenSize = 300;
+			control.imageLibrary.loadEnemy(55, "goblin_swordsman", 110, 70, 0); // length, name,width, height, index
+			control.imageLibrary.loadEnemy(49, "goblin_archer", 80, 50, 1);
+			control.imageLibrary.loadEnemy(31, "goblin_mage", 30, 34, 2);
+			control.imageLibrary.loadEnemy(31, "goblin_cleric", 30, 34, 5);
 			w.makeWall_Ring(319, 507, 253, 253, true);
 			
 			w.makeWall_Circle(28, 413, 81, 1, true);
@@ -317,7 +318,6 @@ public final class LevelController
 			w.makeWall_Rectangle(-67, 169, 129, 103, true, true);
 			w.makeWall_Rectangle(37, 214, 129, 103, true, true);
 			w.makeWall_Rectangle(126, 171, 71, 110, true, true);
-
 			break;
 		case 5:
 			levelWidth = 276;
@@ -364,6 +364,7 @@ public final class LevelController
 			w.makeWall_Rectangle(-35, 100, 244, 86, true, true);
 			break;
 		}
+		w.makePaths();
 		makeEnemies(levelNum);
 		control.imageLibrary.loadLevel(toLoad, levelWidth, levelHeight);
 	}
@@ -436,6 +437,23 @@ public final class LevelController
 			s.makeEnemy(4, 208, 181, 0);
 			s.makeEnemy(4, 145, 135, -21);
 			s.makeEnemy(3, 50, 108, 60);
+			break;
+			
+		case 4:
+			s.makeEnemy(0, 395, 162, 45);
+			s.makeEnemy(1, 294, 92, 45);
+			
+			s.makeEnemy(0, 580, 133, 180);
+			s.makeEnemy(0, 675, 351, 90);
+			s.makeEnemy(2, 748, 115, 150);
+			s.makeEnemy(5, 800, 186, 120);
+			
+			s.makeEnemy(0, 310, 658, 90);
+			s.makeEnemy(0, 508, 513, 0);
+			s.makeEnemy(0, 310, 514, 45);
+			s.makeEnemy(2, 303, 348, 90);
+			s.makeEnemy(2, 145, 516, 0);
+			s.makeEnemy(5, 183, 390, 45);
 			break;
 		}
 	}
