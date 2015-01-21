@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import com.spritelib.SpriteDrawer;
 public final class SpriteController extends SpriteDrawer
 {
-	private Controller control;
+	protected Controller control;
 	protected ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	protected ArrayList<Structure> structures = new ArrayList<Structure>();
 	protected ArrayList<Proj_Tracker_Enemy> proj_TrackerEs = new ArrayList<Proj_Tracker_Enemy>();

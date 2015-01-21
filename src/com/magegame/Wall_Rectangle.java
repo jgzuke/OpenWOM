@@ -17,7 +17,6 @@ public class Wall_Rectangle extends Wall
 	protected int oRX2Player;
 	protected int oRY1Player;
 	protected int oRY2Player;
-	private boolean hitPlayer;
 	/**
 	 * sets variables and stores some in control object array
 	 * @param creator control object
@@ -28,14 +27,13 @@ public class Wall_Rectangle extends Wall
 	 * @param HitPlayer whether wall interacts with the player
 	 * @param Tall whether or not the wall is tall enough to stop projectiles
 	 */
-	public Wall_Rectangle(Controller creator, int ORX, int ORY, int wallWidth, int wallHeight, boolean HitPlayer, boolean Tall)
+	public Wall_Rectangle(Controller creator, int ORX, int ORY, int wallWidth, int wallHeight, boolean Tall)
 	{
 		tall = Tall;
 		oRX1 = ORX;
 		oRY1 = ORY;
 		oRX2 = ORX+wallWidth;
 		oRY2 = ORY+wallHeight;
-		hitPlayer = HitPlayer;
 		x = (oRX1 + oRX2) / 2;
 		y = (oRY1 + oRY2) / 2;
 		control = creator;
@@ -53,9 +51,7 @@ public class Wall_Rectangle extends Wall
 	 */
         @ Override
         protected void frameCall()
-	{
-        	if(hitPlayer)
-        	{
+        {
 				if(control.player.x > oRX1Player && control.player.x < oRX2Player && control.player.y > oRY1Player && control.player.y < oRY2Player)
 				{
 						double holdX;
@@ -96,7 +92,6 @@ public class Wall_Rectangle extends Wall
 							}
 						}
 				}
-        	}
         	ArrayList<Enemy> enemies = control.spriteController.enemies;
 		for(int i = 0; i < enemies.size(); i++)
 		{

@@ -44,28 +44,28 @@ public class Wall_Ring extends Wall
 	@ Override
 	protected void frameCall()
 	{
-			double curX = control.player.x;
-			double curY = control.player.y;
-			xdif = oCX - curX;
-			ydif = oCY - curY;
-			rads = Math.atan2(ydif, xdif);
-			double dist = Math.pow(xdif, 2) + Math.pow(ydif, 2);
-			if(dist < oCRSOut&&dist>oCRSIn)
+		double curX = control.player.x;
+		double curY = control.player.y;
+		xdif = oCX - curX;
+		ydif = oCY - curY;
+		rads = Math.atan2(ydif, xdif);
+		double dist = Math.pow(xdif, 2) + Math.pow(ydif, 2);
+		if(dist < oCRSOut&&dist>oCRSIn)
+		{
+			if(!control.wallController.checkHitBackPass(curX, curY, true))
 			{
-				if(!control.wallController.checkHitBackPass(curX, curY, true))
+				if(dist<oCRSAve)
 				{
-					if(dist<oCRSAve)
-					{
-						control.player.x = oCX - (Math.cos(rads) * oCRIn);
-						control.player.y = oCY - (Math.sin(rads) * oCRIn);
-					} else
-					{
-						control.player.x = oCX - (Math.cos(rads) * oCROut);
-						control.player.y = oCY - (Math.sin(rads) * oCROut);
-					}
+					control.player.x = oCX - (Math.cos(rads) * oCRIn);
+					control.player.y = oCY - (Math.sin(rads) * oCRIn);
+				} else
+				{
+					control.player.x = oCX - (Math.cos(rads) * oCROut);
+					control.player.y = oCY - (Math.sin(rads) * oCROut);
 				}
 			}
-			ArrayList<Enemy> enemies = control.spriteController.enemies;
+		}
+		ArrayList<Enemy> enemies = control.spriteController.enemies;
 		for(int i = 0; i < enemies.size(); i++)
 		{
 			if(enemies.get(i) != null)

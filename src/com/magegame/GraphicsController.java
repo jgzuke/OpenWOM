@@ -216,6 +216,12 @@ public final class GraphicsController extends View
 		g.drawBitmap(imageLibrary.currentLevel, 0, 0, paint);
 		spriteController.drawStructures(g, paint, imageLibrary);
 		spriteController.drawSprites(g, paint, imageLibrary, aoeRect);
+		if(spriteController.control.levelController.levelNum==1)
+		{
+			paint.setColor(Color.BLACK);
+			g.drawCircle(400, 300, 100, paint);
+			g.drawCircle(400, 500, 100, paint);
+		}
 		g.drawBitmap(imageLibrary.currentLevelTop, 0, 0, paint);
 		spriteController.drawHealthBars(g, paint);
 		return drawTo;
