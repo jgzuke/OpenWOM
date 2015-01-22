@@ -6,7 +6,7 @@ abstract public class Wall
 {
 	protected Controller control;
 	protected int playerRollWidth = 5;
-	protected int humanWidth = 10;
+	protected int humanWidth = 12;
 	protected boolean tall;
 	/**
 	 * what happens every frame for walls interacting with players and enemies

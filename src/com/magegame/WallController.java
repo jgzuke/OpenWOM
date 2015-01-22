@@ -90,8 +90,8 @@ public final class WallController
 	protected void makeWall_Rectangle(int x, int y, int width, int height, boolean tall)
 	{
 		wallRects.add(new Wall_Rectangle(control, x-extraWidth, y-extraWidth, width+(2*extraWidth), height+(2*extraWidth), tall));
-		if(tall)setOPassage(x, x+width, y, y+width, 1);
-		else setOPassage(x, x+width, y, y+width, 0);
+		if(tall)setORect(x, x+width, y, y+height, 1);
+		else setORect(x, x+width, y, y+height, 0);
 	}
 	/**
 	 * creates a ring wall object
@@ -116,8 +116,8 @@ public final class WallController
 	 */
 	protected void makeWall_Pass(int x, int y, int width, int height, boolean tall)
 	{
-		if(tall)setOPassage(x, x+width, y, y+width, 1);
-		else setOPassage(x, x+width, y, y+width, 0);
+		if(tall)setOPassage(x, x+width, y, y+height, 1);
+		else setOPassage(x, x+width, y, y+height, 0);
 	}
 	/**
 	 * creates circular wall object
@@ -144,6 +144,7 @@ public final class WallController
 	 */
 	protected boolean checkObstructionsPoint(float x1, float y1, float x2, float y2, boolean objectOnGround, int expand)
 	{
+		expand /= 2;
 		if(x1 < 0 || x1 > control.levelController.levelWidth || y1 < 0 || y1 > control.levelController.levelHeight)
 		{
 			return true;
@@ -154,49 +155,54 @@ public final class WallController
 		}
 		float m1 = (y2 - y1) / (x2 - x1);
 		float b1 = y1 - (m1 * x1);
+		float circM = -(1 / m1);
+		float circB;
 		float tempX;
 		float tempY;
-		
 		for(int i = 0; i < wallCircleValues.size(); i++)
 		{
 			int [] values = wallCircleValues.get(i).clone();
 			if(values[3]==1||objectOnGround) // OBJECT IS TALL OR OBJECT ON GROUND
 			{
 				values[2]+=expand;
-				double x = values[0];
-				double y = values[1];
-				double a = Math.pow(m1, 2)+1;
-				double b = (2*b1*m1)-(2*x)-(2*m1*y);
-				double c = Math.pow(x, 2)+Math.pow(y, 2)+Math.pow(b1, 2)-(2*b1*y)-values[2];
-				double root = (Math.pow(b, 2)-(4*a*c));
-				if(root>0)
+				circB = values[1] - (circM * values[0]);
+				tempX = (circB - b1) / (m1 - circM);
+				if(x1 < tempX && tempX < x2)
 				{
-					double xHit = (-b+Math.sqrt(root))/2*a;
-					if(x1 > xHit && xHit > x2 || x1 < xHit && xHit < x2) return true;
-					xHit = (-b-Math.sqrt(root))/2*a;
-					if(x1 > xHit && xHit > x2 || x1 < xHit && xHit < x2) return true;
+					tempY = (circM * tempX) + circB;
+					if(distance(tempX, values[0], tempY, values[1]) < Math.pow(values[2], 2))
+					{
+						return true;
+					}
 				}
 			}
 		}
 		for(int i = 0; i < wallRingValues.size(); i++)
 		{
-			Log.e("mine", Integer.toString(i));
 			int [] values = wallRingValues.get(i).clone();
-			if(values[4]==1||objectOnGround) // OBJECT IS TALL
+			double dist1 = distance(x1, values[0], y1, values[1]);
+			double dist2 = distance(x2, values[0], y2, values[1]);
+			double dist = Math.pow((values[2]+values[3])/2, 2);
+			if(!(dist1<dist&&dist2<dist))
 			{
-				values[2]+=expand;
-				double x = values[0];
-				double y = values[1];
-				double a = Math.pow(m1, 2)+1;
-				double b = (2*b1*m1)-(2*x)-(2*m1*y);
-				double c = Math.pow(x, 2)+Math.pow(y, 2)+Math.pow(b1, 2)-(2*b1*y)-values[2];
-				double root = (Math.pow(b, 2)-(4*a*c));
-				if(root>0)
+				if((dist1>dist && dist2<dist) || (dist2>dist && dist1<dist))
 				{
-					double xHit = (-b+Math.sqrt(root))/2*a;
-					if(x1 > xHit && xHit > x2 || x1 < xHit && xHit < x2) return true;
-					xHit = (-b-Math.sqrt(root))/2*a;
-					if(x1 > xHit && xHit > x2 || x1 < xHit && xHit < x2) return true; 
+					if(!checkObstructionsPath(x1, y1, x2, y2, objectOnGround, expand)) return true;
+				}
+				if(values[4]==1||objectOnGround) // OBJECT IS TALL
+				{
+					values[2]-=expand;
+					values[3]+=expand;
+					circB = values[1] - (circM * values[0]);
+					tempX = (circB - b1) / (m1 - circM);
+					if(x1 < tempX && tempX < x2)
+					{
+						tempY = (circM * tempX) + circB;
+						if(distance(tempX, values[0], tempY, values[1]) < Math.pow(values[3], 2))
+						{
+							return true;
+						}
+					}
 				}
 			}
 		}
@@ -215,6 +221,70 @@ public final class WallController
 		for(int i = 0; i < wallRectValues.size(); i++)
 		{
 			int [] values = wallRectValues.get(i).clone();
+			if(values[4]==1||objectOnGround) // OBJECT IS TALL
+			{
+				values[0]-=expand;
+				values[1]+=expand;
+				values[2]-=expand;
+				values[3]+=expand;
+					//Right and left Checks
+					if(x1 < values[0] && values[0] < x2) // if left sid of wall 
+					{
+						tempY = (m1 * values[0]) + b1;
+						if(values[2] < tempY && tempY < values[3])
+						{
+							return true;
+						}
+					}
+					if(x1 < values[1] && values[1] < x2)
+					{
+						tempY = (m1 * values[1]) + b1;
+						if(values[2] < tempY && tempY < values[3])
+						{
+							return true;
+						}
+					}
+					//Top and Bottom checks
+					if(y1 < values[2] && values[2] < y2)
+					{
+						tempX = (values[2] - b1) / m1;
+						if(values[0] < tempX && tempX < values[1])
+						{
+							return true;
+						}
+					} else if(y1 < values[3] && values[3] < y2)
+					{
+						tempX = (values[2] - b1) / m1;
+						if(values[0] < tempX && tempX < values[1])
+						{
+							return true;
+						}
+					}
+			}
+		}
+		return false;
+	}
+	protected boolean checkObstructionsPath(float x1, float y1, float x2, float y2, boolean objectOnGround, int expand)
+	{
+		float m1 = (y2 - y1) / (x2 - x1);
+		float b1 = y1 - (m1 * x1);
+		float tempX;
+		float tempY;
+		if(x1 > x2)
+		{
+			tempX = x1;
+			x1 = x2;
+			x2 = tempX;
+		}
+		if(y1 > y2)
+		{
+			tempY = y1;
+			y1 = y2;
+			y2 = tempY;
+		}
+		for(int i = 0; i < wallPassageValues.size(); i++)
+		{
+			int [] values = wallPassageValues.get(i).clone();
 			if(values[4]==1||objectOnGround) // OBJECT IS TALL
 			{
 				values[0]-=expand;
@@ -303,7 +373,7 @@ public final class WallController
 				int [] values = wallCircleValues.get(i);
 				if(values[3]==1||objectOnGround) // OBJECT IS TALL
 				{
-					double dist = Math.pow(X - values[0], 2) + Math.pow((Y - values[1]), 2);
+					double dist = distance(X, values[0], Y, values[1]);
 					if(dist < Math.pow(values[2], 2))
 					{
 						return true;
@@ -315,7 +385,7 @@ public final class WallController
 				int [] values = wallRingValues.get(i);
 				if(values[4]==1||objectOnGround) // OBJECT IS TALL
 				{
-					double dist = Math.pow(X - values[0], 2) + Math.pow((Y - values[1]), 2);
+					double dist = distance(X, values[0], Y, values[1]);
 					if(dist < Math.pow(values[3], 2) && dist > Math.pow(values[2], 2))
 					{
 						if(!checkHitBackPass(X, Y, objectOnGround))
@@ -335,8 +405,7 @@ public final class WallController
 	 */
 	protected boolean checkHitBackPass(double X, double Y, boolean objectOnGround)
 	{
-		return false;
-		/*for(int i = 0; i < wallPassageValues.size(); i++)
+		for(int i = 0; i < wallPassageValues.size(); i++)
 		{
 			int [] values = wallPassageValues.get(i);
 			if(values[4]==1||objectOnGround) // OBJECT IS TALL
@@ -350,7 +419,7 @@ public final class WallController
 				}
 			}
 		}
-		return false;*/
+		return false;
 	}
 	/**
 	 * sets values for an index of all rectangle tall wall value arrays
@@ -435,5 +504,9 @@ public final class WallController
 				pathing[i][j][4] = checkPath(i, j, 0, -1);
 			}
 		}
+	}
+	protected double distance(double x1, double x2, double y1, double y2)
+	{
+		return Math.pow(x1-x2, 2)+Math.pow(y1-y2, 2);
 	}
 }

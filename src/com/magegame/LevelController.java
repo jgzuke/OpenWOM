@@ -195,6 +195,7 @@ public final class LevelController
 			control.imageLibrary.loadEnemy(31, "goblin_cleric", 30, 34, 5);
 			//WALLS
 			w.makeWall_Ring(400, 300, 80, 100, true);
+			w.makeWall_Pass(250, 270, 300, 60, true);
 			w.makeWall_Circle(400, 500, 100, true);
 			w.makeWall_Rectangle(-85, -182, 111, 528, true);
 			w.makeWall_Rectangle(-85, 455, 111, 528, true);

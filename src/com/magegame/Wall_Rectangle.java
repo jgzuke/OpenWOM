@@ -13,10 +13,6 @@ public class Wall_Rectangle extends Wall
 	protected int oRX2;
 	protected int oRY1;
 	protected int oRY2;
-	protected int oRX1Player;
-	protected int oRX2Player;
-	protected int oRY1Player;
-	protected int oRY2Player;
 	/**
 	 * sets variables and stores some in control object array
 	 * @param creator control object
@@ -37,14 +33,10 @@ public class Wall_Rectangle extends Wall
 		x = (oRX1 + oRX2) / 2;
 		y = (oRY1 + oRY2) / 2;
 		control = creator;
-		oRX1Player = oRX1-humanWidth;
-		oRX2Player = oRX2+humanWidth;
-		oRY1Player = oRY1-humanWidth;
-		oRY2Player = oRY2+humanWidth;
-		oRX1 -= humanWidth;
-		oRX2 += humanWidth;
-		oRY1 -= humanWidth;
-		oRY2 += humanWidth;
+		oRX1 -=humanWidth;
+		oRX2 +=humanWidth;
+		oRY1 -=humanWidth;
+		oRY2 +=humanWidth;
 	}
 	/**
 	 * checks whether wall hits player or enemies
@@ -52,43 +44,43 @@ public class Wall_Rectangle extends Wall
         @ Override
         protected void frameCall()
         {
-				if(control.player.x > oRX1Player && control.player.x < oRX2Player && control.player.y > oRY1Player && control.player.y < oRY2Player)
+				if(control.player.x > oRX1 && control.player.x < oRX2 && control.player.y > oRY1 && control.player.y < oRY2)
 				{
 						double holdX;
 						double holdY;
 						if(control.player.x > x)
 						{
-							holdX = Math.abs(control.player.x - oRX2Player);
+							holdX = Math.abs(control.player.x - oRX2);
 						} else
 						{
-							holdX = Math.abs(control.player.x - oRX1Player);
+							holdX = Math.abs(control.player.x - oRX1);
 						}
 						if(control.player.y > y)
 						{
-							holdY = Math.abs(control.player.y - oRY2Player);
+							holdY = Math.abs(control.player.y - oRY2);
 						} else
 						{
-							holdY = Math.abs(control.player.y - oRY1Player);
+							holdY = Math.abs(control.player.y - oRY1);
 						}
 						if((holdX) < (holdY))
 						{
 							if(control.player.x > x)
 							{
-								control.player.x = oRX2Player;
+								control.player.x = oRX2;
 							}
 							else
 							{
-								control.player.x = oRX1Player;
+								control.player.x = oRX1;
 							}
 						} else
 						{
 							if(control.player.y > y)
 							{
-								control.player.y = oRY2Player;
+								control.player.y = oRY2;
 							}
 							else
 							{
-								control.player.y = oRY1Player;
+								control.player.y = oRY1;
 							}
 						}
 				}
@@ -97,31 +89,31 @@ public class Wall_Rectangle extends Wall
 		{
 			if(enemies.get(i) != null)
 			{
-				if(enemies.get(i).x > oRX1Player && enemies.get(i).x < oRX2Player && enemies.get(i).y > oRY1Player && enemies.get(i).y < oRY2Player)
+				if(enemies.get(i).x > oRX1 && enemies.get(i).x < oRX2 && enemies.get(i).y > oRY1 && enemies.get(i).y < oRY2)
 				{
 					enemies.get(i).hitWall();
 						double holdX;
 						double holdY;
 						if(enemies.get(i).x > x)
 						{
-							holdX = Math.abs(enemies.get(i).x - oRX2Player);
+							holdX = Math.abs(enemies.get(i).x - oRX2);
 						} else
 						{
-							holdX = Math.abs(enemies.get(i).x - oRX1Player);
+							holdX = Math.abs(enemies.get(i).x - oRX1);
 						}
 						if(enemies.get(i).y > y)
 						{
-							holdY = Math.abs(enemies.get(i).y - oRY2Player);
+							holdY = Math.abs(enemies.get(i).y - oRY2);
 						} else
 						{
-							holdY = Math.abs(enemies.get(i).y - oRY1Player);
+							holdY = Math.abs(enemies.get(i).y - oRY1);
 						}
 						while(enemies.get(i).rotation<0) enemies.get(i).rotation+=360;
 						if((holdX) < (holdY))
 						{
 							if(enemies.get(i).x > x)
 							{
-								enemies.get(i).x = oRX2Player;
+								enemies.get(i).x = oRX2;
 								if(enemies.get(i).rotation>90&&enemies.get(i).rotation<180)
 								{
 									enemies.get(i).rotation -=2;
@@ -132,7 +124,7 @@ public class Wall_Rectangle extends Wall
 							}
 							else
 							{
-								enemies.get(i).x = oRX1Player;
+								enemies.get(i).x = oRX1;
 								if(enemies.get(i).rotation>0&&enemies.get(i).rotation<90)
 								{
 									enemies.get(i).rotation +=2;
@@ -145,7 +137,7 @@ public class Wall_Rectangle extends Wall
 						{
 							if(enemies.get(i).y > y)
 							{
-								enemies.get(i).y = oRY2Player;
+								enemies.get(i).y = oRY2;
 								if(enemies.get(i).rotation>180&&enemies.get(i).rotation<270)
 								{
 									enemies.get(i).rotation -=2;
@@ -156,7 +148,7 @@ public class Wall_Rectangle extends Wall
 							}
 							else
 							{
-								enemies.get(i).y = oRY1Player;
+								enemies.get(i).y = oRY1;
 								if(enemies.get(i).rotation>0&&enemies.get(i).rotation<90)
 								{
 									enemies.get(i).rotation -=2;
