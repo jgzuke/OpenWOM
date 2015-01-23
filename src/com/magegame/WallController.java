@@ -45,7 +45,10 @@ public final class WallController
 {
 	private Controller control;
 	protected boolean [][][] pathing; //x, y, isFree, left, right, up, down
-	protected boolean [][] hitDetected; //x, y, isFree, left, right, up, down
+	protected boolean [][] hitLow; //x, y, isFree, left, right, up, down
+	protected boolean [][] hitHigh; //x, y, isFree, left, right, up, down
+	protected boolean [][] hitPassHigh;
+	protected boolean [][] hitPassLow;
 	private ArrayList<Wall_Rectangle> wallRects = new ArrayList<Wall_Rectangle>();
 	private ArrayList<Wall_Ring> wallRings = new ArrayList<Wall_Ring>();
 	private ArrayList<Wall_Circle> wallCircles = new ArrayList<Wall_Circle>();
@@ -343,13 +346,29 @@ public final class WallController
 		double y2 = y1 + (Math.sin(rads) * distance);
 		return checkObstructionsPoint((float) x1, (float) y1, (float) x2, (float) y2, objectOnGround, offset);
 	}
+	protected boolean checkHitBackPass(double X, double Y, boolean objectOnGround)
+	{
+		int x = (int)(X/5);
+		int y = (int)(Y/5);
+		if(x<0||y<0||x>hitLow.length-1||y>hitLow[0].length-1) return false;
+		if(objectOnGround) return hitPassLow[x][y];
+		else return hitPassHigh[x][y];
+	}
+	protected boolean checkHitBack(double X, double Y, boolean objectOnGround)
+	{
+		int x = (int)(X/5);
+		int y = (int)(Y/5);
+		if(x<0||y<0||x>hitLow.length-1||y>hitLow[0].length-1) return true;
+		if(objectOnGround) return hitLow[x][y];
+		else return hitHigh[x][y];
+	}
 	/**x
 	 * checks whether a given point hits any obstacles
 	 * @param X x point
 	 * @param Y y point
 	 * @return whether it hits
 	 */
-	protected boolean checkHitBack(double X, double Y, boolean objectOnGround)
+	protected boolean checkHitBackForArray(double X, double Y, boolean objectOnGround)
 	{
 		if(X < 0 || X > control.levelController.levelWidth || Y < 0 || Y > control.levelController.levelHeight)
 		{
@@ -404,7 +423,7 @@ public final class WallController
 	 * @param Y y point
 	 * @return whether it hits
 	 */
-	protected boolean checkHitBackPass(double X, double Y, boolean objectOnGround)
+	protected boolean checkHitBackPassForArray(double X, double Y, boolean objectOnGround)
 	{
 		for(int i = 0; i < wallPassageValues.size(); i++)
 		{
@@ -474,20 +493,19 @@ public final class WallController
 		int [] vals = {xVal, yVal, radiusInVal, radiusOutVal, tall};
 		wallRingValues.add(vals);
 	}
-	protected boolean checkPoint(double x, double y)
-	{
-		return checkHitBack(x, y, true);
-	}
 	protected boolean [] checkPaths(int x, int y)
 	{
-		boolean [] paths = {!hitDetected[x/5][y/5], true, true, true, true};
-		
+		x /= 5;
+		y /= 5;
+		boolean [] paths = {!hitLow[x][y], true, true, true, true};
 		for(int i = 1; i < 5; i++)
 		{
-			if(hitDetected[x+i][y]) paths[1] = false;
-			if(hitDetected[x-i][y]) paths[2] = false;
-			if(hitDetected[x][y+i]) paths[3] = false;
-			if(hitDetected[x][y-i]) paths[4] = false;
+			int maxX = hitLow.length-5;
+			int maxY = hitLow[0].length-5;
+			if(x>maxX || hitLow[x+i][y]) paths[1] = false;
+			if(x<5 || hitLow[x-i][y]) paths[2] = false;
+			if(y>maxY || hitLow[x][y+i]) paths[3] = false;
+			if(y<5 || hitLow[x][y-i]) paths[4] = false;
 		}
 		return paths;
 	}
@@ -498,12 +516,18 @@ public final class WallController
 	{
 		int width = control.levelController.levelWidth/5;
 		int height = control.levelController.levelHeight/5;
-		hitDetected = new boolean[width][height];
+		hitHigh = new boolean[width][height];
+		hitLow = new boolean[width][height];
+		hitPassLow = new boolean[width][height];
+		hitPassHigh = new boolean[width][height];
 		for(int i = 0; i < width; i++)
 		{
 			for(int j = 0; j < height; j++)
 			{
-				hitDetected[i][j] = checkPoint(i*5, j*5);
+				hitPassHigh[i][j] = checkHitBackPassForArray(i*5, j*5, false);
+				hitPassLow[i][j] = hitPassHigh[i][j] || checkHitBackPassForArray(i*5, j*5, true);
+				hitHigh[i][j] = checkHitBackForArray(i*5, j*5, false);
+				hitLow[i][j] = hitHigh[i][j] || checkHitBackForArray(i*5, j*5, true);
 			}
 		}
 		pathing = new boolean[width/4][height/4][5]; //x, y, isFree, right, left, down, up

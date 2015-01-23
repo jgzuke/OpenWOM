@@ -463,7 +463,7 @@ abstract public class Enemy extends EnemyShell
 				points.add(newPoint);
 				checked[x-1][y]=true;
 			}
-			if(x<checked[0].length-2&&paths[x][y][3] && !checked[x][y+1])
+			if(y<checked[0].length-2&&paths[x][y][3] && !checked[x][y+1])
 			{
 				int[] newPoint = {x, y+1, x, y};
 				points.add(newPoint);
