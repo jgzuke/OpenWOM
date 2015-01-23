@@ -45,6 +45,7 @@ public final class WallController
 {
 	private Controller control;
 	protected boolean [][][] pathing; //x, y, isFree, left, right, up, down
+	protected boolean [][] hitDetected; //x, y, isFree, left, right, up, down
 	private ArrayList<Wall_Rectangle> wallRects = new ArrayList<Wall_Rectangle>();
 	private ArrayList<Wall_Ring> wallRings = new ArrayList<Wall_Ring>();
 	private ArrayList<Wall_Circle> wallCircles = new ArrayList<Wall_Circle>();
@@ -475,33 +476,43 @@ public final class WallController
 	}
 	protected boolean checkPoint(double x, double y)
 	{
-		return !checkHitBack(x*20, y*20, true);
+		return checkHitBack(x, y, true);
 	}
-	protected boolean checkPath(int x, int y, double xmove, double ymove)
+	protected boolean [] checkPaths(int x, int y)
 	{
+		boolean [] paths = {!hitDetected[x/5][y/5], true, true, true, true};
+		
 		for(int i = 1; i < 5; i++)
 		{
-			if(checkPoint(x+(xmove*i/4), y+(ymove*i/4))) return false;
+			if(hitDetected[x+i][y]) paths[1] = false;
+			if(hitDetected[x-i][y]) paths[2] = false;
+			if(hitDetected[x][y+i]) paths[3] = false;
+			if(hitDetected[x][y-i]) paths[4] = false;
 		}
-		return true;
+		return paths;
 	}
 	/**
 	 * makes paths for enemy search
 	 */
 	protected void makePaths()
 	{
-		int width = control.levelController.levelWidth/20;
-		int height = control.levelController.levelHeight/20;
-		pathing = new boolean[width][height][5]; //x, y, isFree, right, left, down, up
+		int width = control.levelController.levelWidth/5;
+		int height = control.levelController.levelHeight/5;
+		hitDetected = new boolean[width][height];
 		for(int i = 0; i < width; i++)
 		{
 			for(int j = 0; j < height; j++)
 			{
-				pathing[i][j][0] = checkPoint(i, j);
-				pathing[i][j][1] = checkPath(i, j, 1, 0);
-				pathing[i][j][2] = checkPath(i, j, -1, 0);
-				pathing[i][j][3] = checkPath(i, j, 0, 1);
-				pathing[i][j][4] = checkPath(i, j, 0, -1);
+				hitDetected[i][j] = checkPoint(i*5, j*5);
+			}
+		}
+		pathing = new boolean[width/4][height/4][5]; //x, y, isFree, right, left, down, up
+		
+		for(int i = 0; i < width/4; i++)
+		{
+			for(int j = 0; j < height/4; j++)
+			{
+				pathing[i][j] = checkPaths(i*4, j*4);
 			}
 		}
 	}
