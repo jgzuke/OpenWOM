@@ -47,7 +47,7 @@ public final class WallController
 	private ArrayList<Wall_Rectangle> wallRects = new ArrayList<Wall_Rectangle>();
 	private ArrayList<Wall_Ring> wallRings = new ArrayList<Wall_Ring>();
 	private ArrayList<Wall_Circle> wallCircles = new ArrayList<Wall_Circle>();
-	private ArrayList<int[]> wallPassageValues = new ArrayList<int[]>(); // int[] is x1, x2, y1, y2
+	private ArrayList<int[]> wallPassageValues = new ArrayList<int[]>(); // int[] is x1, x2, y1, y2, and correspondant ring position
 	private ArrayList<int[]> wallRingValues = new ArrayList<int[]>(); // int[] is x, y, radiusInner, radiusOuter, tall or not
 	private ArrayList<int[]> wallRectValues = new ArrayList<int[]>(); // int[] is x1, x2, y1, y2, tall or not
 	private ArrayList<int[]> wallCircleValues = new ArrayList<int[]>(); // int[] is x, y, radius, tall or not
@@ -113,10 +113,10 @@ public final class WallController
 	 * @param width passage width
 	 * @param height passage height
 	 */
-	protected void makeWall_Pass(int x, int y, int width, int height, boolean tall)
+	protected void makeWall_Pass(int x, int y, int width, int height, boolean tall, int ringID)
 	{
-		if(tall)setOPassage(x, x+width, y, y+height, 1);
-		else setOPassage(x, x+width, y, y+height, 0);
+		if(tall)setOPassage(x, x+width, y, y+height, 1, ringID);
+		else setOPassage(x, x+width, y, y+height, 0, ringID);
 	}
 	/**
 	 * creates circular wall object
@@ -198,7 +198,7 @@ public final class WallController
 					}
 				} else if(dist1>dist||dist2>dist) // if only one outside
 				{
-					if(!checkObstructionsPath(x1, y1, x2, y2, objectOnGround)) return true;
+					if(!checkObstructionsPath(x1, y1, x2, y2, objectOnGround, expand, i)) return true;
 				}
 			}
 		}
@@ -260,7 +260,7 @@ public final class WallController
 		}
 		return false;
 	}
-	protected boolean checkObstructionsPath(float x1, float y1, float x2, float y2, boolean objectOnGround, int expand)
+	protected boolean checkObstructionsPath(float x1, float y1, float x2, float y2, boolean objectOnGround, int expand, int ringID)
 	{
 		float m1 = (y2 - y1) / (x2 - x1);
 		float b1 = y1 - (m1 * x1);
@@ -281,7 +281,7 @@ public final class WallController
 		for(int i = 0; i < wallPassageValues.size(); i++)
 		{
 			int [] values = wallPassageValues.get(i).clone();
-			if(values[4]==1||objectOnGround) // OBJECT IS TALL
+			if(values[5] == ringID && (values[4]==1||objectOnGround)) // OBJECT IS TALL
 			{
 				values[0]-=expand;
 				values[1]+=expand;
@@ -438,9 +438,9 @@ public final class WallController
 	 * @param oRectY1 top y
 	 * @param oRectY2 bottom y
 	 */
-	protected void setOPassage(int left, int right, int top, int bottom, int tall)
+	protected void setOPassage(int left, int right, int top, int bottom, int tall, int ringID)
 	{
-		int [] vals = {left, right, top, bottom, tall};
+		int [] vals = {left, right, top, bottom, tall, ringID};
 		wallPassageValues.add(vals);
 	}
 	/**
