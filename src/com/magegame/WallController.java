@@ -49,6 +49,7 @@ public final class WallController
 	protected boolean [][] hitHigh; //x, y, isFree, left, right, up, down
 	protected boolean [][] hitPassHigh;
 	protected boolean [][] hitPassLow;
+	private int wallExtra = 5;
 	private ArrayList<Wall_Rectangle> wallRects = new ArrayList<Wall_Rectangle>();
 	private ArrayList<Wall_Ring> wallRings = new ArrayList<Wall_Ring>();
 	private ArrayList<Wall_Circle> wallCircles = new ArrayList<Wall_Circle>();
@@ -149,9 +150,9 @@ public final class WallController
 	protected boolean checkObstructionsPoint(float x1, float y1, float x2, float y2, boolean objectOnGround, int expand)
 	{
 		double distance = distance(x1, x2, y1, y2);
-		double xMove = 3*((x2-x1)/distance);
-		double yMove = 3*((y2-y1)/distance);
-		while(Math.abs(x1-x2)+Math.abs(y1-y2)>5)
+		double xMove = 20*((x2-x1)/distance);
+		double yMove = 20*((y2-y1)/distance);
+		while(Math.abs(x1-x2)+Math.abs(y1-y2)>18)
 		{
 			if(checkHitBack(x1, y1, objectOnGround)) return true;
 			y1 += yMove;
@@ -185,7 +186,7 @@ public final class WallController
 	{
 		int x = (int)(X/5);
 		int y = (int)(Y/5);
-		if(x<0||y<0||x>hitLow.length-1||y>hitLow[0].length-1) return true;
+		if(x<0||y<0||x>159||y>159) return true;
 		if(objectOnGround) return hitLow[x][y];
 		else return hitHigh[x][y];
 	}
@@ -206,9 +207,9 @@ public final class WallController
 				int [] values = wallRectValues.get(i);
 				if(values[4]==1||objectOnGround) // OBJECT IS TALL
 				{
-					if(X > values[0] && X < values[1])
+					if(X > values[0]-wallExtra && X < values[1]+wallExtra)
 					{
-						if(Y > values[2] && Y < values[3])
+						if(Y > values[2]-wallExtra && Y < values[3]+wallExtra)
 						{
 							return true;
 						}
@@ -221,7 +222,7 @@ public final class WallController
 				if(values[3]==1||objectOnGround) // OBJECT IS TALL
 				{
 					double dist = distance(X, values[0], Y, values[1]);
-					if(dist < Math.pow(values[2], 2))
+					if(dist < Math.pow(values[2]+wallExtra, 2))
 					{
 						return true;
 					}
@@ -233,7 +234,7 @@ public final class WallController
 				if(values[4]==1||objectOnGround) // OBJECT IS TALL
 				{
 					double dist = distance(X, values[0], Y, values[1]);
-					if(dist < Math.pow(values[3], 2) && dist > Math.pow(values[2], 2))
+					if(dist < Math.pow(values[3]+wallExtra, 2) && dist > Math.pow(values[2]-wallExtra, 2))
 					{
 						if(!checkHitBackPass(X, Y, objectOnGround))
 						{
