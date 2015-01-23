@@ -423,12 +423,12 @@ public final class LevelController
 		switch(toLoad)
 		{
 		case 1:
-			s.makeEnemy(0, 504, 677, -120);
+			/*s.makeEnemy(0, 504, 677, -120);
 			s.makeEnemy(3, 678, 518, 180);
 			s.makeEnemy(5, 730, 551, -165);
 			s.makeEnemy(0, 607, 623, -135);
 			s.makeEnemy(3, 724, 617, 180);
-			s.makeEnemy(2, 623, 671, -165);
+			s.makeEnemy(2, 623, 671, -165);*/
 			break;
 		
 		case 2:
@@ -442,7 +442,7 @@ public final class LevelController
 			
 		case 4:
 			s.makeEnemy(0, 395, 162, 45);
-			s.makeEnemy(1, 294, 92, 45);
+			/*s.makeEnemy(1, 294, 92, 45);
 			
 			s.makeEnemy(0, 580, 133, 180);
 			s.makeEnemy(0, 675, 351, 90);
@@ -454,7 +454,7 @@ public final class LevelController
 			s.makeEnemy(0, 310, 514, 45);
 			s.makeEnemy(2, 303, 348, 90);
 			s.makeEnemy(2, 145, 516, 0);
-			s.makeEnemy(5, 183, 390, 45);
+			s.makeEnemy(5, 183, 390, 45);*/
 			break;
 		}
 	}

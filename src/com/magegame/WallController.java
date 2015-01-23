@@ -1,4 +1,3 @@
-
 /** Controls running of battle, calls objects frameCalls, draws and handles all objects, edge hit detection
  * @param DifficultyLevel Chosen difficulty setting which dictates enemy reaction time and DifficultyLevelMultiplier
  * @param DifficultyLevelMultiplier Function of DifficultyLevel which changes enemy health, mana, speed
@@ -45,11 +44,6 @@ public final class WallController
 {
 	private Controller control;
 	protected boolean [][][] pathing; //x, y, isFree, left, right, up, down
-	protected boolean [][] hitLow; //x, y, isFree, left, right, up, down
-	protected boolean [][] hitHigh; //x, y, isFree, left, right, up, down
-	protected boolean [][] hitPassHigh;
-	protected boolean [][] hitPassLow;
-	private int wallExtra = 5;
 	private ArrayList<Wall_Rectangle> wallRects = new ArrayList<Wall_Rectangle>();
 	private ArrayList<Wall_Ring> wallRings = new ArrayList<Wall_Ring>();
 	private ArrayList<Wall_Circle> wallCircles = new ArrayList<Wall_Circle>();
@@ -149,14 +143,184 @@ public final class WallController
 	 */
 	protected boolean checkObstructionsPoint(float x1, float y1, float x2, float y2, boolean objectOnGround, int expand)
 	{
-		double distance = distance(x1, x2, y1, y2);
-		double xMove = 20*((x2-x1)/distance);
-		double yMove = 20*((y2-y1)/distance);
-		while(Math.abs(x1-x2)+Math.abs(y1-y2)>18)
+		expand /= 2;
+		if(x1 < 0 || x1 > control.levelController.levelWidth || y1 < 0 || y1 > control.levelController.levelHeight)
 		{
-			if(checkHitBack(x1, y1, objectOnGround)) return true;
-			y1 += yMove;
-			x1 += xMove;
+			return true;
+		}
+		if(x2 < 0 || x2 > control.levelController.levelWidth || y2 < 0 || y2 > control.levelController.levelHeight)
+		{
+			return true;
+		}
+		float m1 = (y2 - y1) / (x2 - x1);
+		float b1 = y1 - (m1 * x1);
+		float circM = -(1 / m1);
+		float circB;
+		float tempX;
+		float tempY;
+		for(int i = 0; i < wallCircleValues.size(); i++)
+		{
+			int [] values = wallCircleValues.get(i).clone();
+			if(values[3]==1||objectOnGround) // OBJECT IS TALL OR OBJECT ON GROUND
+			{
+				values[2]+=expand;
+				circB = values[1] - (circM * values[0]);
+				tempX = (circB - b1) / (m1 - circM);
+				if(x1 < tempX && tempX < x2)
+				{
+					tempY = (circM * tempX) + circB;
+					if(distanceSqr(tempX, values[0], tempY, values[1]) < Math.pow(values[2], 2))
+					{
+						return true;
+					}
+				}
+			}
+		}
+		for(int i = 0; i < wallRingValues.size(); i++)
+		{
+			int [] values = wallRingValues.get(i).clone();
+			if(values[4]==1||objectOnGround) // OBJECT IS TALL
+			{
+				double dist1 = distanceSqr(x1, values[0], y1, values[1]);
+				double dist2 = distanceSqr(x2, values[0], y2, values[1]);
+				double dist = Math.pow((values[2]+values[3])/2, 2);
+				if(dist1>dist&&dist2>dist) // if both outside
+				{
+					circB = values[1] - (circM * values[0]);
+					tempX = (circB - b1) / (m1 - circM);
+					if(x1 < tempX && tempX < x2)
+					{
+						tempY = (circM * tempX) + circB;
+						if(distanceSqr(tempX, values[0], tempY, values[1]) < dist)
+						{
+							return true;
+						}
+					}
+				} else if(dist1>dist||dist2>dist) // if only one outside
+				{
+					if(!checkObstructionsPath(x1, y1, x2, y2, objectOnGround)) return true;
+				}
+			}
+		}
+		if(x1 > x2)
+		{
+			tempX = x1;
+			x1 = x2;
+			x2 = tempX;
+		}
+		if(y1 > y2)
+		{
+			tempY = y1;
+			y1 = y2;
+			y2 = tempY;
+		}
+		for(int i = 0; i < wallRectValues.size(); i++)
+		{
+			int [] values = wallRectValues.get(i).clone();
+			if(values[4]==1||objectOnGround) // OBJECT IS TALL
+			{
+				values[0]-=expand;
+				values[1]+=expand;
+				values[2]-=expand;
+				values[3]+=expand;
+					//Right and left Checks
+					if(x1 < values[0] && values[0] < x2) // if left sid of wall 
+					{
+						tempY = (m1 * values[0]) + b1;
+						if(values[2] < tempY && tempY < values[3])
+						{
+							return true;
+						}
+					}
+					if(x1 < values[1] && values[1] < x2)
+					{
+						tempY = (m1 * values[1]) + b1;
+						if(values[2] < tempY && tempY < values[3])
+						{
+							return true;
+						}
+					}
+					//Top and Bottom checks
+					if(y1 < values[2] && values[2] < y2)
+					{
+						tempX = (values[2] - b1) / m1;
+						if(values[0] < tempX && tempX < values[1])
+						{
+							return true;
+						}
+					} else if(y1 < values[3] && values[3] < y2)
+					{
+						tempX = (values[2] - b1) / m1;
+						if(values[0] < tempX && tempX < values[1])
+						{
+							return true;
+						}
+					}
+			}
+		}
+		return false;
+	}
+	protected boolean checkObstructionsPath(float x1, float y1, float x2, float y2, boolean objectOnGround, int expand)
+	{
+		float m1 = (y2 - y1) / (x2 - x1);
+		float b1 = y1 - (m1 * x1);
+		float tempX;
+		float tempY;
+		if(x1 > x2)
+		{
+			tempX = x1;
+			x1 = x2;
+			x2 = tempX;
+		}
+		if(y1 > y2)
+		{
+			tempY = y1;
+			y1 = y2;
+			y2 = tempY;
+		}
+		for(int i = 0; i < wallPassageValues.size(); i++)
+		{
+			int [] values = wallPassageValues.get(i).clone();
+			if(values[4]==1||objectOnGround) // OBJECT IS TALL
+			{
+				values[0]-=expand;
+				values[1]+=expand;
+				values[2]-=expand;
+				values[3]+=expand;
+					//Right and left Checks
+					if(x1 < values[0] && values[0] < x2) // if left sid of wall 
+					{
+						tempY = (m1 * values[0]) + b1;
+						if(values[2] < tempY && tempY < values[3])
+						{
+							return true;
+						}
+					}
+					if(x1 < values[1] && values[1] < x2)
+					{
+						tempY = (m1 * values[1]) + b1;
+						if(values[2] < tempY && tempY < values[3])
+						{
+							return true;
+						}
+					}
+					//Top and Bottom checks
+					if(y1 < values[2] && values[2] < y2)
+					{
+						tempX = (values[2] - b1) / m1;
+						if(values[0] < tempX && tempX < values[1])
+						{
+							return true;
+						}
+					} else if(y1 < values[3] && values[3] < y2)
+					{
+						tempX = (values[2] - b1) / m1;
+						if(values[0] < tempX && tempX < values[1])
+						{
+							return true;
+						}
+					}
+			}
 		}
 		return false;
 	}
@@ -174,29 +338,13 @@ public final class WallController
 		double y2 = y1 + (Math.sin(rads) * distance);
 		return checkObstructionsPoint((float) x1, (float) y1, (float) x2, (float) y2, objectOnGround, offset);
 	}
-	protected boolean checkHitBackPass(double X, double Y, boolean objectOnGround)
-	{
-		int x = (int)(X/5);
-		int y = (int)(Y/5);
-		if(x<0||y<0||x>hitLow.length-1||y>hitLow[0].length-1) return false;
-		if(objectOnGround) return hitPassLow[x][y];
-		else return hitPassHigh[x][y];
-	}
-	protected boolean checkHitBack(double X, double Y, boolean objectOnGround)
-	{
-		int x = (int)(X/5);
-		int y = (int)(Y/5);
-		if(x<0||y<0||x>159||y>159) return true;
-		if(objectOnGround) return hitLow[x][y];
-		else return hitHigh[x][y];
-	}
 	/**x
 	 * checks whether a given point hits any obstacles
 	 * @param X x point
 	 * @param Y y point
 	 * @return whether it hits
 	 */
-	protected boolean checkHitBackForArray(double X, double Y, boolean objectOnGround)
+	protected boolean checkHitBack(double X, double Y, boolean objectOnGround)
 	{
 		if(X < 0 || X > control.levelController.levelWidth || Y < 0 || Y > control.levelController.levelHeight)
 		{
@@ -207,9 +355,9 @@ public final class WallController
 				int [] values = wallRectValues.get(i);
 				if(values[4]==1||objectOnGround) // OBJECT IS TALL
 				{
-					if(X > values[0]-wallExtra && X < values[1]+wallExtra)
+					if(X > values[0] && X < values[1])
 					{
-						if(Y > values[2]-wallExtra && Y < values[3]+wallExtra)
+						if(Y > values[2] && Y < values[3])
 						{
 							return true;
 						}
@@ -221,8 +369,8 @@ public final class WallController
 				int [] values = wallCircleValues.get(i);
 				if(values[3]==1||objectOnGround) // OBJECT IS TALL
 				{
-					double dist = distance(X, values[0], Y, values[1]);
-					if(dist < Math.pow(values[2]+wallExtra, 2))
+					double dist = distanceSqr(X, values[0], Y, values[1]);
+					if(dist < Math.pow(values[2], 2))
 					{
 						return true;
 					}
@@ -233,8 +381,8 @@ public final class WallController
 				int [] values = wallRingValues.get(i);
 				if(values[4]==1||objectOnGround) // OBJECT IS TALL
 				{
-					double dist = distance(X, values[0], Y, values[1]);
-					if(dist < Math.pow(values[3]+wallExtra, 2) && dist > Math.pow(values[2]-wallExtra, 2))
+					double dist = distanceSqr(X, values[0], Y, values[1]);
+					if(dist < Math.pow(values[3], 2) && dist > Math.pow(values[2], 2))
 					{
 						if(!checkHitBackPass(X, Y, objectOnGround))
 						{
@@ -251,7 +399,7 @@ public final class WallController
 	 * @param Y y point
 	 * @return whether it hits
 	 */
-	protected boolean checkHitBackPassForArray(double X, double Y, boolean objectOnGround)
+	protected boolean checkHitBackPass(double X, double Y, boolean objectOnGround)
 	{
 		for(int i = 0; i < wallPassageValues.size(); i++)
 		{
@@ -321,54 +469,39 @@ public final class WallController
 		int [] vals = {xVal, yVal, radiusInVal, radiusOutVal, tall};
 		wallRingValues.add(vals);
 	}
-	protected boolean [] checkPaths(int x, int y)
+	protected boolean checkPoint(double x, double y)
 	{
-		x /= 5;
-		y /= 5;
-		boolean [] paths = {!hitLow[x][y], true, true, true, true};
+		return !checkHitBack(x*20, y*20, true);
+	}
+	protected boolean checkPath(int x, int y, double xmove, double ymove)
+	{
 		for(int i = 1; i < 5; i++)
 		{
-			int maxX = hitLow.length-5;
-			int maxY = hitLow[0].length-5;
-			if(x>maxX || hitLow[x+i][y]) paths[1] = false;
-			if(x<5 || hitLow[x-i][y]) paths[2] = false;
-			if(y>maxY || hitLow[x][y+i]) paths[3] = false;
-			if(y<5 || hitLow[x][y-i]) paths[4] = false;
+			if(checkPoint(x+(xmove*i/4), y+(ymove*i/4))) return false;
 		}
-		return paths;
+		return true;
 	}
 	/**
 	 * makes paths for enemy search
 	 */
 	protected void makePaths()
 	{
-		int width = control.levelController.levelWidth/5;
-		int height = control.levelController.levelHeight/5;
-		hitHigh = new boolean[width][height];
-		hitLow = new boolean[width][height];
-		hitPassLow = new boolean[width][height];
-		hitPassHigh = new boolean[width][height];
+		int width = control.levelController.levelWidth/20;
+		int height = control.levelController.levelHeight/20;
+		pathing = new boolean[width][height][5]; //x, y, isFree, right, left, down, up
 		for(int i = 0; i < width; i++)
 		{
 			for(int j = 0; j < height; j++)
 			{
-				hitPassHigh[i][j] = checkHitBackPassForArray(i*5, j*5, false);
-				hitPassLow[i][j] = hitPassHigh[i][j] || checkHitBackPassForArray(i*5, j*5, true);
-				hitHigh[i][j] = checkHitBackForArray(i*5, j*5, false);
-				hitLow[i][j] = hitHigh[i][j] || checkHitBackForArray(i*5, j*5, true);
-			}
-		}
-		pathing = new boolean[width/4][height/4][5]; //x, y, isFree, right, left, down, up
-		
-		for(int i = 0; i < width/4; i++)
-		{
-			for(int j = 0; j < height/4; j++)
-			{
-				pathing[i][j] = checkPaths(i*4, j*4);
+				pathing[i][j][0] = checkPoint(i, j);
+				pathing[i][j][1] = checkPath(i, j, 1, 0);
+				pathing[i][j][2] = checkPath(i, j, -1, 0);
+				pathing[i][j][3] = checkPath(i, j, 0, 1);
+				pathing[i][j][4] = checkPath(i, j, 0, -1);
 			}
 		}
 	}
-	protected double distance(double x1, double x2, double y1, double y2)
+	protected double distanceSqr(double x1, double x2, double y1, double y2)
 	{
 		return Math.pow(x1-x2, 2)+Math.pow(y1-y2, 2);
 	}
