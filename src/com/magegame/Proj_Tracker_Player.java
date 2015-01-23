@@ -103,7 +103,11 @@ public final class Proj_Tracker_Player extends Proj_Tracker
 		double newRotation = Math.atan2(yDif, xDif) * r2d;
 		double needToTurn = Math.abs(rotation-newRotation);
 		if(needToTurn>180) needToTurn = 360-needToTurn;
-		return needToTurn<20&&distance<d;
+		if(needToTurn<20&&distance<d)
+		{
+			return !control.wallController.checkObstructionsPoint((int)x, (int)y, (int)s.x, (int)s.y, false, 10);
+		}
+		return false;
 	}
 	public double compareRot(double newRotation)
 	{
